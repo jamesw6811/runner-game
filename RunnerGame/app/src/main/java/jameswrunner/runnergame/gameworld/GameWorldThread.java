@@ -14,12 +14,12 @@ public class GameWorldThread extends Thread {
     }
 
     @Override
-    public void start(){
+    public void start() {
         running = true;
         super.start();
     }
 
-    public void stopRunning(){
+    public void stopRunning() {
         running = false;
     }
 
@@ -34,17 +34,18 @@ public class GameWorldThread extends Thread {
             lastTime = startTime;
             startTime = System.currentTimeMillis();
             try {
-                gw.tickTime(((float)(startTime - lastTime))/1000f);
+                gw.tickTime(((float) (startTime - lastTime)) / 1000f);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            sleepTime = ticksPS-(System.currentTimeMillis() - startTime);
+            sleepTime = ticksPS - (System.currentTimeMillis() - startTime);
             try {
                 if (sleepTime > 0)
                     sleep(sleepTime);
                 else
                     sleep(10);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
         }
     }
 }

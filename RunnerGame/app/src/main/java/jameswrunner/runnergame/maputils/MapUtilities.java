@@ -3,8 +3,6 @@ package jameswrunner.runnergame.maputils;
 import android.app.Activity;
 import android.location.Location;
 
-import androidx.core.app.ActivityCompat;
-
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.GeoApiContext;
 import com.google.maps.RoadsApi;
@@ -21,19 +19,19 @@ import jameswrunner.runnergame.R;
 
 public class MapUtilities {
 
-    public static GeoApiContext getGeoContext(Activity act){
+    public static GeoApiContext getGeoContext(Activity act) {
         GeoApiContext geoApiContext = new GeoApiContext();
         geoApiContext.setApiKey(act.getString(R.string.google_maps_key));
         return geoApiContext;
     }
 
-    public static LatLng getRandomDistantPosition(LatLng pos, float distanceMeters){
+    public static LatLng getRandomDistantPosition(LatLng pos, float distanceMeters) {
         float randomHeading = getRandomHeading();
         LatLng newLatLng = SphericalUtil.computeOffset(pos, distanceMeters, randomHeading);
         return newLatLng;
     }
 
-    public static LatLng locationToLatLng(Location l){
+    public static LatLng locationToLatLng(Location l) {
         LatLng ll = new LatLng(l.getLatitude(), l.getLongitude());
         return ll;
     }
@@ -41,22 +39,22 @@ public class MapUtilities {
     public static LatLng snapToRoad(Activity act, LatLng ll) throws Exception {
         com.google.maps.model.LatLng modelLl = new com.google.maps.model.LatLng(ll.latitude, ll.longitude);
         SnappedPoint[] sps = RoadsApi.snapToRoads(getGeoContext(act), true, modelLl).await();
-        if (sps.length > 0){
+        if (sps.length > 0) {
             return new LatLng(sps[0].location.lat, sps[0].location.lng);
         } else return null;
     }
 
-    public static float getRandomHeading(){
+    public static float getRandomHeading() {
         Random r = new Random();
-        return r.nextFloat()*360f;
+        return r.nextFloat() * 360f;
     }
 
-    public static double mapHeadingToGameHeading(double mapheading){
-        return -mapheading+90f;
+    public static double mapHeadingToGameHeading(double mapheading) {
+        return -mapheading + 90f;
     }
 
-    public static double gameHeadingToMapHeading(double gameheading){
-        return -gameheading+90f;
+    public static double gameHeadingToMapHeading(double gameheading) {
+        return -gameheading + 90f;
     }
 
 }

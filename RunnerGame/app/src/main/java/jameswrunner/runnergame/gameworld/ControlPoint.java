@@ -5,8 +5,6 @@ import android.graphics.Color;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
-import com.google.android.gms.maps.model.Polygon;
-import com.google.android.gms.maps.model.PolygonOptions;
 
 /**
  * Created by james on 6/17/2017.
@@ -16,34 +14,20 @@ public class ControlPoint {
     public GamePoint position;
     public Circle circle;
     public CAPTURESTATUS capturestatus;
-    public enum CAPTURESTATUS{
-        //You can initialize enums using enumname(value)
-        NEUTRAL(0),
-        ENEMYTEAM(1),
-        OURTEAM(2);
-        private int capturestatus;
-        CAPTURESTATUS(int cap)
-        {
-            capturestatus = cap;
-        }
-        public int GetCaptureStatus()
-        {
-            return capturestatus;
-        }
-    }
-    public ControlPoint(GamePoint pos){
+
+    public ControlPoint(GamePoint pos) {
         position = pos;
         capturestatus = CAPTURESTATUS.NEUTRAL;
     }
 
-    public void updateCaptureStatus(CAPTURESTATUS capstat){
+    public void updateCaptureStatus(CAPTURESTATUS capstat) {
         capturestatus = capstat;
         updateCaptureStatusColor();
     }
 
-    private void updateCaptureStatusColor(){
+    private void updateCaptureStatusColor() {
         int color = Color.BLACK;
-        switch(capturestatus){
+        switch (capturestatus) {
             case NEUTRAL:
                 color = Color.BLUE;
                 break;
@@ -55,12 +39,12 @@ public class ControlPoint {
                 break;
         }
 
-        if (circle!=null){
+        if (circle != null) {
             circle.setFillColor(color);
         }
     }
 
-    public void updateMarker(GoogleMap gm, GameBoundaries bounds){
+    public void updateMarker(GoogleMap gm, GameBoundaries bounds) {
         if (circle == null) {
             circle = gm.addCircle(new CircleOptions().center(bounds.gamePointtoLatLng(position))
                     .radius(10f));
@@ -70,7 +54,23 @@ public class ControlPoint {
         }
     }
 
-    public void destroy(){
-        if (circle!=null)circle.remove();
+    public void destroy() {
+        if (circle != null) circle.remove();
+    }
+
+    public enum CAPTURESTATUS {
+        //You can initialize enums using enumname(value)
+        NEUTRAL(0),
+        ENEMYTEAM(1),
+        OURTEAM(2);
+        private int capturestatus;
+
+        CAPTURESTATUS(int cap) {
+            capturestatus = cap;
+        }
+
+        public int GetCaptureStatus() {
+            return capturestatus;
+        }
     }
 }

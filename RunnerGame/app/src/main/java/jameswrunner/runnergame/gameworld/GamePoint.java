@@ -8,7 +8,7 @@ import android.graphics.PointF;
  */
 
 public class GamePoint extends PointF {
-    public GamePoint(float x, float y){
+    public GamePoint(float x, float y) {
         super(x, y);
     }
 }

@@ -7,11 +7,11 @@ package jameswrunner.runnergame.gameworld;
 public class GameHeading {
     public float headingDegrees;
 
-    public GameHeading(float headingDegs){
+    public GameHeading(float headingDegs) {
         headingDegrees = headingDegs;
     }
 
-    public float getHeadingRadians(){
-        return (float)(headingDegrees/180f*Math.PI);
+    public float getHeadingRadians() {
+        return (float) (headingDegrees / 180f * Math.PI);
     }
 }

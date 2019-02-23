@@ -5,8 +5,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -18,6 +16,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentActivity;
 import jameswrunner.runnergame.gameworld.GameWorld;
 
 import static jameswrunner.runnergame.maputils.MapUtilities.locationToLatLng;
@@ -44,9 +44,8 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
     }
 
 
-
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         startListeningLocation();
     }
 
@@ -84,6 +83,7 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
     }
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -100,7 +100,7 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         disableMarkerScrolling();
     }
 
-    private void disableMarkerScrolling(){
+    private void disableMarkerScrolling() {
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             public boolean onMarkerClick(Marker marker) {
                 // Check if there is an open info window
@@ -128,28 +128,28 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         });
     }
 
-    private void makeUseOfNewLocation(Location loc){
+    private void makeUseOfNewLocation(Location loc) {
         if (loc.getAccuracy() < MINIMUM_ACCURACY_REQUIRED) {
             if (gw == null) {
                 gw = new GameWorld(loc, mMap, this);
-                gw.startRunning();
+                gw.initializeAndStartRunning();
                 initializeCurrentPosition(locationToLatLng(loc));
             }
             gw.updatePlayerLocation(loc);
         }
     }
 
-    private void initializeCurrentPosition(LatLng ll){
+    private void initializeCurrentPosition(LatLng ll) {
         zoomToWalkable(ll);
     }
 
-    private void zoomToWalkable(LatLng ll){
+    private void zoomToWalkable(LatLng ll) {
         mMap.moveCamera(CameraUpdateFactory.newLatLng(ll));
         mMap.moveCamera(CameraUpdateFactory.zoomTo(17f));
     }
 
 
-    protected void showErrorToast(String s){
+    protected void showErrorToast(String s) {
         Context context = getApplicationContext();
         CharSequence text = s;
         int duration = Toast.LENGTH_SHORT;
