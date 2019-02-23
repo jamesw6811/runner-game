@@ -6,6 +6,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -27,6 +29,7 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
 
 
     private GoogleMap mMap;
+    private TextToSpeech tts;
     private GameWorld gw;
 
     private Marker lastOpened;
@@ -36,6 +39,15 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_run_map);
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                Log.d(this.getClass().getName(), "TextToSpeech initialized with status:"+status);
+                if (status != TextToSpeech.ERROR){
+                    Log.d(this.getClass().getName(), "TextToSpeech no error");
+                }
+            }
+        });
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -43,6 +55,14 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         startListeningLocation();
     }
 
+    @Override
+    public void onPause(){
+        if(tts !=null){
+            tts.stop();
+            tts.shutdown();
+        }
+        super.onPause();
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -131,7 +151,7 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
     private void makeUseOfNewLocation(Location loc) {
         if (loc.getAccuracy() < MINIMUM_ACCURACY_REQUIRED) {
             if (gw == null) {
-                gw = new GameWorld(loc, mMap, this);
+                gw = new GameWorld(loc, mMap, tts, this);
                 gw.initializeAndStartRunning();
                 initializeCurrentPosition(locationToLatLng(loc));
             }

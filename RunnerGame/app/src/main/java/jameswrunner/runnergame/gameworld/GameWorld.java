@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Handler;
 import android.os.Looper;
+import android.speech.tts.TextToSpeech;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -43,11 +44,17 @@ public class GameWorld {
     private Circle currentPositionCircle;
     private Polygon gameBoundsPoly;
     private Circle gameBoundsBottomLeft;
+    private TextToSpeech tts;
 
-    public GameWorld(Location center, GoogleMap gm, Activity act) {
+    public GameWorld(Location center, GoogleMap gm, TextToSpeech tts, Activity act) {
         bounds = new GameBoundaries(locationToLatLng(center), 0, GAME_HEIGHT_METERS, GAME_WIDTH_METERS);
         googlemap = gm;
         activityContext = act;
+        this.tts = tts;
+    }
+
+    private void speakTTS(CharSequence speech){
+        tts.speak(speech, TextToSpeech.QUEUE_ADD, null, "RunMapVoice");
     }
 
     private static void runOnMainThreadBlocking(final Runnable runnable) throws InterruptedException {
@@ -132,6 +139,7 @@ public class GameWorld {
         if (gameWorldThread == null || !gameWorldThread.isAlive()) {
             gameWorldThread = new GameWorldThread(this);
             gameWorldThread.start();
+            speakTTS("Game started.");
         }
     }
 
@@ -154,6 +162,7 @@ public class GameWorld {
             public void run() {
                 if (srai == null) {
                     srai = generateNewRunnerAI();
+                    speakTTS("New runner generated.");
                 }
                 srai.tick(time);
                 if (!bounds.withinBounds(srai.position)) {
