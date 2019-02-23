@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '28.0.3'
+    compileSdkVersion 28
     defaultConfig {
         applicationId "jameswrunner.runnergame"
-        minSdkVersion 15
-        targetSdkVersion 24
+        minSdkVersion 19
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
     buildTypes {
@@ -24,13 +24,12 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-alpha4', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:24.2.0'
-    compile 'com.google.android.gms:play-services:9.4.0'
-    compile 'com.google.maps.android:android-maps-utils:0.5'
-    compile 'com.google.maps:google-maps-services:0.1.6'
-    testCompile 'junit:junit:4.12'
+    implementation 'com.google.android.gms:play-services:9.4.0'
+    implementation 'com.google.maps.android:android-maps-utils:0.5'
+    implementation 'com.google.maps:google-maps-services:0.1.6'
+    testImplementation 'junit:junit:4.12'
 }

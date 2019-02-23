@@ -1,18 +1,13 @@
 package jameswrunner.runnergame;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -20,28 +15,12 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.maps.GeoApiContext;
-import com.google.maps.RoadsApi;
-import com.google.maps.android.SphericalUtil;
-import com.google.maps.model.SnappedPoint;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 import jameswrunner.runnergame.gameworld.GameWorld;
 
-import static jameswrunner.runnergame.maputils.MapUtilities.getRandomDistantPosition;
 import static jameswrunner.runnergame.maputils.MapUtilities.locationToLatLng;
-import static jameswrunner.runnergame.maputils.MapUtilities.snapToRoad;
 
 public class RunMapActivity extends FragmentActivity implements OnMapReadyCallback {
     public static final float MINIMUM_ACCURACY_REQUIRED = 50f;
