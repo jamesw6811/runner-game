@@ -2,7 +2,6 @@ package jameswrunner.runnergame.gameworld;
 
 import android.graphics.PointF;
 
-import com.google.android.gms.games.Game;
 
 /**
  * Created by james on 6/17/2017.

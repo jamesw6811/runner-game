@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.google.android.gms.games.Game;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
@@ -61,7 +60,6 @@ public class GameWorld {
         bounds = new GameBoundaries(locationToLatLng(center), 0, GAME_HEIGHT_METERS, GAME_WIDTH_METERS);
         googlemap = gm;
         activityContext = act;
-        initializeNewGame();
     }
 
     public void initializeNewGame(){
@@ -84,14 +82,19 @@ public class GameWorld {
     }
 
     public void drawGameBounds(){
-        if (gameBoundsPoly != null) {
-            gameBoundsPoly.remove();
-        }
-        gameBoundsPoly = googlemap.addPolygon(
-                new PolygonOptions().addAll(bounds.getLatLngCorners())
-                        .strokeColor(Color.RED));
-        gameBoundsBottomLeft = googlemap.addCircle(
-                new CircleOptions().strokeWidth(2).fillColor(Color.GREEN).radius(10).center(bounds.bottomLeft));
+        activityContext.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (gameBoundsPoly != null) {
+                    gameBoundsPoly.remove();
+                }
+                gameBoundsPoly = googlemap.addPolygon(
+                        new PolygonOptions().addAll(bounds.getLatLngCorners())
+                                .strokeColor(Color.RED));
+                gameBoundsBottomLeft = googlemap.addCircle(
+                        new CircleOptions().strokeWidth(2).fillColor(Color.GREEN).radius(10).center(bounds.bottomLeft));
+            }
+        });
     }
 
     private void generateControlPoints() throws Exception {
