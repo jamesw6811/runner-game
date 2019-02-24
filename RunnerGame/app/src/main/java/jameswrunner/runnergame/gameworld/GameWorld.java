@@ -38,6 +38,7 @@ public class GameWorld {
     LinkedList<ControlPoint> cplist = new LinkedList<ControlPoint>();
     private GameBoundaries bounds;
     private LatLng lastPosition;
+    private LatLng lastLastPosition;
     private GoogleMap googlemap;
     private GameWorldThread gameWorldThread;
     private Activity activityContext;
@@ -124,8 +125,10 @@ public class GameWorld {
         controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS / 3, GAME_HEIGHT_METERS * 4 / 6));
         controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS / 2, GAME_HEIGHT_METERS * 5 / 6));
 
+        int i = 1;
         for (GamePoint gp : controlpointpoints) {
-            cplist.add(new ControlPoint(getNearestGamePointWalkable(gp)));
+            cplist.add(new ControlPoint(getNearestGamePointWalkable(gp), "Control Point Number " + i));
+            i += 1;
         }
     }
 
@@ -160,10 +163,14 @@ public class GameWorld {
         runOnMainThreadBlocking(new Runnable() {
             @Override
             public void run() {
+
+                // Generate AI
                 if (srai == null) {
                     srai = generateNewRunnerAI();
-                    speakTTS("New runner generated.");
+                    speakTTS("New AI runner generated.");
                 }
+
+                // Move AI
                 srai.tick(time);
                 if (!bounds.withinBounds(srai.position)) {
                     srai.destroy();
@@ -179,21 +186,38 @@ public class GameWorld {
                 } else {
                     srai.updateMarker(googlemap, bounds);
                 }
+
+                // Check control point collisions
                 for (ControlPoint cp : cplist) {
+                    // Give player precedence
                     if (bounds.crowDistance(
                             bounds.latLngtoGamePoint(lastPosition),
-                            cp.position) < CATCH_RUNNER_DISTANCE_METERS) {
+                            cp.position) < CATCH_RUNNER_DISTANCE_METERS &&
+                        cp.capturestatus != ControlPoint.CAPTURESTATUS.OURTEAM) {
                         cp.updateCaptureStatus(ControlPoint.CAPTURESTATUS.OURTEAM);
-                    }
-                    if (srai != null && bounds.crowDistance(
+                        speakTTS("You've captured " + cp.name + "!");
+                    } else if (srai != null && bounds.crowDistance(
                             srai.position,
-                            cp.position) < CATCH_RUNNER_DISTANCE_METERS) {
+                            cp.position) < CATCH_RUNNER_DISTANCE_METERS &&
+                            cp.capturestatus != ControlPoint.CAPTURESTATUS.ENEMYTEAM) {
                         cp.updateCaptureStatus(ControlPoint.CAPTURESTATUS.ENEMYTEAM);
+                        speakTTS("AI runner captured " + cp.name + "!");
                     }
                     cp.updateMarker(googlemap, bounds);
                 }
+
+                // Check player exiting bounds
+                if (!bounds.withinBounds(bounds.latLngtoGamePoint(lastPosition))) {
+                    if (bounds.withinBounds(bounds.latLngtoGamePoint(lastLastPosition))){
+                        speakTTS("You have left the boundary. Turn around!");
+                    }
+                }
+
                 drawCurrentPosition();
                 checkWinConditions();
+
+                // Handle post-tick position model
+                lastLastPosition = lastPosition;
             }
         });
     }
@@ -207,7 +231,9 @@ public class GameWorld {
     }
 
     private void doCapturedAllWinCondition() {
+
         gameWorldThread.stopRunning();
+        speakTTS("We've won. You've captured all the points. Thank you! See the app for your reward.");
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(activityContext);
         builder.setTitle("Victory!")

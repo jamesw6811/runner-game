@@ -25,7 +25,7 @@ import jameswrunner.runnergame.gameworld.GameWorld;
 import static jameswrunner.runnergame.maputils.MapUtilities.locationToLatLng;
 
 public class RunMapActivity extends FragmentActivity implements OnMapReadyCallback {
-    public static final float MINIMUM_ACCURACY_REQUIRED = 50f;
+    public static final float MINIMUM_ACCURACY_REQUIRED = 25f;
 
 
     private GoogleMap mMap;

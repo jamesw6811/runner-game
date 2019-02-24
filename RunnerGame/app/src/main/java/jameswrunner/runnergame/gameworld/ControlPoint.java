@@ -14,10 +14,12 @@ public class ControlPoint {
     public GamePoint position;
     public Circle circle;
     public CAPTURESTATUS capturestatus;
+    public String name;
 
-    public ControlPoint(GamePoint pos) {
+    public ControlPoint(GamePoint pos, String n) {
         position = pos;
         capturestatus = CAPTURESTATUS.NEUTRAL;
+        name = n;
     }
 
     public void updateCaptureStatus(CAPTURESTATUS capstat) {
