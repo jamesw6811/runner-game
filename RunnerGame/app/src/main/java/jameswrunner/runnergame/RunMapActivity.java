@@ -15,6 +15,11 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -109,29 +114,7 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
 
     public void startListeningLocation() {
         // Acquire a reference to the system Location Manager
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
-        LocationListener ll = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                makeUseOfNewLocation(location);
-            }
-
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String s) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String s) {
-
-            }
-        };
+        FusedLocationProviderClient flpc = LocationServices.getFusedLocationProviderClient(this);
 
         // Register the listener with the Location Manager to receive location updates
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -139,7 +122,20 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
             ActivityCompat.requestPermissions(this, perms, 0);
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
+        LocationRequest lr = new LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(500);
+        flpc.requestLocationUpdates(lr,
+                new LocationCallback(){
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        if (locationResult == null) {
+                            return;
+                        }
+                        for (Location location : locationResult.getLocations()) {
+                            makeUseOfNewLocation(location);
+                        }
+                    };
+                },
+                null);
     }
 
     /**
