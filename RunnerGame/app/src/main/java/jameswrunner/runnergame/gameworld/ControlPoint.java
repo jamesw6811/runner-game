@@ -1,10 +1,15 @@
 package jameswrunner.runnergame.gameworld;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.ui.IconGenerator;
 
 /**
  * Created by james on 6/17/2017.
@@ -12,22 +17,24 @@ import com.google.android.gms.maps.model.CircleOptions;
 
 public class ControlPoint {
     public GamePoint position;
-    public Circle circle;
+    public Marker circle;
     public CAPTURESTATUS capturestatus;
     public String name;
+    public String shortName;
 
-    public ControlPoint(GamePoint pos, String n) {
+    public ControlPoint(GamePoint pos, String n, String sn) {
         position = pos;
         capturestatus = CAPTURESTATUS.NEUTRAL;
         name = n;
+        shortName = sn;
     }
 
-    public void updateCaptureStatus(CAPTURESTATUS capstat) {
+    public void updateCaptureStatus(Context context, CAPTURESTATUS capstat) {
         capturestatus = capstat;
-        updateCaptureStatusColor();
+        updateCaptureStatusIcon(context);
     }
 
-    private void updateCaptureStatusColor() {
+    private void updateCaptureStatusIcon(Context context) {
         int color = Color.BLACK;
         switch (capturestatus) {
             case NEUTRAL:
@@ -42,17 +49,20 @@ public class ControlPoint {
         }
 
         if (circle != null) {
-            circle.setFillColor(color);
+            IconGenerator ig = new IconGenerator(context);
+            ig.setColor(color);
+            Bitmap icon = ig.makeIcon(shortName);
+            circle.setIcon(BitmapDescriptorFactory.fromBitmap(icon));
         }
     }
 
-    public void updateMarker(GoogleMap gm, GameBoundaries bounds) {
+    public void updateMarker(Context context, GoogleMap gm, GameBoundaries bounds) {
         if (circle == null) {
-            circle = gm.addCircle(new CircleOptions().center(bounds.gamePointtoLatLng(position))
-                    .radius(10f));
-            updateCaptureStatusColor();
+            MarkerOptions mo = new MarkerOptions().position(bounds.gamePointtoLatLng(position)).visible(true);
+            circle = gm.addMarker(mo);
+            updateCaptureStatusIcon(context);
         } else {
-            circle.setCenter(bounds.gamePointtoLatLng(position));
+            circle.setPosition(bounds.gamePointtoLatLng(position));
         }
     }
 

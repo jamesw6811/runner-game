@@ -34,6 +34,7 @@ public class GameWorld {
     public static final float GAME_WIDTH_METERS = 300;
     public static final float CATCH_RUNNER_DISTANCE_METERS = 20;
     public static final float RUNNER_SPEED = 3f;
+    public static final int ANNOUNCEMENT_PERIOD = 20*1000;
     StraightRunnerAI srai;
     LinkedList<ControlPoint> cplist = new LinkedList<ControlPoint>();
     private GameBoundaries bounds;
@@ -46,6 +47,7 @@ public class GameWorld {
     private Polygon gameBoundsPoly;
     private Circle gameBoundsBottomLeft;
     private TextToSpeech tts;
+    private long lastAnnouncementTime = 0;
 
     public GameWorld(Location center, GoogleMap gm, TextToSpeech tts, Activity act) {
         bounds = new GameBoundaries(locationToLatLng(center), 0, GAME_HEIGHT_METERS, GAME_WIDTH_METERS);
@@ -115,19 +117,19 @@ public class GameWorld {
             cplist.clear();
         }
         List<GamePoint> controlpointpoints = new LinkedList<GamePoint>();
-        controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS / 2, GAME_HEIGHT_METERS / 6));
-        controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS / 3, GAME_HEIGHT_METERS * 2 / 6));
+        controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS * 1 / 2, GAME_HEIGHT_METERS * 1 / 6));
+        controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS * 1 / 3, GAME_HEIGHT_METERS * 2 / 6));
         controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS * 2 / 3, GAME_HEIGHT_METERS * 2 / 6));
         controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS * 1 / 4, GAME_HEIGHT_METERS * 3 / 6));
         controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS * 2 / 4, GAME_HEIGHT_METERS * 3 / 6));
         controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS * 3 / 4, GAME_HEIGHT_METERS * 3 / 6));
         controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS * 2 / 3, GAME_HEIGHT_METERS * 4 / 6));
-        controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS / 3, GAME_HEIGHT_METERS * 4 / 6));
-        controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS / 2, GAME_HEIGHT_METERS * 5 / 6));
+        controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS * 1 / 3, GAME_HEIGHT_METERS * 4 / 6));
+        controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS * 1 / 2, GAME_HEIGHT_METERS * 5 / 6));
 
         int i = 1;
         for (GamePoint gp : controlpointpoints) {
-            cplist.add(new ControlPoint(getNearestGamePointWalkable(gp), "Control Point Number " + i));
+            cplist.add(new ControlPoint(getNearestGamePointWalkable(gp), "Control Point Number " + i, "CP#" + i));
             i += 1;
         }
     }
@@ -163,7 +165,6 @@ public class GameWorld {
         runOnMainThreadBlocking(new Runnable() {
             @Override
             public void run() {
-
                 // Generate AI
                 if (srai == null) {
                     srai = generateNewRunnerAI();
@@ -194,16 +195,16 @@ public class GameWorld {
                             bounds.latLngtoGamePoint(lastPosition),
                             cp.position) < CATCH_RUNNER_DISTANCE_METERS &&
                         cp.capturestatus != ControlPoint.CAPTURESTATUS.OURTEAM) {
-                        cp.updateCaptureStatus(ControlPoint.CAPTURESTATUS.OURTEAM);
+                        cp.updateCaptureStatus(activityContext, ControlPoint.CAPTURESTATUS.OURTEAM);
                         speakTTS("You've captured " + cp.name + "!");
                     } else if (srai != null && bounds.crowDistance(
                             srai.position,
                             cp.position) < CATCH_RUNNER_DISTANCE_METERS &&
                             cp.capturestatus != ControlPoint.CAPTURESTATUS.ENEMYTEAM) {
-                        cp.updateCaptureStatus(ControlPoint.CAPTURESTATUS.ENEMYTEAM);
+                        cp.updateCaptureStatus(activityContext, ControlPoint.CAPTURESTATUS.ENEMYTEAM);
                         speakTTS("AI runner captured " + cp.name + "!");
                     }
-                    cp.updateMarker(googlemap, bounds);
+                    cp.updateMarker(activityContext, googlemap, bounds);
                 }
 
                 // Check player exiting bounds
@@ -213,6 +214,19 @@ public class GameWorld {
                     }
                 }
 
+                // Check announcements
+                if (System.currentTimeMillis() - lastAnnouncementTime > ANNOUNCEMENT_PERIOD){
+                    ControlPoint cp = getClosestUncapturedControlPoint();
+                    if (cp != null) {
+                        speakTTS("The closest uncaptured point is " + cp.name + ", to the " +
+                                bounds.directionOfAngle(bounds.angleBetweenPoints(
+                                        bounds.latLngtoGamePoint(lastPosition), cp.position
+                                )).getName());
+                    }
+                    lastAnnouncementTime = System.currentTimeMillis();
+                }
+
+                // Check win conditions and draw
                 drawCurrentPosition();
                 checkWinConditions();
 
@@ -220,6 +234,21 @@ public class GameWorld {
                 lastLastPosition = lastPosition;
             }
         });
+    }
+
+    private ControlPoint getClosestUncapturedControlPoint() {
+        double min_distance = Double.MAX_VALUE;
+        ControlPoint closest = null;
+        for (ControlPoint cp : cplist) {
+            if (cp.capturestatus != ControlPoint.CAPTURESTATUS.OURTEAM) {
+                double distance = bounds.crowDistance(bounds.latLngtoGamePoint(lastPosition), cp.position);
+                if (distance < min_distance) {
+                    min_distance = distance;
+                    closest = cp;
+                }
+            }
+        }
+        return closest;
     }
 
     private void checkWinConditions() {

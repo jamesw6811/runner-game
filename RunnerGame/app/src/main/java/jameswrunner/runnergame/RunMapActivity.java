@@ -5,8 +5,12 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.AudioAttributes;
+import android.media.AudioFocusRequest;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -39,6 +43,19 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_run_map);
+        initializeTextToSpeechAudio();
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+        startListeningLocation();
+    }
+
+    private void initializeTextToSpeechAudio() {
+        // initialization of the audio attributes and focus request
+        final AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
+
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -48,20 +65,38 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
                 }
             }
         });
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-        startListeningLocation();
+
+        final AudioManager.OnAudioFocusChangeListener afcl = new AudioManager.OnAudioFocusChangeListener() {
+            @Override
+            public void onAudioFocusChange(int focusChange) {
+            }
+        };
+
+        tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+            @Override
+            public void onStart(String utteranceId) {
+                mAudioManager.requestAudioFocus(afcl, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
+            }
+
+            @Override
+            public void onDone(String utteranceId) {
+                mAudioManager.abandonAudioFocus(afcl);
+            }
+
+            @Override
+            public void onError(String utteranceId) {
+
+            }
+        });
     }
 
     @Override
-    public void onPause(){
+    public void onDestroy(){
         if(tts !=null){
             tts.stop();
             tts.shutdown();
         }
-        super.onPause();
+        super.onDestroy();
     }
 
     @Override
