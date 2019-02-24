@@ -92,6 +92,9 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
 
     @Override
     public void onDestroy(){
+        if(gw != null){
+            gw.stopRunning();
+        }
         if(tts !=null){
             tts.stop();
             tts.shutdown();
