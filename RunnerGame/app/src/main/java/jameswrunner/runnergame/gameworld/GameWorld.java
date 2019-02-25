@@ -184,6 +184,7 @@ public class GameWorld {
                                     .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).title("CAUGHT!"));
                     srai.destroy();
                     srai = null;
+                    speakTTS("You captured the AI runner. It ran away!");
                 } else {
                     srai.updateMarker(googlemap, bounds);
                 }
@@ -197,25 +198,28 @@ public class GameWorld {
                         cp.capturestatus != ControlPoint.CAPTURESTATUS.OURTEAM) {
                         cp.updateCaptureStatus(activityContext, ControlPoint.CAPTURESTATUS.OURTEAM);
                         speakTTS("You've captured " + cp.name + "!");
+                        refreshAnnouncement();
                     } else if (srai != null && bounds.crowDistance(
                             srai.position,
                             cp.position) < CATCH_RUNNER_DISTANCE_METERS &&
                             cp.capturestatus != ControlPoint.CAPTURESTATUS.ENEMYTEAM) {
                         cp.updateCaptureStatus(activityContext, ControlPoint.CAPTURESTATUS.ENEMYTEAM);
                         speakTTS("AI runner captured " + cp.name + "!");
+                        refreshAnnouncement();
                     }
                     cp.updateMarker(activityContext, googlemap, bounds);
                 }
 
-                // Check player exiting bounds
-                if (!bounds.withinBounds(bounds.latLngtoGamePoint(lastPosition))) {
-                    if (bounds.withinBounds(bounds.latLngtoGamePoint(lastLastPosition))){
-                        speakTTS("You have left the boundary. Turn around!");
-                    }
-                }
+
 
                 // Check announcements
                 if (System.currentTimeMillis() - lastAnnouncementTime > ANNOUNCEMENT_PERIOD){
+                    // Check player exiting bounds
+                    if (!bounds.withinBounds(bounds.latLngtoGamePoint(lastPosition))) {
+                        speakTTS("You have left the boundary. Turn around!");
+                    }
+
+                    // Announce closest control point
                     ControlPoint cp = getClosestUncapturedControlPoint();
                     if (cp != null) {
                         speakTTS("The closest uncaptured point is " + cp.name + ", to the " +
@@ -223,6 +227,7 @@ public class GameWorld {
                                         bounds.latLngtoGamePoint(lastPosition), cp.position
                                 )).getName());
                     }
+
                     lastAnnouncementTime = System.currentTimeMillis();
                 }
 
@@ -234,6 +239,10 @@ public class GameWorld {
                 lastLastPosition = lastPosition;
             }
         });
+    }
+
+    private void refreshAnnouncement(){
+        lastAnnouncementTime = 0;
     }
 
     private ControlPoint getClosestUncapturedControlPoint() {
