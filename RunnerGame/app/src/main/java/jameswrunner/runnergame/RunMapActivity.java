@@ -33,6 +33,10 @@ import jameswrunner.runnergame.gameworld.GameWorld;
 
 import static jameswrunner.runnergame.maputils.MapUtilities.locationToLatLng;
 
+//TODO: Migrate to gameworld and location listening being run in a foreground service so it works even while changing music, etc..
+//TODO: Work on navigation - maybe a beeping sound? or maybe naming locations and having less of them?
+//TODO: Move away from Google Roads API - maybe the user sets up their own base as part of the jog?
+
 public class RunMapActivity extends FragmentActivity implements OnMapReadyCallback {
     public static final float MINIMUM_ACCURACY_REQUIRED = 25f;
 
