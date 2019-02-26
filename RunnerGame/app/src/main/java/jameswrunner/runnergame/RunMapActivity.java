@@ -18,7 +18,9 @@ import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -42,9 +44,12 @@ import static jameswrunner.runnergame.maputils.MapUtilities.locationToLatLng;
 
 //TODO: Work on navigation - maybe a beeping sound? or maybe naming locations and having less of them?
 //TODO: Move away from Google Roads API - maybe the user sets up their own base as part of the jog?
+//TODO: Add controls from earphone buttons
+
 
 public class RunMapActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private Button button_quit;
     private GoogleMap mMap;
     SupportMapFragment mapFragment;
 
@@ -84,6 +89,16 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        button_quit = findViewById(R.id.button_quit);
+        button_quit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (gameService != null){
+                    gameService.finish();
+                }
+                finish();
+            }
+        });
     }
 
     @Override
