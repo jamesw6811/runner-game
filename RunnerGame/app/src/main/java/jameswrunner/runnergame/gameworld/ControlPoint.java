@@ -6,35 +6,35 @@ import android.graphics.Color;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
+
+import jameswrunner.runnergame.GameService;
 
 /**
  * Created by james on 6/17/2017.
  */
 
-public class ControlPoint {
-    public GamePoint position;
-    public Marker circle;
+public class ControlPoint extends GameObject {
+    public Marker marker;
     public CAPTURESTATUS capturestatus;
     public String name;
     public String shortName;
 
-    public ControlPoint(GamePoint pos, String n, String sn) {
+    public ControlPoint(GameWorld gw, GamePoint pos, String n, String sn) {
+        super(gw);
         position = pos;
         capturestatus = CAPTURESTATUS.NEUTRAL;
         name = n;
         shortName = sn;
     }
 
-    public void updateCaptureStatus(Context context, CAPTURESTATUS capstat) {
+    public void updateCaptureStatus(CAPTURESTATUS capstat) {
         capturestatus = capstat;
-        updateCaptureStatusIcon(context);
     }
 
-    private void updateCaptureStatusIcon(Context context) {
+    private synchronized void updateCaptureStatusIcon(Context context) {
         int color = Color.BLACK;
         switch (capturestatus) {
             case NEUTRAL:
@@ -48,26 +48,31 @@ public class ControlPoint {
                 break;
         }
 
-        if (circle != null) {
+        if (marker != null) {
             IconGenerator ig = new IconGenerator(context);
             ig.setColor(color);
             Bitmap icon = ig.makeIcon(shortName);
-            circle.setIcon(BitmapDescriptorFactory.fromBitmap(icon));
+            marker.setIcon(BitmapDescriptorFactory.fromBitmap(icon));
         }
     }
 
-    public void updateMarker(Context context, GoogleMap gm, GameBoundaries bounds) {
-        if (circle == null) {
+    protected synchronized void clearMarkerState(){
+        marker = null;
+    }
+
+    @Override
+    protected synchronized void removeMarker() {
+        if (marker != null) marker.remove();
+    }
+
+    protected synchronized void drawMarker(GameService gs, GoogleMap map, GameBoundaries bounds){
+        if (marker == null) {
             MarkerOptions mo = new MarkerOptions().position(bounds.gamePointtoLatLng(position)).visible(true);
-            circle = gm.addMarker(mo);
-            updateCaptureStatusIcon(context);
+            marker = map.addMarker(mo);
         } else {
-            circle.setPosition(bounds.gamePointtoLatLng(position));
+            marker.setPosition(bounds.gamePointtoLatLng(position));
         }
-    }
-
-    public void destroy() {
-        if (circle != null) circle.remove();
+        updateCaptureStatusIcon(gs);
     }
 
     public enum CAPTURESTATUS {

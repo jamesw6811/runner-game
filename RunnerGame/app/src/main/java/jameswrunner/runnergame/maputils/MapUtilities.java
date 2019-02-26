@@ -1,6 +1,7 @@
 package jameswrunner.runnergame.maputils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -19,7 +20,7 @@ import jameswrunner.runnergame.R;
 
 public class MapUtilities {
 
-    public static GeoApiContext getGeoContext(Activity act) {
+    public static GeoApiContext getGeoContext(Context act) {
         GeoApiContext geoApiContext = new GeoApiContext();
         geoApiContext.setApiKey(act.getString(R.string.google_maps_key));
         return geoApiContext;
@@ -36,7 +37,7 @@ public class MapUtilities {
         return ll;
     }
 
-    public static LatLng snapToRoad(Activity act, LatLng ll) throws Exception {
+    public static LatLng snapToRoad(Context act, LatLng ll) throws Exception {
         com.google.maps.model.LatLng modelLl = new com.google.maps.model.LatLng(ll.latitude, ll.longitude);
         SnappedPoint[] sps = RoadsApi.snapToRoads(getGeoContext(act), true, modelLl).await();
         if (sps.length > 0) {

@@ -16,13 +16,15 @@ import static jameswrunner.runnergame.maputils.MapUtilities.mapHeadingToGameHead
 
 public class GameBoundaries {
     public static final String LOGTAG = "GameBoundaries";
-    public double height;
-    public double width;
-    protected LatLng bottomLeft;
-    protected double offsetAngle;
-    private List<LatLng> corners;
+    public final double height;
+    public final double width;
+    protected final LatLng bottomLeft;
+    protected final double offsetAngle;
+    private final List<LatLng> corners;
+    private final LatLng center;
 
     public GameBoundaries(LatLng center, double offsetAngle, double height, double width) {
+        this.center = center;
         this.offsetAngle = offsetAngle;
         this.height = height;
         this.width = width;
@@ -30,16 +32,13 @@ public class GameBoundaries {
         double cornerDistance = Math.sqrt(Math.pow(height / 2, 2) + Math.pow(width / 2, 2));
         bottomLeft = SphericalUtil.computeOffset(center, cornerDistance,
                 gameHeadingToMapHeading(aspectAngle + 180 + offsetAngle));
-        initializeCorners();
-    }
-
-    private void initializeCorners() {
         corners = new LinkedList<LatLng>();
         corners.add(bottomLeft);
         corners.add(gamePointtoLatLng(new GamePoint(0, (float) height)));
         corners.add(gamePointtoLatLng(new GamePoint((float) width, (float) height)));
         corners.add(gamePointtoLatLng(new GamePoint((float) width, 0)));
     }
+
 
     public GamePoint latLngtoGamePoint(LatLng ll) {
         double distance = SphericalUtil.computeDistanceBetween(bottomLeft, ll);
@@ -147,6 +146,10 @@ public class GameBoundaries {
 
     public double crowDistance(GamePoint gp1, GamePoint gp2) {
         return Math.sqrt(Math.pow(gp1.x - gp2.x, 2) + Math.pow(gp1.y - gp2.y, 2));
+    }
+
+    public LatLng getCenter() {
+        return center;
     }
 
     public enum DIRECTION {

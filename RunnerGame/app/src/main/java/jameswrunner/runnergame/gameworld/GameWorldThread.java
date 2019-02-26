@@ -33,11 +33,7 @@ public class GameWorldThread extends Thread {
         while (running) {
             lastTime = startTime;
             startTime = System.currentTimeMillis();
-            try {
-                gw.tickTime(((float) (startTime - lastTime)) / 1000f);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            gw.tickTime(((float) (startTime - lastTime)) / 1000f);
             sleepTime = ticksPS - (System.currentTimeMillis() - startTime);
             try {
                 if (sleepTime > 0)
