@@ -13,6 +13,7 @@ import android.location.Location;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
@@ -24,6 +25,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import jameswrunner.runnergame.gameworld.GameWorld;
+import jameswrunner.runnergame.sound.ToneRunner;
 
 import android.provider.MediaStore;
 import android.speech.tts.TextToSpeech;
@@ -65,6 +67,7 @@ public class GameService extends Service {
 
     private static final int NOTIFICATION_ID = 1;
 
+
     // Check for orientation change
     private boolean mChangingConfiguration = false;
 
@@ -83,6 +86,8 @@ public class GameService extends Service {
     private RunMapActivity mActivity;
 
     private TextToSpeech tts;
+
+    private ToneRunner toner;
 
     private GameWorld gw;
 
@@ -107,6 +112,7 @@ public class GameService extends Service {
         HandlerThread handlerThread = new HandlerThread(LOGTAG);
         handlerThread.start();
         mServiceHandler = new Handler(handlerThread.getLooper());
+
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         // Android O requires a Notification Channel.
@@ -121,6 +127,7 @@ public class GameService extends Service {
         }
 
         initializeTextToSpeechAudio();
+        toner = new ToneRunner();
         requestLocationUpdates();
     }
 
@@ -199,6 +206,10 @@ public class GameService extends Service {
         if(tts !=null){
             tts.stop();
             tts.shutdown();
+        }
+        if(toner != null){
+            toner.stopTone();
+            toner.release();
         }
         mServiceHandler.removeCallbacksAndMessages(null);
     }
@@ -384,12 +395,17 @@ public class GameService extends Service {
         });
     }
 
+
     public boolean passMapUpdate(RunMapActivity.MapUpdate mu){
         if (mActivity != null){
             mActivity.processMapUpdate(mu);
             return true;
         }
         return false;
+    }
+
+    public ToneRunner getToneRunner(){
+        return toner;
     }
 
     public void finish(){

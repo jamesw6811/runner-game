@@ -42,9 +42,12 @@ import jameswrunner.runnergame.gameworld.GameWorld;
 
 import static jameswrunner.runnergame.maputils.MapUtilities.locationToLatLng;
 
-//TODO: Work on navigation - maybe a beeping sound? or maybe naming locations and having less of them?
 //TODO: Move away from Google Roads API - maybe the user sets up their own base as part of the jog?
 //TODO: Add controls from earphone buttons
+//TODO: Add varied control points, strategic game
+//TODO: Add menu
+//TODO: Add persistent map between sessions
+
 
 
 public class RunMapActivity extends FragmentActivity implements OnMapReadyCallback {

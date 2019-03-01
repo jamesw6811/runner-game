@@ -4,24 +4,19 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.location.Location;
-import android.os.Handler;
-import android.os.Looper;
 import android.speech.tts.TextToSpeech;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 import jameswrunner.runnergame.GameService;
 import jameswrunner.runnergame.RunMapActivity;
@@ -39,6 +34,7 @@ public class GameWorld {
     public static final float CATCH_RUNNER_DISTANCE_METERS = 20;
     public static final float RUNNER_SPEED = 3f;
     public static final int ANNOUNCEMENT_PERIOD = 20*1000;
+    public static final double NAV_BEEP_PERIOD_MULTIPLIER = 2500.0 / 300.0; // millis period per meter
     StraightRunnerAI srai;
     LinkedList<ControlPoint> cplist = new LinkedList<ControlPoint>();
     ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
@@ -52,6 +48,7 @@ public class GameWorld {
     private Circle gameBoundsBottomLeft;
     private TextToSpeech tts;
     private long lastAnnouncementTime = 0;
+    private long lastNavBeepTime = 0;
 
     public GameWorld(Location center, TextToSpeech tts, GameService gs) {
         bounds = new GameBoundaries(locationToLatLng(center), 0, GAME_HEIGHT_METERS, GAME_WIDTH_METERS);
@@ -136,15 +133,15 @@ public class GameWorld {
             cplist.clear();
         }
         List<GamePoint> controlpointpoints = new LinkedList<GamePoint>();
-        controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS * 1 / 2, GAME_HEIGHT_METERS * 1 / 6));
+        //controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS * 1 / 2, GAME_HEIGHT_METERS * 1 / 6));
         controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS * 1 / 3, GAME_HEIGHT_METERS * 2 / 6));
-        controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS * 2 / 3, GAME_HEIGHT_METERS * 2 / 6));
+        //controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS * 2 / 3, GAME_HEIGHT_METERS * 2 / 6));
         controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS * 1 / 4, GAME_HEIGHT_METERS * 3 / 6));
-        controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS * 2 / 4, GAME_HEIGHT_METERS * 3 / 6));
+        //controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS * 2 / 4, GAME_HEIGHT_METERS * 3 / 6));
         controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS * 3 / 4, GAME_HEIGHT_METERS * 3 / 6));
-        controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS * 2 / 3, GAME_HEIGHT_METERS * 4 / 6));
+        //controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS * 2 / 3, GAME_HEIGHT_METERS * 4 / 6));
         controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS * 1 / 3, GAME_HEIGHT_METERS * 4 / 6));
-        controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS * 1 / 2, GAME_HEIGHT_METERS * 5 / 6));
+        //controlpointpoints.add(new GamePoint(GAME_WIDTH_METERS * 1 / 2, GAME_HEIGHT_METERS * 5 / 6));
 
         int i = 1;
         for (GamePoint gp : controlpointpoints) {
@@ -223,7 +220,12 @@ public class GameWorld {
                 cp.updateMarker(gameService, bounds);
             }
 
-
+            // Check nav beep
+            if (srai != null) {
+                double ai_distance = bounds.crowDistance(bounds.latLngtoGamePoint(lastPosition),
+                        srai.position);
+                gameService.getToneRunner().playTone((int) (ai_distance * NAV_BEEP_PERIOD_MULTIPLIER));
+            }
 
             // Check announcements
             if (System.currentTimeMillis() - lastAnnouncementTime > ANNOUNCEMENT_PERIOD){
