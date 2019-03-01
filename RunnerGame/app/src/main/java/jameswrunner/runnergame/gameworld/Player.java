@@ -12,7 +12,7 @@ import jameswrunner.runnergame.GameService;
  * Created by james on 6/17/2017.
  */
 
-public class Player extends GameObject{
+public class Player extends GameObject {
     public Circle circle;
 
     public Player(GameWorld gw, GamePoint gp) {

@@ -56,7 +56,7 @@ public class ControlPoint extends GameObject {
         }
     }
 
-    protected synchronized void clearMarkerState(){
+    protected synchronized void clearMarkerState() {
         marker = null;
     }
 
@@ -65,7 +65,7 @@ public class ControlPoint extends GameObject {
         if (marker != null) marker.remove();
     }
 
-    protected synchronized void drawMarker(GameService gs, GoogleMap map, GameBoundaries bounds){
+    protected synchronized void drawMarker(GameService gs, GoogleMap map, GameBoundaries bounds) {
         if (marker == null) {
             MarkerOptions mo = new MarkerOptions().position(bounds.gamePointtoLatLng(position)).visible(true);
             marker = map.addMarker(mo);

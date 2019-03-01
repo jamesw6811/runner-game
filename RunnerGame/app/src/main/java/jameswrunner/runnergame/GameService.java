@@ -10,27 +10,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.Location;
-import android.media.AudioAttributes;
-import android.media.AudioFocusRequest;
-import android.media.AudioManager;
-import android.media.ToneGenerator;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
-import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import jameswrunner.runnergame.gameworld.GameWorld;
-import jameswrunner.runnergame.sound.TextToSpeechRunner;
-import jameswrunner.runnergame.sound.ToneRunner;
-
-import android.provider.MediaStore;
-import android.speech.tts.TextToSpeech;
-import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -38,58 +23,38 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import static jameswrunner.runnergame.maputils.MapUtilities.locationToLatLng;
+import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import jameswrunner.runnergame.gameworld.GameWorld;
+import jameswrunner.runnergame.sound.TextToSpeechRunner;
+import jameswrunner.runnergame.sound.ToneRunner;
 
 public class GameService extends Service {
     public static final float MINIMUM_ACCURACY_REQUIRED = 25f;
-
     private static final String LOGTAG = GameService.class.getName();
-
     private static final String PACKAGE_NAME =
-            "app.jamesw.jameswrunner.runnergame."+LOGTAG;
-
+            "app.jamesw.jameswrunner.runnergame." + LOGTAG;
     private static final String CHANNEL_ID = "gameservice_notifications";
-
     private static final String EXTRA_STARTED_FROM_NOTIFICATION = PACKAGE_NAME +
             ".started_from_notification";
-
-    private final IBinder mBinder = new LocalBinder();
-
     private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 500;
-
     private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
-
     private static final int NOTIFICATION_ID = 1;
-
-
-    // Check for orientation change
+    private final IBinder mBinder = new LocalBinder();
     private boolean mChangingConfiguration = false;
-
     private NotificationManager mNotificationManager;
-
     private LocationRequest mLocationRequest;
-
     private FusedLocationProviderClient mFusedLocationClient;
-
     private LocationCallback mLocationCallback;
-
     private Handler mServiceHandler;
-
     private Location mLocation;
-
     private RunMapActivity mActivity;
-
     private TextToSpeechRunner ttser;
-
     private ToneRunner toner;
-
     private GameWorld gw;
 
     public GameService() {
@@ -163,7 +128,7 @@ public class GameService extends Service {
         return mBinder;
     }
 
-    public void setActivity(RunMapActivity act){
+    public void setActivity(RunMapActivity act) {
         this.mActivity = act;
     }
 
@@ -177,7 +142,7 @@ public class GameService extends Service {
         super.onRebind(intent);
     }
 
-    private void onAllBind(){
+    private void onAllBind() {
         stopForeground(true);
         mChangingConfiguration = false;
         if (gw != null) gw.refreshUIState();
@@ -201,14 +166,14 @@ public class GameService extends Service {
 
     @Override
     public void onDestroy() {
-        if(gw != null){
+        if (gw != null) {
             gw.stopRunning();
         }
-        if(ttser !=null){
+        if (ttser != null) {
             ttser.stopSpeech();
             ttser.release();
         }
-        if(toner != null){
+        if (toner != null) {
             toner.stopTone();
             toner.release();
         }
@@ -315,16 +280,6 @@ public class GameService extends Service {
     }
 
     /**
-     * Class used for the client Binder.  Since this service runs in the same process as its
-     * clients, we don't need to deal with IPC.
-     */
-    public class LocalBinder extends Binder {
-        GameService getService() {
-            return GameService.this;
-        }
-    }
-
-    /**
      * Returns true if this is a foreground service.
      *
      * @param context The {@link Context}.
@@ -343,26 +298,37 @@ public class GameService extends Service {
         return false;
     }
 
-
-    public boolean passMapUpdate(RunMapActivity.MapUpdate mu){
-        if (mActivity != null){
+    public boolean passMapUpdate(RunMapActivity.MapUpdate mu) {
+        if (mActivity != null) {
             mActivity.processMapUpdate(mu);
             return true;
         }
         return false;
     }
 
-    public TextToSpeechRunner getTTSRunner() { return ttser; }
+    public TextToSpeechRunner getTTSRunner() {
+        return ttser;
+    }
 
-    public ToneRunner getToneRunner(){
+    public ToneRunner getToneRunner() {
         return toner;
     }
 
-    public void finish(){
-        if (mActivity != null){
+    public void finish() {
+        if (mActivity != null) {
             mActivity.finish();
         }
         this.stopSelf();
+    }
+
+    /**
+     * Class used for the client Binder.  Since this service runs in the same process as its
+     * clients, we don't need to deal with IPC.
+     */
+    public class LocalBinder extends Binder {
+        GameService getService() {
+            return GameService.this;
+        }
     }
 
 }

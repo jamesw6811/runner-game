@@ -1,6 +1,5 @@
 package jameswrunner.runnergame.maputils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 

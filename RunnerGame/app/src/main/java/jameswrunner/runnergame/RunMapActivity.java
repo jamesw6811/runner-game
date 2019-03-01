@@ -1,46 +1,25 @@
 package jameswrunner.runnergame;
 
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.media.AudioAttributes;
-import android.media.AudioFocusRequest;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.speech.tts.TextToSpeech;
-import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import jameswrunner.runnergame.gameworld.GameWorld;
-
-import static jameswrunner.runnergame.maputils.MapUtilities.locationToLatLng;
 
 //TODO: Move away from Google Roads API - maybe the user sets up their own base as part of the jog?
 //TODO: Add controls from earphone buttons
@@ -49,17 +28,13 @@ import static jameswrunner.runnergame.maputils.MapUtilities.locationToLatLng;
 //TODO: Add persistent map between sessions
 
 
-
 public class RunMapActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private static final String LOGTAG = RunMapActivity.class.getName();
+    SupportMapFragment mapFragment;
     private Button button_quit;
     private GoogleMap mMap;
-    SupportMapFragment mapFragment;
-
     private Marker lastOpened;
-
-    private static final String LOGTAG = RunMapActivity.class.getName();
-
     // A reference to the service used to get location updates.
     private GameService gameService = null;
 
@@ -96,7 +71,7 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         button_quit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (gameService != null){
+                if (gameService != null) {
                     gameService.finish();
                 }
                 finish();
@@ -133,10 +108,9 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
     }
-
 
 
     @Override
@@ -144,7 +118,7 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         bindGameService();
     }
 
-    private void bindGameService(){
+    private void bindGameService() {
         Log.d(LOGTAG, "Binding GameService");
         // Bind to the service. If the service is in foreground mode, this signals to the service
         // that since this activity is in the foreground, the service can exit foreground mode.
@@ -205,12 +179,12 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         toast.show();
     }
 
-    public void processMapUpdate(MapUpdate mu){
+    public void processMapUpdate(MapUpdate mu) {
         runOnUiThread(mu.getRunnable(mMap));
     }
 
     public abstract static class MapUpdate {
-        public Runnable getRunnable(final GoogleMap gm){
+        public Runnable getRunnable(final GoogleMap gm) {
             return new Runnable() {
                 @Override
                 public void run() {

@@ -95,9 +95,9 @@ public class GameBoundaries {
     }
 
     public DIRECTION directionOfAngle(float d) {
-        float d_mod = d%360;
+        float d_mod = d % 360;
         if (d_mod < 0) d_mod += 360;
-        int d_round = (int)Math.round(d_mod/45.0);
+        int d_round = (int) Math.round(d_mod / 45.0);
 
         switch (d_round) {
             case 0:
@@ -123,8 +123,8 @@ public class GameBoundaries {
         }
     }
 
-    public float angleBetweenPoints(GamePoint from, GamePoint to){
-        return (float)(Math.atan2(to.y-from.y, to.x-from.x) * 180 / (Math.PI));
+    public float angleBetweenPoints(GamePoint from, GamePoint to) {
+        return (float) (Math.atan2(to.y - from.y, to.x - from.x) * 180 / (Math.PI));
     }
 
     public GameHeading getSemiRandomHeading(DIRECTION d) {
@@ -177,6 +177,7 @@ public class GameBoundaries {
         public String getName() {
             return name;
         }
+
         public float getAngle() {
             return angle;
         }

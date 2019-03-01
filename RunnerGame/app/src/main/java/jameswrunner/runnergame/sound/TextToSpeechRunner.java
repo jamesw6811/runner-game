@@ -9,7 +9,7 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 
-public class TextToSpeechRunner  {
+public class TextToSpeechRunner {
     private static final String LOGTAG = TextToSpeechRunner.class.getName();
     private TextToSpeech tts;
     private AudioManager mAudioManager;
@@ -23,23 +23,24 @@ public class TextToSpeechRunner  {
         tts.setOnUtteranceProgressListener(listener);
     }
 
-    public void addSpeech(CharSequence toSay){
+    public void addSpeech(CharSequence toSay) {
         tts.speak(toSay, TextToSpeech.QUEUE_ADD, null, LOGTAG);
     }
 
-    public void stopSpeech(){
+    public void stopSpeech() {
         tts.stop();
     }
 
-    public void release(){
+    public void release() {
         stopSpeech();
         tts.shutdown();
         mAudioManager.abandonAudioFocus(listener);
     }
 
-    private class TTSRunnerListener extends UtteranceProgressListener implements AudioManager.OnAudioFocusChangeListener, TextToSpeech.OnInitListener{
+    private class TTSRunnerListener extends UtteranceProgressListener implements AudioManager.OnAudioFocusChangeListener, TextToSpeech.OnInitListener {
         final TextToSpeechRunner ttsr;
-        TTSRunnerListener(){
+
+        TTSRunnerListener() {
             this.ttsr = TextToSpeechRunner.this;
         }
 
@@ -74,8 +75,8 @@ public class TextToSpeechRunner  {
 
         @Override
         public void onInit(int status) {
-            Log.d(LOGTAG, "TextToSpeech initialized with status:"+status);
-            if (status != TextToSpeech.ERROR){
+            Log.d(LOGTAG, "TextToSpeech initialized with status:" + status);
+            if (status != TextToSpeech.ERROR) {
                 Log.d(LOGTAG, "TextToSpeech no error");
             }
         }

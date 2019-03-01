@@ -12,7 +12,7 @@ import jameswrunner.runnergame.GameService;
  * Created by james on 6/17/2017.
  */
 
-public class StraightRunnerAI extends GameObject{
+public class StraightRunnerAI extends GameObject {
     public GameHeading heading;
     public float speed;
     public Circle circle;
