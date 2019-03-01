@@ -25,6 +25,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import jameswrunner.runnergame.gameworld.GameWorld;
+import jameswrunner.runnergame.sound.TextToSpeechRunner;
 import jameswrunner.runnergame.sound.ToneRunner;
 
 import android.provider.MediaStore;
@@ -85,7 +86,7 @@ public class GameService extends Service {
 
     private RunMapActivity mActivity;
 
-    private TextToSpeech tts;
+    private TextToSpeechRunner ttser;
 
     private ToneRunner toner;
 
@@ -126,7 +127,7 @@ public class GameService extends Service {
             mNotificationManager.createNotificationChannel(mChannel);
         }
 
-        initializeTextToSpeechAudio();
+        ttser = new TextToSpeechRunner(this);
         toner = new ToneRunner();
         requestLocationUpdates();
     }
@@ -203,9 +204,9 @@ public class GameService extends Service {
         if(gw != null){
             gw.stopRunning();
         }
-        if(tts !=null){
-            tts.stop();
-            tts.shutdown();
+        if(ttser !=null){
+            ttser.stopSpeech();
+            ttser.release();
         }
         if(toner != null){
             toner.stopTone();
@@ -295,7 +296,7 @@ public class GameService extends Service {
 
         if (location.getAccuracy() < MINIMUM_ACCURACY_REQUIRED) {
             if (gw == null) {
-                gw = new GameWorld(location, tts, this);
+                gw = new GameWorld(location, this);
                 gw.initializeAndStartRunning();
             }
             gw.updatePlayerLocation(location);
@@ -342,59 +343,6 @@ public class GameService extends Service {
         return false;
     }
 
-    private void initializeTextToSpeechAudio() {
-        // initialization of the audio attributes and focus request
-        final AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-
-
-        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                Log.d(this.getClass().getName(), "TextToSpeech initialized with status:"+status);
-                if (status != TextToSpeech.ERROR){
-                    Log.d(this.getClass().getName(), "TextToSpeech no error");
-                }
-            }
-        });
-
-        final AudioManager.OnAudioFocusChangeListener afcl = new AudioManager.OnAudioFocusChangeListener() {
-            @Override
-            public void onAudioFocusChange(int focusChange) {
-            }
-        };
-
-        tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
-            @Override
-            public void onStart(String utteranceId) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    AudioAttributes mPlaybackAttributes = new AudioAttributes.Builder()
-                            .setUsage(AudioAttributes.USAGE_MEDIA)
-                            .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-                            .build();
-                    AudioFocusRequest mFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
-                            .setAudioAttributes(mPlaybackAttributes)
-                            .setAcceptsDelayedFocusGain(true)
-                            .setWillPauseWhenDucked(true)
-                            .setOnAudioFocusChangeListener(afcl)
-                            .build();
-                    mAudioManager.requestAudioFocus(mFocusRequest);
-                } else {
-                    mAudioManager.requestAudioFocus(afcl, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
-                }
-            }
-
-            @Override
-            public void onDone(String utteranceId) {
-                mAudioManager.abandonAudioFocus(afcl);
-            }
-
-            @Override
-            public void onError(String utteranceId) {
-
-            }
-        });
-    }
-
 
     public boolean passMapUpdate(RunMapActivity.MapUpdate mu){
         if (mActivity != null){
@@ -403,6 +351,8 @@ public class GameService extends Service {
         }
         return false;
     }
+
+    public TextToSpeechRunner getTTSRunner() { return ttser; }
 
     public ToneRunner getToneRunner(){
         return toner;

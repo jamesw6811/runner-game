@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.location.Location;
-import android.speech.tts.TextToSpeech;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,6 +36,8 @@ public class GameWorld {
     public static final double NAV_BEEP_PERIOD_MULTIPLIER = 2500.0 / 300.0; // millis period per meter
     StraightRunnerAI srai;
     LinkedList<ControlPoint> cplist = new LinkedList<ControlPoint>();
+
+
     ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
     private GameBoundaries bounds;
     private LatLng lastPosition;
@@ -44,20 +45,19 @@ public class GameWorld {
     private GameWorldThread gameWorldThread;
     private GameService gameService;
     private Player player;
+    private GameObject navTarget;
     private Polygon gameBoundsPoly;
     private Circle gameBoundsBottomLeft;
-    private TextToSpeech tts;
     private long lastAnnouncementTime = 0;
     private long lastNavBeepTime = 0;
 
-    public GameWorld(Location center, TextToSpeech tts, GameService gs) {
+    public GameWorld(Location center, GameService gs) {
         bounds = new GameBoundaries(locationToLatLng(center), 0, GAME_HEIGHT_METERS, GAME_WIDTH_METERS);
         gameService = gs;
-        this.tts = tts;
     }
 
     private void speakTTS(CharSequence speech){
-        tts.speak(speech, TextToSpeech.QUEUE_ADD, null, "RunMapVoice");
+        gameService.getTTSRunner().addSpeech(speech);
     }
 
     private void focusCameraOnBounds(){
