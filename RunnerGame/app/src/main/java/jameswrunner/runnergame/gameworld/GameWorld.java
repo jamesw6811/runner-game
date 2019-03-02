@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.location.Location;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import jameswrunner.runnergame.GameService;
 import jameswrunner.runnergame.RunMapActivity;
+import jameswrunner.runnergame.controls.RunningMediaController;
 
 import static jameswrunner.runnergame.maputils.MapUtilities.locationToLatLng;
 import static jameswrunner.runnergame.maputils.MapUtilities.snapToRoad;
@@ -34,6 +36,7 @@ public class GameWorld {
     public static final float RUNNER_SPEED = 3f;
     public static final int ANNOUNCEMENT_PERIOD = 20 * 1000;
     public static final double NAV_BEEP_PERIOD_MULTIPLIER = 2500.0 / 300.0; // millis period per meter
+    private static final String LOGTAG = GameWorld.class.getName();
     StraightRunnerAI srai;
     LinkedList<ControlPoint> cplist = new LinkedList<ControlPoint>();
 
@@ -178,6 +181,15 @@ public class GameWorld {
     }
 
     public synchronized void tickTime(final float time) {
+        // Get input
+        RunningMediaController.ClickState clickState = gameService.getController().getClickState(true);
+        if (clickState.singleClicked) {
+            Log.d(LOGTAG, "Single clicked!");
+        }
+        if (clickState.doubleClicked) {
+            Log.d(LOGTAG, "Double clicked!");
+        }
+
         // Generate AI
         if (srai == null) {
             srai = generateNewRunnerAI();

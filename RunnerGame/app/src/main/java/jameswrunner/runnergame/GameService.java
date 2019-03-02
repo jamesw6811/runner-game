@@ -1,22 +1,25 @@
 package jameswrunner.runnergame;
 
-import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.Location;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
+import android.view.KeyEvent;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -28,6 +31,8 @@ import com.google.android.gms.tasks.Task;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+import androidx.media.session.MediaButtonReceiver;
+import jameswrunner.runnergame.controls.RunningMediaController;
 import jameswrunner.runnergame.gameworld.GameWorld;
 import jameswrunner.runnergame.sound.TextToSpeechRunner;
 import jameswrunner.runnergame.sound.ToneRunner;
@@ -45,7 +50,6 @@ public class GameService extends Service {
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
     private static final int NOTIFICATION_ID = 1;
     private final IBinder mBinder = new LocalBinder();
-    private boolean mChangingConfiguration = false;
     private NotificationManager mNotificationManager;
     private LocationRequest mLocationRequest;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -55,13 +59,16 @@ public class GameService extends Service {
     private RunMapActivity mActivity;
     private TextToSpeechRunner ttser;
     private ToneRunner toner;
+    private RunningMediaController controller;
     private GameWorld gw;
+    private boolean uiBound;
 
     public GameService() {
     }
 
     @Override
     public void onCreate() {
+        uiBound = false;
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         mLocationCallback = new LocationCallback() {
@@ -94,20 +101,26 @@ public class GameService extends Service {
 
         ttser = new TextToSpeechRunner(this);
         toner = new ToneRunner();
+        controller = new RunningMediaController(this);
         requestLocationUpdates();
     }
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(LOGTAG, "Service started");
+
+        MediaButtonReceiver.handleIntent(controller.getMediaSession(), intent);
         boolean startedFromNotification = intent.getBooleanExtra(EXTRA_STARTED_FROM_NOTIFICATION,
                 false);
-
         // We got here because the user decided to remove location updates from the notification.
         if (startedFromNotification) {
             removeLocationUpdates();
             stopSelf();
+        } else {
+            startForeground(NOTIFICATION_ID, getNotification());
         }
+
         // Tells the system to not try to recreate the service after it has been killed.
         return START_NOT_STICKY;
     }
@@ -115,7 +128,6 @@ public class GameService extends Service {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        mChangingConfiguration = true;
     }
 
     @Override
@@ -128,8 +140,10 @@ public class GameService extends Service {
         return mBinder;
     }
 
-    public void setActivity(RunMapActivity act) {
+    public void bindUI(RunMapActivity act) {
         this.mActivity = act;
+        uiBound = true;
+        if (gw != null) gw.refreshUIState();
     }
 
     @Override
@@ -143,29 +157,22 @@ public class GameService extends Service {
     }
 
     private void onAllBind() {
-        stopForeground(true);
-        mChangingConfiguration = false;
-        if (gw != null) gw.refreshUIState();
+        controller.refreshPriority();
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
         Log.i(LOGTAG, "Last client unbound from service");
-
-        // Called when the last client (MainActivity in case of this sample) unbinds from this
-        // service. If this method is called due to a configuration change in MainActivity, we
-        // do nothing. Otherwise, we make this service a foreground service.
-        mActivity = null;
-        if (!mChangingConfiguration) {
-            Log.i(LOGTAG, "Starting foreground service");
-            startForeground(NOTIFICATION_ID, getNotification());
-        }
+        uiBound = false;
         if (gw != null) gw.clearUIState();
         return true; // Ensures onRebind() is called when a client re-binds.
     }
 
     @Override
     public void onDestroy() {
+        if (controller != null){
+            controller.release();
+        }
         if (gw != null) {
             gw.stopRunning();
         }
@@ -279,27 +286,8 @@ public class GameService extends Service {
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
-    /**
-     * Returns true if this is a foreground service.
-     *
-     * @param context The {@link Context}.
-     */
-    public boolean serviceIsRunningInForeground(Context context) {
-        ActivityManager manager = (ActivityManager) context.getSystemService(
-                Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(
-                Integer.MAX_VALUE)) {
-            if (getClass().getName().equals(service.service.getClassName())) {
-                if (service.foreground) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     public boolean passMapUpdate(RunMapActivity.MapUpdate mu) {
-        if (mActivity != null) {
+        if (mActivity != null && uiBound) {
             mActivity.processMapUpdate(mu);
             return true;
         }
@@ -313,6 +301,8 @@ public class GameService extends Service {
     public ToneRunner getToneRunner() {
         return toner;
     }
+
+    public RunningMediaController getController() { return controller; }
 
     public void finish() {
         if (mActivity != null) {

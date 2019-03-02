@@ -40,6 +40,7 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
 
     // Tracks the bound state of the service.
     private boolean mBound = false;
+    private boolean mMapReady = false;
 
     // Monitors the state of the connection to the service.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -48,7 +49,7 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         public void onServiceConnected(ComponentName name, IBinder service) {
             GameService.LocalBinder binder = (GameService.LocalBinder) service;
             gameService = binder.getService();
-            gameService.setActivity(RunMapActivity.this);
+            gameService.bindUI(RunMapActivity.this);
             mBound = true;
         }
 
@@ -120,8 +121,6 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
 
     private void bindGameService() {
         Log.d(LOGTAG, "Binding GameService");
-        // Bind to the service. If the service is in foreground mode, this signals to the service
-        // that since this activity is in the foreground, the service can exit foreground mode.
         bindService(new Intent(this, GameService.class), mServiceConnection,
                 Context.BIND_AUTO_CREATE);
     }
@@ -138,6 +137,7 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
             ActivityCompat.requestPermissions(this, perms, 0);
             return;
         }
+        mMapReady = true;
         bindGameService();
     }
 
@@ -180,7 +180,9 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
     }
 
     public void processMapUpdate(MapUpdate mu) {
-        runOnUiThread(mu.getRunnable(mMap));
+        if (mMapReady) {
+            runOnUiThread(mu.getRunnable(mMap));
+        }
     }
 
     public abstract static class MapUpdate {
@@ -188,7 +190,11 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
             return new Runnable() {
                 @Override
                 public void run() {
-                    updateMap(gm);
+                    try {
+                        updateMap(gm);
+                    } catch (IllegalArgumentException unmanaged){
+                        Log.w(LOGTAG, "Updating unmanaged descriptor");
+                    }
                 }
             };
         }
