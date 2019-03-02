@@ -8,18 +8,13 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.Location;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
-import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
-import android.view.KeyEvent;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -170,7 +165,7 @@ public class GameService extends Service {
 
     @Override
     public void onDestroy() {
-        if (controller != null){
+        if (controller != null) {
             controller.release();
         }
         if (gw != null) {
@@ -302,7 +297,9 @@ public class GameService extends Service {
         return toner;
     }
 
-    public RunningMediaController getController() { return controller; }
+    public RunningMediaController getController() {
+        return controller;
+    }
 
     public void finish() {
         if (mActivity != null) {

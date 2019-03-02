@@ -3,11 +3,9 @@ package jameswrunner.runnergame.controls;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 
 import jameswrunner.runnergame.GameService;
 import jameswrunner.runnergame.R;
@@ -71,7 +69,7 @@ public class RunningMediaController {
         mSilencePlayer.start();
     }
 
-    public void release(){
+    public void release() {
         if (mediaSession != null) mediaSession.release();
         if (mSilencePlayer != null) {
             mSilencePlayer.stop();
@@ -79,15 +77,15 @@ public class RunningMediaController {
         }
     }
 
-    private void onSingleClick(){
+    private void onSingleClick() {
         singleClicked = true;
     }
 
-    private void onDoubleClick(){
+    private void onDoubleClick() {
         doubleClicked = true;
     }
 
-    public ClickState getClickState(boolean reset){
+    public ClickState getClickState(boolean reset) {
         ClickState cs = new ClickState();
         cs.singleClicked = singleClicked;
         cs.doubleClicked = doubleClicked;
@@ -95,7 +93,7 @@ public class RunningMediaController {
         return cs;
     }
 
-    public void resetClickState(){
+    public void resetClickState() {
         singleClicked = false;
         doubleClicked = false;
     }

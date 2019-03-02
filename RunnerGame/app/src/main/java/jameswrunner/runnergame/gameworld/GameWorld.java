@@ -41,7 +41,7 @@ public class GameWorld {
     LinkedList<ControlPoint> cplist = new LinkedList<ControlPoint>();
 
 
-    ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
+    private ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
     private GameBoundaries bounds;
     private LatLng lastPosition;
     private LatLng lastLastPosition;

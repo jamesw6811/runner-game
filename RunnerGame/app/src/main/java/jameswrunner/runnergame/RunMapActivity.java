@@ -22,7 +22,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 //TODO: Move away from Google Roads API - maybe the user sets up their own base as part of the jog?
-//TODO: Add controls from earphone buttons
 //TODO: Add varied control points, strategic game
 //TODO: Add menu
 //TODO: Add persistent map between sessions
@@ -40,8 +39,6 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
 
     // Tracks the bound state of the service.
     private boolean mBound = false;
-    private boolean mMapReady = false;
-
     // Monitors the state of the connection to the service.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -59,6 +56,7 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
             mBound = false;
         }
     };
+    private boolean mMapReady = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,7 +190,7 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
                 public void run() {
                     try {
                         updateMap(gm);
-                    } catch (IllegalArgumentException unmanaged){
+                    } catch (IllegalArgumentException unmanaged) {
                         Log.w(LOGTAG, "Updating unmanaged descriptor");
                     }
                 }
