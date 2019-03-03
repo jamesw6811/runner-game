@@ -21,10 +21,13 @@ import com.google.android.gms.maps.model.Marker;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
-//TODO: Move away from Google Roads API - maybe the user sets up their own base as part of the jog?
-//TODO: Add varied control points, strategic game
+//TODO: Add resource inventory and jogging income
+//TODO: Add resource point discovery
+//TODO: Add building action
+//TODO: Transition from control points to strategic build game
 //TODO: Add menu
 //TODO: Add persistent map between sessions
+//TODO: Add short tutorial
 
 
 public class RunMapActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -38,6 +41,7 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
     private GameService gameService = null;
 
     // Tracks the bound state of the service.
+
     private boolean mBound = false;
     // Monitors the state of the connection to the service.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
