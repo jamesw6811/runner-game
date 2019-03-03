@@ -19,12 +19,6 @@ import jameswrunner.runnergame.R;
 
 public class MapUtilities {
 
-    public static GeoApiContext getGeoContext(Context act) {
-        GeoApiContext geoApiContext = new GeoApiContext();
-        geoApiContext.setApiKey(act.getString(R.string.google_maps_key));
-        return geoApiContext;
-    }
-
     public static LatLng getRandomDistantPosition(LatLng pos, float distanceMeters) {
         float randomHeading = getRandomHeading();
         LatLng newLatLng = SphericalUtil.computeOffset(pos, distanceMeters, randomHeading);
@@ -34,14 +28,6 @@ public class MapUtilities {
     public static LatLng locationToLatLng(Location l) {
         LatLng ll = new LatLng(l.getLatitude(), l.getLongitude());
         return ll;
-    }
-
-    public static LatLng snapToRoad(Context act, LatLng ll) throws Exception {
-        com.google.maps.model.LatLng modelLl = new com.google.maps.model.LatLng(ll.latitude, ll.longitude);
-        SnappedPoint[] sps = RoadsApi.snapToRoads(getGeoContext(act), true, modelLl).await();
-        if (sps.length > 0) {
-            return new LatLng(sps[0].location.lat, sps[0].location.lng);
-        } else return null;
     }
 
     public static float getRandomHeading() {

@@ -23,7 +23,6 @@ import jameswrunner.runnergame.RunMapActivity;
 import jameswrunner.runnergame.controls.RunningMediaController;
 
 import static jameswrunner.runnergame.maputils.MapUtilities.locationToLatLng;
-import static jameswrunner.runnergame.maputils.MapUtilities.snapToRoad;
 
 /**
  * Created by james on 6/17/2017.
@@ -148,15 +147,9 @@ public class GameWorld {
 
         int i = 1;
         for (GamePoint gp : controlpointpoints) {
-            cplist.add(new ControlPoint(this, getNearestGamePointWalkable(gp), "Control Point Number " + i, "CP#" + i));
+            cplist.add(new ControlPoint(this, gp, "Control Point Number " + i, "CP#" + i));
             i += 1;
         }
-    }
-
-    private GamePoint getNearestGamePointWalkable(GamePoint gp) throws Exception {
-        LatLng ll = bounds.gamePointtoLatLng(gp);
-        LatLng llwalkable = snapToRoad(gameService, ll);
-        return bounds.latLngtoGamePoint(llwalkable);
     }
 
     public void initializeAndStartRunning() {
