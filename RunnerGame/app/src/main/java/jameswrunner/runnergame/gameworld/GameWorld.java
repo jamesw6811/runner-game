@@ -29,17 +29,22 @@ public class GameWorld {
     private static final String LOGTAG = GameWorld.class.getName();
 
 
-    private ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
     private LatLng lastGPS;
     private GameWorldThread gameWorldThread;
     private GameService gameService;
-    private Player player;
+
     private long lastAnnouncementTime = 0;
+    private RunningMediaController.ClickState clickState;
     private double metersSinceSpirit = 0;
+
+    private ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
+    private Player player;
+    private Headquarters headquarters = null;
 
     public GameWorld(Location firstGPS, GameService gs) {
         gameService = gs;
         lastGPS = locationToLatLng(firstGPS);
+        clickState = gameService.getController().getClickState(true);
         player = new Player(this, lastGPS);
         focusCameraOnGameObject(player);
     }
@@ -77,9 +82,8 @@ public class GameWorld {
     }
 
     public synchronized void tickTime(final float timeDelta) {
-        // Get controller input
-        RunningMediaController.ClickState clickState = gameService.getController().getClickState(true);
-        // Update player position from GPS
+        // Update state from controller input and GPS input
+        clickState = gameService.getController().getClickState(true);
         player.updatePosition(lastGPS);
 
         // Check discoveries
@@ -90,8 +94,19 @@ public class GameWorld {
             speakTTS("" + player.getSpirits() + " spirits.");
         }
 
+        // Check building
+        if (clickState.doubleClicked) {
+            if (headquarters == null && player.getSpirits() >= 10) {
+                player.takeSpirits(10);
+                headquarters = new Headquarters(this, player.getPosition(), "Spirit Well", "Well");
+            }
+        }
+
         // Check announcements
         if (System.currentTimeMillis() - lastAnnouncementTime > ANNOUNCEMENT_PERIOD) {
+            if (headquarters == null && player.getSpirits() >= 10) {
+                speakTTS("You have enough spirits to create the spirit well.");
+            }
             lastAnnouncementTime = System.currentTimeMillis();
         }
 

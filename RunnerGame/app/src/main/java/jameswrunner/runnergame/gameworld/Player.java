@@ -73,10 +73,16 @@ public class Player extends GameObject {
     }
 
     public void giveSpirits(int i) {
+        if (i < 1) throw new RuntimeException("Giving less than 1 spirit");
         spirits += i;
     }
 
     public int getSpirits() {
         return spirits;
+    }
+
+    public void takeSpirits(int i) {
+        if (i < 1) throw new RuntimeException("Taking less than 1 spirit");
+        spirits -= i;
     }
 }
