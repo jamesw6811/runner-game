@@ -25,8 +25,9 @@ import androidx.fragment.app.FragmentActivity;
 //TODO: Add resource point discovery
 //TODO: Add building action
 //TODO: Transition from control points to strategic build game
-//TODO: Add menu
 //TODO: Add persistent map between sessions
+//TODO: Add menu
+
 //TODO: Add short tutorial
 
 

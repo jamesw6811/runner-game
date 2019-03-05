@@ -6,6 +6,7 @@ import android.graphics.Color;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
@@ -21,8 +22,9 @@ public class ControlPoint extends GameObject {
     public CAPTURESTATUS capturestatus;
     public String name;
     public String shortName;
+    public LatLng position;
 
-    public ControlPoint(GameWorld gw, GamePoint pos, String n, String sn) {
+    public ControlPoint(GameWorld gw, LatLng pos, String n, String sn) {
         super(gw);
         position = pos;
         capturestatus = CAPTURESTATUS.NEUTRAL;
@@ -65,12 +67,17 @@ public class ControlPoint extends GameObject {
         if (marker != null) marker.remove();
     }
 
-    protected synchronized void drawMarker(GameService gs, GoogleMap map, GameBoundaries bounds) {
+    @Override
+    protected LatLng getPosition() {
+        return position;
+    }
+
+    protected synchronized void drawMarker(GameService gs, GoogleMap map) {
         if (marker == null) {
-            MarkerOptions mo = new MarkerOptions().position(bounds.gamePointtoLatLng(position)).visible(true);
+            MarkerOptions mo = new MarkerOptions().position(position).visible(true);
             marker = map.addMarker(mo);
         } else {
-            marker.setPosition(bounds.gamePointtoLatLng(position));
+            marker.setPosition(position);
         }
         updateCaptureStatusIcon(gs);
     }

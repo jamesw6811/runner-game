@@ -5,6 +5,8 @@ import android.graphics.Color;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.SphericalUtil;
 
 import jameswrunner.runnergame.GameService;
 
@@ -13,11 +15,12 @@ import jameswrunner.runnergame.GameService;
  */
 
 public class StraightRunnerAI extends GameObject {
-    public GameHeading heading;
+    public float heading;
     public float speed;
     public Circle circle;
+    public LatLng position;
 
-    public StraightRunnerAI(GameWorld gw, GamePoint gp, GameHeading head, float speed) {
+    public StraightRunnerAI(GameWorld gw, LatLng gp, float head, float speed) {
         super(gw);
         position = gp;
         heading = head;
@@ -25,18 +28,17 @@ public class StraightRunnerAI extends GameObject {
     }
 
     public void tick(float time) {
-        position.x += speed * time * Math.cos(heading.getHeadingRadians());
-        position.y += speed * time * Math.sin(heading.getHeadingRadians());
+        position = SphericalUtil.computeOffset(position, speed, heading);
     }
 
     @Override
-    protected synchronized void drawMarker(GameService gs, GoogleMap gm, GameBoundaries gb) {
+    protected synchronized void drawMarker(GameService gs, GoogleMap gm) {
         if (circle == null) {
-            circle = gm.addCircle(new CircleOptions().center(gb.gamePointtoLatLng(position))
+            circle = gm.addCircle(new CircleOptions().center(position)
                     .radius(10f)
                     .strokeColor(Color.RED));
         } else {
-            circle.setCenter(gb.gamePointtoLatLng(position));
+            circle.setCenter(position);
         }
     }
 
@@ -48,5 +50,10 @@ public class StraightRunnerAI extends GameObject {
     @Override
     protected synchronized void removeMarker() {
         if (circle != null) circle.remove();
+    }
+
+    @Override
+    protected LatLng getPosition() {
+        return position;
     }
 }

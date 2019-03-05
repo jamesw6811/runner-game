@@ -265,8 +265,9 @@ public class GameService extends Service {
             if (gw == null) {
                 gw = new GameWorld(location, this);
                 gw.initializeAndStartRunning();
+            } else {
+                gw.updateGPS(location);
             }
-            gw.updatePlayerLocation(location);
         }
     }
 

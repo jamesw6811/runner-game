@@ -29,7 +29,6 @@ public class GameWorldThread extends Thread {
         long startTime = System.currentTimeMillis();
         long sleepTime;
         long lastTime;
-        gw.initializeNewGame();
         while (running) {
             lastTime = startTime;
             startTime = System.currentTimeMillis();

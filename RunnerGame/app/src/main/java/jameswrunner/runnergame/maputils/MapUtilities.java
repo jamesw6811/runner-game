@@ -19,11 +19,6 @@ import jameswrunner.runnergame.R;
 
 public class MapUtilities {
 
-    public static LatLng getRandomDistantPosition(LatLng pos, float distanceMeters) {
-        float randomHeading = getRandomHeading();
-        LatLng newLatLng = SphericalUtil.computeOffset(pos, distanceMeters, randomHeading);
-        return newLatLng;
-    }
 
     public static LatLng locationToLatLng(Location l) {
         LatLng ll = new LatLng(l.getLatitude(), l.getLongitude());
@@ -35,12 +30,11 @@ public class MapUtilities {
         return r.nextFloat() * 360f;
     }
 
-    public static double mapHeadingToGameHeading(double mapheading) {
-        return -mapheading + 90f;
+    public static LatLng getRandomDistantPosition(LatLng pos, float distanceMeters) {
+        float randomHeading = getRandomHeading();
+        LatLng newLatLng = SphericalUtil.computeOffset(pos, distanceMeters, randomHeading);
+        return newLatLng;
     }
 
-    public static double gameHeadingToMapHeading(double gameheading) {
-        return -gameheading + 90f;
-    }
 
 }
