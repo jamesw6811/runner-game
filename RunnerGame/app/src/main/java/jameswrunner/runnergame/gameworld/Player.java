@@ -16,25 +16,24 @@ import jameswrunner.runnergame.GameService;
 
 public class Player extends GameObject {
     private Circle circle;
-    private LatLng position;
+    private LatLng lastPosition;
     private double lastDistanceTravelled;
     private double lastHeadingTravelled;
     private int spirits;
 
     public Player(GameWorld gw, LatLng gp) {
-        super(gw);
-        position = gp;
+        super(gw, "player", gp);
         spirits = 0;
     }
 
     @Override
     protected void drawMarker(GameService gs, GoogleMap gm) {
         if (circle == null) {
-            circle = gm.addCircle(new CircleOptions().center(position)
+            circle = gm.addCircle(new CircleOptions().center(getPosition())
                     .radius(10f)
                     .strokeColor(Color.GREEN));
         } else {
-            circle.setCenter(position);
+            circle.setCenter(getPosition());
         }
     }
 
@@ -48,21 +47,18 @@ public class Player extends GameObject {
         if (circle != null) circle.remove();
     }
 
-    @Override
-    protected LatLng getPosition() {
-        return position;
-    }
-
     public void updatePosition(LatLng lastGPS) {
-        if (lastGPS.equals(position)) {
+        lastPosition = getPosition();
+        if (lastGPS.equals(getPosition())) {
             lastDistanceTravelled = 0;
         } else {
-            lastDistanceTravelled = SphericalUtil.computeDistanceBetween(position, lastGPS);
-            lastHeadingTravelled = SphericalUtil.computeHeading(position, lastGPS);
-            position = lastGPS;
-            updateMarker();
+            lastDistanceTravelled = SphericalUtil.computeDistanceBetween(getPosition(), lastGPS);
+            lastHeadingTravelled = SphericalUtil.computeHeading(getPosition(), lastGPS);
+            setPosition(lastGPS);
         }
     }
+
+    public LatLng getLastPosition() { return  lastPosition; }
 
     public double getLastDistanceTravelled() {
         return lastDistanceTravelled;

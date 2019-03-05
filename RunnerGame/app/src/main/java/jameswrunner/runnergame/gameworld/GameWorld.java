@@ -8,8 +8,11 @@ import android.util.Log;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.SphericalUtil;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 import jameswrunner.runnergame.GameService;
 import jameswrunner.runnergame.RunMapActivity;
@@ -23,6 +26,7 @@ import static jameswrunner.runnergame.maputils.MapUtilities.locationToLatLng;
 
 public class GameWorld {
     private static final int METERS_PER_SPIRIT = 30;
+    private static final double METERS_IN_SIGHT = 15;
 
     public static final int ANNOUNCEMENT_PERIOD = 20 * 1000;
     public static final double NAV_BEEP_PERIOD_MULTIPLIER = 2500.0 / 300.0; // millis period per meter
@@ -98,9 +102,13 @@ public class GameWorld {
         if (clickState.doubleClicked) {
             if (headquarters == null && player.getSpirits() >= 10) {
                 player.takeSpirits(10);
-                headquarters = new Headquarters(this, player.getPosition(), "Spirit Well", "Well");
+                headquarters = new Headquarters(this, player.getPosition());
+                speakTTS("You built a Spirit Well. This is a powerful first headquarters for your spiritual activities!");
             }
         }
+
+        // Check sights & collisions
+        speakSights();
 
         // Check announcements
         if (System.currentTimeMillis() - lastAnnouncementTime > ANNOUNCEMENT_PERIOD) {
@@ -112,6 +120,35 @@ public class GameWorld {
 
         // Check win conditions and draw
         checkWinConditions();
+    }
+
+    private void speakSights() {
+        LinkedList<GameObject> sights = new LinkedList<>();
+        for (GameObject go : gameObjects) {
+            if (go == player)continue;
+            double distance = SphericalUtil.computeDistanceBetween(go.getPosition(), player.getPosition());
+            if (distance <= METERS_IN_SIGHT) {
+                double previousDistance = SphericalUtil.computeDistanceBetween(go.getPosition(), player.getLastPosition());
+                if (previousDistance >= METERS_IN_SIGHT) {
+                    sights.add(go);
+                }
+            }
+        }
+        if (sights.size() > 0){
+            Iterator<GameObject> nextSight = sights.iterator();
+            String sightsText = "";
+            while (nextSight.hasNext()) {
+                String spokenName = nextSight.next().getSpokenName();
+                if (sights.size() == 1) {
+                    sightsText += spokenName;
+                } else if (nextSight.hasNext()){
+                    sightsText += spokenName + ", ";
+                } else {
+                    sightsText += "and " + spokenName;
+                }
+            }
+            speakTTS("You are approaching " + sightsText + ".");
+        }
     }
 
     private void refreshAnnouncement() {

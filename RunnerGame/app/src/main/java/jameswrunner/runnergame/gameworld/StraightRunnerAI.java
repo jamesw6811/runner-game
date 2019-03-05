@@ -15,30 +15,28 @@ import jameswrunner.runnergame.GameService;
  */
 
 public class StraightRunnerAI extends GameObject {
-    public float heading;
-    public float speed;
-    public Circle circle;
-    public LatLng position;
+    private float heading;
+    private float speed;
+    private Circle circle;
 
     public StraightRunnerAI(GameWorld gw, LatLng gp, float head, float speed) {
-        super(gw);
-        position = gp;
-        heading = head;
+        super(gw, "AI runner", gp);
+        this.heading = head;
         this.speed = speed;
     }
 
     public void tick(float time) {
-        position = SphericalUtil.computeOffset(position, speed, heading);
+        setPosition(SphericalUtil.computeOffset(getPosition(), speed, heading));
     }
 
     @Override
     protected synchronized void drawMarker(GameService gs, GoogleMap gm) {
         if (circle == null) {
-            circle = gm.addCircle(new CircleOptions().center(position)
+            circle = gm.addCircle(new CircleOptions().center(getPosition())
                     .radius(10f)
                     .strokeColor(Color.RED));
         } else {
-            circle.setCenter(position);
+            circle.setCenter(getPosition());
         }
     }
 
@@ -52,8 +50,4 @@ public class StraightRunnerAI extends GameObject {
         if (circle != null) circle.remove();
     }
 
-    @Override
-    protected LatLng getPosition() {
-        return position;
-    }
 }

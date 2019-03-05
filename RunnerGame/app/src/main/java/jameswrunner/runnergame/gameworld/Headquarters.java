@@ -19,15 +19,9 @@ import jameswrunner.runnergame.GameService;
 
 public class Headquarters extends GameObject {
     private Marker marker;
-    private String name;
-    private String shortName;
-    private LatLng position;
 
-    public Headquarters(GameWorld gw, LatLng pos, String n, String sn) {
-        super(gw);
-        position = pos;
-        name = n;
-        shortName = sn;
+    public Headquarters(GameWorld gw, LatLng pos) {
+        super(gw, "your Spirit Well", pos);
     }
 
     protected synchronized void clearMarkerState() {
@@ -39,23 +33,18 @@ public class Headquarters extends GameObject {
         if (marker != null) marker.remove();
     }
 
-    @Override
-    protected LatLng getPosition() {
-        return position;
-    }
-
     protected synchronized void drawMarker(GameService gs, GoogleMap map) {
         if (marker == null) {
-            MarkerOptions mo = new MarkerOptions().position(position).visible(true);
+            MarkerOptions mo = new MarkerOptions().position(getPosition()).visible(true);
             marker = map.addMarker(mo);
         } else {
-            marker.setPosition(position);
+            marker.setPosition(getPosition());
         }
 
         if (marker != null) {
             IconGenerator ig = new IconGenerator(gs);
             ig.setColor(Color.GREEN);
-            Bitmap icon = ig.makeIcon(shortName);
+            Bitmap icon = ig.makeIcon("Well");
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(icon));
         }
     }

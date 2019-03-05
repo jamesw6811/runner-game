@@ -8,10 +8,15 @@ import jameswrunner.runnergame.RunMapActivity;
 
 public abstract class GameObject {
     private GameWorld gameWorld;
+    private String spokenName;
+    private LatLng position;
 
-    public GameObject(GameWorld gw) {
+    public GameObject(GameWorld gw, String spokenName, LatLng position) {
         gameWorld = gw;
         gameWorld.addObject(this);
+        this.spokenName = spokenName;
+        this.position = position;
+        updateMarker();
     }
 
     protected void updateMarker() {
@@ -31,8 +36,6 @@ public abstract class GameObject {
 
     protected abstract void removeMarker();
 
-    protected abstract LatLng getPosition();
-
     public void destroy() {
         getGameService().passMapUpdate(new RunMapActivity.MapUpdate() {
             @Override
@@ -48,4 +51,20 @@ public abstract class GameObject {
         return gameWorld.getGameService();
     }
 
+    public String getSpokenName() {
+        return spokenName;
+    }
+
+    public void setSpokenName(String spokenName) {
+        this.spokenName = spokenName;
+    }
+
+    public LatLng getPosition() {
+        return position;
+    }
+
+    public void setPosition(LatLng position) {
+        this.position = position;
+        updateMarker();
+    }
 }
