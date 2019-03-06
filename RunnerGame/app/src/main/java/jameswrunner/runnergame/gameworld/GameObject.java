@@ -51,6 +51,8 @@ public abstract class GameObject {
         return gameWorld.getGameService();
     }
 
+    protected GameWorld getGameWorld() { return gameWorld; }
+
     public String getSpokenName() {
         return spokenName;
     }
@@ -66,5 +68,13 @@ public abstract class GameObject {
     public void setPosition(LatLng position) {
         this.position = position;
         updateMarker();
+    }
+
+    public boolean isUpgradable() {
+        return false;
+    }
+
+    public void upgrade(Player player) {
+        throw new UnsupportedOperationException("This object is not upgradable.");
     }
 }
