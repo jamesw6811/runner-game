@@ -17,8 +17,12 @@ import jameswrunner.runnergame.GameService;
  */
 
 public class BuildingResourceSite extends GameObject {
+    private static final int MAX_RESOURCE = 10;
+    private static final float RESOURCE_GENERATION_PERIOD = 30f;
     private Marker marker;
     private boolean built = false;
+    private int resource = 0;
+    private float timeSinceLastResource = 0;
 
     public BuildingResourceSite(GameWorld gw, LatLng pos) {
         super(gw, "a Spirit Tree", pos);
@@ -56,7 +60,7 @@ public class BuildingResourceSite extends GameObject {
     @Override
     public String getSpokenName(){
         if (!built) return super.getSpokenName();
-        else return super.getSpokenName() + " with your Spirit Tap installed";
+        else return super.getSpokenName() + " with " + resource + " spirits in your Spirit Tap";
     }
 
     public void setBuilt(boolean b){
@@ -73,12 +77,41 @@ public class BuildingResourceSite extends GameObject {
     @Override
     public void upgrade(Player player) {
         if (built) throw new UnsupportedOperationException("Cannot upgrade further.");
-        if (player.getSpirits() >= 10) {
-            player.takeSpirits(10);
+        if (player.getRunningResource() >= 10) {
+            player.takeRunningResource(10);
             setBuilt(true);
-            getGameWorld().speakTTS("You installed a Spirit Tap for 10 spirits.");
+            getGameWorld().speakTTS("You installed a Spirit Tap for 10 spirits. The tap will generate Ecto, a powerful spiritual essence, over time.");
         } else {
             getGameWorld().speakTTS("You need at least 10 spirits to install a Spirit Tap.");
+        }
+    }
+
+    @Override
+    public boolean isInteractable() {
+        if (built) return true;
+        else return false;
+    }
+
+    @Override
+    public void interact(Player player) {
+        if (resource > 0) {
+            getGameWorld().speakTTS("You collected " + resource + " Ecto from the tap.");
+            player.giveBuildingResource(resource);
+            resource = 0;
+        } else {
+            getGameWorld().speakTTS("This Spirit Tree is tapped out for now. Come back later.");
+        }
+    }
+
+    @Override
+    public void tickTime(float timeDelta) {
+        super.tickTime(timeDelta);
+        if (built) {
+            timeSinceLastResource += timeDelta;
+            if (timeSinceLastResource > RESOURCE_GENERATION_PERIOD) {
+                timeSinceLastResource -= RESOURCE_GENERATION_PERIOD;
+                resource = Math.min(MAX_RESOURCE, resource + 1);
+            }
         }
     }
 }

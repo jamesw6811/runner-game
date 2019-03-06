@@ -77,4 +77,16 @@ public abstract class GameObject {
     public void upgrade(Player player) {
         throw new UnsupportedOperationException("This object is not upgradable.");
     }
+
+    public void tickTime(float timeDelta) {
+
+    }
+
+    public boolean isInteractable() {
+        return false;
+    }
+
+    public void interact(Player player) {
+        throw new UnsupportedOperationException("This object is not interactable.");
+    }
 }

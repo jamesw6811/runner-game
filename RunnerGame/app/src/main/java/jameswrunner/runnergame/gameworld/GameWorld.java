@@ -1,11 +1,7 @@
 package jameswrunner.runnergame.gameworld;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.location.Location;
-import android.util.Log;
 
-import com.google.android.gms.common.util.ArrayUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -94,6 +90,9 @@ public class GameWorld {
         clickState = gameService.getController().getClickState(true);
         player.updatePosition(lastGPS);
 
+        // Tick all GameWorld objects
+        for (GameObject go : gameObjects) go.tickTime(timeDelta);
+
         // Build list of buildings in-range for discovery
         LinkedList<GameObject> objectsInDiscoveryRange = getObjectsInCircle(player.getPosition(), METERS_DISCOVERY_MINIMUM);
         objectsInDiscoveryRange.remove(player);
@@ -103,8 +102,8 @@ public class GameWorld {
         metersSinceSpirit += player.getLastDistanceTravelled();
         if (metersSinceSpirit > METERS_PER_SPIRIT) {
             metersSinceSpirit -= METERS_PER_SPIRIT;
-            player.giveSpirits(1);
-            speakTTS("" + player.getSpirits() + " spirits.");
+            player.giveRunningResource(1);
+            refreshAnnouncement();
         }
         // Discovery - no other buildings in range
         if (headquarters != null && objectsInDiscoveryRange.size() == 0) {
@@ -123,10 +122,10 @@ public class GameWorld {
         LinkedList<GameObject> objectsInInteractionRange = getObjectsInCircle(player.getPosition(), METERS_IN_SIGHT);
         objectsInInteractionRange.remove(player);
 
-        // Check building
+        // Check building or building upgrade
         if (clickState.doubleClicked) {
-            if (headquarters == null && player.getSpirits() >= 10) {
-                player.takeSpirits(10);
+            if (headquarters == null && player.getRunningResource() >= 10) {
+                player.takeRunningResource(10);
                 headquarters = new Headquarters(this, player.getPosition());
                 speakTTS("You built a Spirit Well. This is a powerful first headquarters for your spiritual activities!");
             } else {
@@ -135,8 +134,22 @@ public class GameWorld {
                     GameObject tryUpgrade = goit.next();
                     if (tryUpgrade.isUpgradable()) {
                         tryUpgrade.upgrade(player);
+                        refreshAnnouncement();
                         break;
                     }
+                }
+            }
+        }
+
+        // Check interaction
+        if (clickState.singleClicked) {
+            Iterator<GameObject> goit = objectsInInteractionRange.iterator();
+            while (goit.hasNext()){
+                GameObject tryInteract = goit.next();
+                if (tryInteract.isInteractable()) {
+                    tryInteract.interact(player);
+                    refreshAnnouncement();
+                    break;
                 }
             }
         }
@@ -146,9 +159,14 @@ public class GameWorld {
 
         // Check announcements
         if (System.currentTimeMillis() - lastAnnouncementTime > ANNOUNCEMENT_PERIOD) {
-            if (headquarters == null && player.getSpirits() >= 10) {
+            String resourceAnnounce = "";
+            if (player.getRunningResource() > 0) resourceAnnounce += "You have " + player.getRunningResource() + " spirits, ";
+            else resourceAnnounce += "You have no spirits, ";
+            if (player.getBuildingResource() > 0) resourceAnnounce += "and " + player.getBuildingResource() + " Ecto.";
+            speakTTS(resourceAnnounce);
+            if (headquarters == null && player.getRunningResource() >= 10) {
                 speakTTS("You have enough spirits to create the spirit well.");
-            } else if (headquarters != null && player.getSpirits() >= 10) {
+            } else if (headquarters != null && player.getRunningResource() >= 10) {
                 speakTTS("You have enough spirits to build your first spirit tap, but first you need to find a spirit tree.");
             }
             lastAnnouncementTime = System.currentTimeMillis();

@@ -19,11 +19,12 @@ public class Player extends GameObject {
     private LatLng lastPosition;
     private double lastDistanceTravelled;
     private double lastHeadingTravelled;
-    private int spirits;
+    private int runningResource;
+    private int buildingResource;
 
     public Player(GameWorld gw, LatLng gp) {
         super(gw, "player", gp);
-        spirits = 0;
+        runningResource = 0;
     }
 
     @Override
@@ -68,17 +69,31 @@ public class Player extends GameObject {
         return lastHeadingTravelled;
     }
 
-    public void giveSpirits(int i) {
-        if (i < 1) throw new RuntimeException("Giving less than 1 spirit");
-        spirits += i;
+    public void giveRunningResource(int i) {
+        if (i < 1) throw new RuntimeException("Giving less than 1 resource");
+        runningResource += i;
     }
 
-    public int getSpirits() {
-        return spirits;
+    public int getRunningResource() {
+        return runningResource;
     }
 
-    public void takeSpirits(int i) {
-        if (i < 1) throw new RuntimeException("Taking less than 1 spirit");
-        spirits -= i;
+    public void takeRunningResource(int i) {
+        if (i < 1) throw new RuntimeException("Taking less than 1 resource");
+        runningResource -= i;
+    }
+
+    public void giveBuildingResource(int i) {
+        if (i < 1) throw new RuntimeException("Giving less than 1 resource");
+        buildingResource += i;
+    }
+
+    public int getBuildingResource() {
+        return buildingResource;
+    }
+
+    public void takeBuildingResource(int i) {
+        if (i < 1) throw new RuntimeException("Taking less than 1 resource");
+        buildingResource -= i;
     }
 }
