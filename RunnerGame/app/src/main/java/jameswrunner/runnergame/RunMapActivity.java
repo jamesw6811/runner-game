@@ -21,9 +21,7 @@ import com.google.android.gms.maps.model.Marker;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
-//TODO: Add resource inventory and jogging income
-//TODO: Add resource point discovery
-//TODO: Add building action
+//TODO: Convert theme to Tree Spies - Sappy Secrets?
 //TODO: Transition from control points to strategic build game
 //TODO: Add persistent map between sessions
 //TODO: Add menu

@@ -80,6 +80,7 @@ public class BuildingResourceSite extends GameObject {
         if (player.getRunningResource() >= 10) {
             player.takeRunningResource(10);
             setBuilt(true);
+            getGameWorld().tutorialResourceBuildingUpgraded = true;
             getGameWorld().speakTTS("You installed a Spirit Tap for 10 spirits. The tap will generate Ecto, a powerful spiritual essence, over time.");
         } else {
             getGameWorld().speakTTS("You need at least 10 spirits to install a Spirit Tap.");
@@ -95,6 +96,7 @@ public class BuildingResourceSite extends GameObject {
     @Override
     public void interact(Player player) {
         if (resource > 0) {
+            getGameWorld().tutorialResourceBuildingCollected = true;
             getGameWorld().speakTTS("You collected " + resource + " Ecto from the tap.");
             player.giveBuildingResource(resource);
             resource = 0;

@@ -23,11 +23,11 @@ import static jameswrunner.runnergame.maputils.MapUtilities.locationToLatLng;
  */
 
 public class GameWorld {
-    private static final int METERS_PER_SPIRIT = 30;
+    private static final int METERS_PER_SPIRIT = 50;
     private static final double METERS_IN_SIGHT = 15;
-    private static final double METERS_DISCOVERY_MINIMUM = 60;
+    private static final double METERS_DISCOVERY_MINIMUM = 250;
 
-    public static final int ANNOUNCEMENT_PERIOD = 20 * 1000;
+    public static final int ANNOUNCEMENT_PERIOD = 60 * 1000;
     public static final double NAV_BEEP_PERIOD_MULTIPLIER = 2500.0 / 300.0; // millis period per meter
     private static final String LOGTAG = GameWorld.class.getName();
 
@@ -43,6 +43,13 @@ public class GameWorld {
     private ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
     private Player player;
     private Headquarters headquarters = null;
+
+    public boolean tutorialFirstResource = false;
+    public boolean tutorialHQbuilt = false;
+    public boolean tutorialResourceBuildingDiscovered = false;
+    public boolean tutorialResourceBuildingUpgraded = false;
+    public boolean tutorialResourceBuildingCollected = false;
+    public boolean tutorialCompleted = false;
 
     public GameWorld(Location firstGPS, GameService gs) {
         gameService = gs;
@@ -103,7 +110,9 @@ public class GameWorld {
         if (metersSinceSpirit > METERS_PER_SPIRIT) {
             metersSinceSpirit -= METERS_PER_SPIRIT;
             player.giveRunningResource(1);
-            refreshAnnouncement();
+            speakTTS("Spirit captured!");
+            if (!tutorialFirstResource) refreshAnnouncement();
+            tutorialFirstResource = true;
         }
         // Discovery - no other buildings in range
         if (headquarters != null && objectsInDiscoveryRange.size() == 0) {
@@ -111,6 +120,8 @@ public class GameWorld {
             GameObject discovery = null;
             if (discoverSeed < 0.1) {
                 discovery = new BuildingResourceSite(this, player.getPosition());
+                if (!tutorialResourceBuildingDiscovered) refreshAnnouncement();
+                tutorialResourceBuildingDiscovered = true;
             }
             if (discovery != null) {
                 speakTTS("You have discovered " + discovery.getSpokenName() + "!");
@@ -127,7 +138,8 @@ public class GameWorld {
             if (headquarters == null && player.getRunningResource() >= 10) {
                 player.takeRunningResource(10);
                 headquarters = new Headquarters(this, player.getPosition());
-                speakTTS("You built a Spirit Well. This is a powerful first headquarters for your spiritual activities!");
+                speakTTS("You built a Spirit Well. This is a powerful headquarters for your spiritual activities!");
+                tutorialHQbuilt = true;
             } else {
                 Iterator<GameObject> goit = objectsInInteractionRange.iterator();
                 while (goit.hasNext()){
@@ -164,10 +176,22 @@ public class GameWorld {
             else resourceAnnounce += "You have no spirits, ";
             if (player.getBuildingResource() > 0) resourceAnnounce += "and " + player.getBuildingResource() + " Ecto.";
             speakTTS(resourceAnnounce);
-            if (headquarters == null && player.getRunningResource() >= 10) {
-                speakTTS("You have enough spirits to create the spirit well.");
-            } else if (headquarters != null && player.getRunningResource() >= 10) {
-                speakTTS("You have enough spirits to build your first spirit tap, but first you need to find a spirit tree.");
+            if (!tutorialFirstResource) speakTTS("Walk or jog around to find spirits.");
+            else if (!tutorialHQbuilt) {
+                if (player.getRunningResource() < 10) speakTTS("I wonder what will happen if we get enough spirits?");
+                else speakTTS("10 of the spirits seem ready to settle. Choose a central location to build your headquarters, the spirit well. Double-click to build it.");
+            }
+            else if (!tutorialResourceBuildingDiscovered) {
+                speakTTS("Let's look around for something to power our headquarters.");
+            }
+            else if (!tutorialResourceBuildingUpgraded) {
+                speakTTS("We can install a spirit tap on to a spirit tree to harness its power. It will cost 10 spirits. Double-click near the tree to build it.");
+            }
+            else if (!tutorialResourceBuildingCollected) {
+                speakTTS("To collect Ecto, come back to a Spirit Tree Tap after some time and single-click near it.");
+            } else if (!tutorialCompleted) {
+                speakTTS("You've completed the tutorial, but there is a lot more to discover - get out there!");
+                tutorialCompleted = true;
             }
             lastAnnouncementTime = System.currentTimeMillis();
         }
