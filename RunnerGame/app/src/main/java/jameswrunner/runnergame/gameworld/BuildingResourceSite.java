@@ -11,12 +11,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 
 import jameswrunner.runnergame.GameService;
+import jameswrunner.runnergame.R;
 
 /**
  * Created by james on 6/17/2017.
  */
 
 public class BuildingResourceSite extends GameObject {
+    public static final int RUNNING_RESOURCE_UPGRADE_COST = 10;
     private static final int MAX_RESOURCE = 10;
     private static final float RESOURCE_GENERATION_PERIOD = 30f;
     private Marker marker;
@@ -25,7 +27,7 @@ public class BuildingResourceSite extends GameObject {
     private float timeSinceLastResource = 0;
 
     public BuildingResourceSite(GameWorld gw, LatLng pos) {
-        super(gw, "a Spirit Tree", pos);
+        super(gw, gw.getGameService().getString(R.string.buildingresourcesite_spokenName), pos);
     }
 
     protected synchronized void clearMarkerState() {
@@ -52,7 +54,7 @@ public class BuildingResourceSite extends GameObject {
             } else {
                 ig.setColor(Color.BLACK);
             }
-            Bitmap icon = ig.makeIcon("Tree");
+            Bitmap icon = ig.makeIcon(gs.getString(R.string.buildingresourcesite_mapName));
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(icon));
         }
     }
@@ -60,7 +62,7 @@ public class BuildingResourceSite extends GameObject {
     @Override
     public String getSpokenName(){
         if (!built) return super.getSpokenName();
-        else return super.getSpokenName() + " with " + resource + " spirits in your Spirit Tap";
+        else return getGameWorld().getGameService().getString(R.string.buildingresourcesite_spokenNameWithResources, super.getSpokenName(), resource);
     }
 
     public void setBuilt(boolean b){
@@ -81,9 +83,9 @@ public class BuildingResourceSite extends GameObject {
             player.takeRunningResource(10);
             setBuilt(true);
             getGameWorld().tutorialResourceBuildingUpgraded = true;
-            getGameWorld().speakTTS("You installed a Spirit Tap for 10 spirits. The tap will generate Ecto, a powerful spiritual essence, over time.");
+            getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingresourcesite_upgradeSuccess, 10));
         } else {
-            getGameWorld().speakTTS("You need at least 10 spirits to install a Spirit Tap.");
+            getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingresourcesite_upgradeNotEnoughResources, 10));
         }
     }
 
@@ -97,11 +99,11 @@ public class BuildingResourceSite extends GameObject {
     public void interact(Player player) {
         if (resource > 0) {
             getGameWorld().tutorialResourceBuildingCollected = true;
-            getGameWorld().speakTTS("You collected " + resource + " Ecto from the tap.");
+            getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingresourcesite_collectSuccess, resource));
             player.giveBuildingResource(resource);
             resource = 0;
         } else {
-            getGameWorld().speakTTS("This Spirit Tree is tapped out for now. Come back later.");
+            getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingresourcesite_collectOutOfResource));
         }
     }
 

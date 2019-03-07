@@ -1,4 +1,32 @@
 <resources>
     <string name="app_name">RunnerGame</string>
     <string name="title_activity_run_map">RunMap</string>
+    <string name="AI_runner_spokenName">AI runner</string>
+    <string name="player_spokenName">player</string>
+    <string name="headquarters_spokenName">your Spirit Well</string>
+    <string name="headquarters_mapName">Well</string>
+    <string name="buildingresourcesite_spokenName">a Spirit Tree</string>
+    <string name="buildingresourcesite_mapName">Tree</string>
+    <string name="buildingresourcesite_spokenNameWithResources">%s with %d spirits in your Spirit Tap</string>
+    <string name="buildingresourcesite_upgradeSuccess">You installed a Spirit Tap for %d spirits.</string>
+    <string name="buildingresourcesite_upgradeNotEnoughResources">You need at least %d spirits to install a Spirit Tap.</string>
+    <string name="buildingresourcesite_collectSuccess">You collected %d Ecto from the tap.</string>
+    <string name="buildingresourcesite_collectOutOfResource">This Spirit Tree is tapped out for now. Come back later.</string>
+    <string name="game_started">Game started.</string>
+    <string name="receivedMovementResource">Spirit captured!</string>
+    <string name="discoveredNotification">You have discovered %s!</string>
+    <string name="headquarters_build">You built a Spirit Well. This is a powerful headquarters for your spiritual activities!</string>
+    <string name="movementResourceAnnounce">You have %d spirits.</string>
+    <string name="movementResourceAnnounceNone">You have no spirits.</string>
+    <string name="buildingResourceAnnounce">%d Ecto.</string>
+    <string name="tutorialFirstResource">Walk or jog around to find spirits.</string>
+    <string name="tutorialHQbuilt_notEnoughResources">I wonder what will happen if we get enough spirits?</string>
+    <string name="tutorialHQbuilt_readyToBuild">%d of the spirits seem ready to settle. Choose a central location to build your headquarters, the spirit well. Double-click to build it.</string>
+    <string name="tutorialResourceBuildingDiscovered">Let\'s look around for something to power our headquarters.</string>
+    <string name="tutorialResourceBuildingUpgraded">We can install a spirit tap on to a spirit tree to harness its power. It will cost %d spirits. Double-click near the tree to build it.</string>
+    <string name="tutorialResourceBuildingCollected">Spirit tree taps will generate Ecto, a powerful spiritual essence, over time. To collect Ecto, come back to a Spirit Tree Tap after some time and single-click near it.</string>
+    <string name="tutorialCompleted">You\'ve completed the tutorial, but there is a lot more to discover - get out there!</string>
+    <string name="list_separator">,</string>
+    <string name="list_final_and">and</string>
+    <string name="approachingAnnounce">You are approaching %s.</string>
 </resources>

@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.SphericalUtil;
 
 import jameswrunner.runnergame.GameService;
+import jameswrunner.runnergame.R;
 
 /**
  * Created by james on 6/17/2017.
@@ -20,7 +21,7 @@ public class StraightRunnerAI extends GameObject {
     private Circle circle;
 
     public StraightRunnerAI(GameWorld gw, LatLng gp, float head, float speed) {
-        super(gw, "AI runner", gp);
+        super(gw, gw.getGameService().getString(R.string.AI_runner_spokenName), gp);
         this.heading = head;
         this.speed = speed;
     }

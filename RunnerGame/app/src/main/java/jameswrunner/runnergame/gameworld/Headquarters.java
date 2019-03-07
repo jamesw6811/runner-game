@@ -12,6 +12,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 
 import jameswrunner.runnergame.GameService;
+import jameswrunner.runnergame.R;
 
 /**
  * Created by james on 6/17/2017.
@@ -19,9 +20,10 @@ import jameswrunner.runnergame.GameService;
 
 public class Headquarters extends GameObject {
     private Marker marker;
+    public static final int RUNNING_RESOURCE_BUILD_COST = 10;
 
     public Headquarters(GameWorld gw, LatLng pos) {
-        super(gw, "your Spirit Well", pos);
+        super(gw, gw.getGameService().getString(R.string.headquarters_spokenName), pos);
     }
 
     protected synchronized void clearMarkerState() {
@@ -44,7 +46,7 @@ public class Headquarters extends GameObject {
         if (marker != null) {
             IconGenerator ig = new IconGenerator(gs);
             ig.setColor(Color.GREEN);
-            Bitmap icon = ig.makeIcon("Well");
+            Bitmap icon = ig.makeIcon(gs.getString(R.string.headquarters_mapName));
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(icon));
         }
     }

@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.Random;
 
 import jameswrunner.runnergame.GameService;
+import jameswrunner.runnergame.R;
 import jameswrunner.runnergame.RunMapActivity;
 import jameswrunner.runnergame.controls.RunningMediaController;
 
@@ -23,7 +24,7 @@ import static jameswrunner.runnergame.maputils.MapUtilities.locationToLatLng;
  */
 
 public class GameWorld {
-    private static final int METERS_PER_SPIRIT = 50;
+    private static final int METERS_PER_RUNNING_RESOURCE = 50;
     private static final double METERS_IN_SIGHT = 15;
     private static final double METERS_DISCOVERY_MINIMUM = 250;
 
@@ -37,7 +38,7 @@ public class GameWorld {
 
     private long lastAnnouncementTime = 0;
     private RunningMediaController.ClickState clickState;
-    private double metersSinceSpirit = 0;
+    private double metersSinceRunningResource = 0;
     private Random random;
 
     private ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
@@ -82,7 +83,7 @@ public class GameWorld {
         if (gameWorldThread == null || !gameWorldThread.isAlive()) {
             gameWorldThread = new GameWorldThread(this);
             gameWorldThread.start();
-            speakTTS("Game started.");
+            speakTTS(gameService.getString(R.string.game_started));
         }
     }
 
@@ -106,11 +107,11 @@ public class GameWorld {
 
         // Check discoveries
         // Spirit discovery
-        metersSinceSpirit += player.getLastDistanceTravelled();
-        if (metersSinceSpirit > METERS_PER_SPIRIT) {
-            metersSinceSpirit -= METERS_PER_SPIRIT;
+        metersSinceRunningResource += player.getLastDistanceTravelled();
+        if (metersSinceRunningResource > METERS_PER_RUNNING_RESOURCE) {
+            metersSinceRunningResource -= METERS_PER_RUNNING_RESOURCE;
             player.giveRunningResource(1);
-            speakTTS("Spirit captured!");
+            speakTTS(gameService.getString(R.string.receivedMovementResource));
             if (!tutorialFirstResource) refreshAnnouncement();
             tutorialFirstResource = true;
         }
@@ -124,7 +125,7 @@ public class GameWorld {
                 tutorialResourceBuildingDiscovered = true;
             }
             if (discovery != null) {
-                speakTTS("You have discovered " + discovery.getSpokenName() + "!");
+                speakTTS(gameService.getString(R.string.discoveredNotification, discovery.getSpokenName()));
             }
         }
 
@@ -135,10 +136,10 @@ public class GameWorld {
 
         // Check building or building upgrade
         if (clickState.doubleClicked) {
-            if (headquarters == null && player.getRunningResource() >= 10) {
-                player.takeRunningResource(10);
+            if (headquarters == null && player.getRunningResource() >= Headquarters.RUNNING_RESOURCE_BUILD_COST) {
+                player.takeRunningResource(Headquarters.RUNNING_RESOURCE_BUILD_COST);
                 headquarters = new Headquarters(this, player.getPosition());
-                speakTTS("You built a Spirit Well. This is a powerful headquarters for your spiritual activities!");
+                speakTTS(gameService.getString(R.string.headquarters_build));
                 tutorialHQbuilt = true;
             } else {
                 Iterator<GameObject> goit = objectsInInteractionRange.iterator();
@@ -172,25 +173,25 @@ public class GameWorld {
         // Check announcements
         if (System.currentTimeMillis() - lastAnnouncementTime > ANNOUNCEMENT_PERIOD) {
             String resourceAnnounce = "";
-            if (player.getRunningResource() > 0) resourceAnnounce += "You have " + player.getRunningResource() + " spirits, ";
-            else resourceAnnounce += "You have no spirits, ";
-            if (player.getBuildingResource() > 0) resourceAnnounce += "and " + player.getBuildingResource() + " Ecto.";
+            if (player.getRunningResource() > 0) resourceAnnounce += gameService.getString(R.string.movementResourceAnnounce, player.getRunningResource());
+            else resourceAnnounce += gameService.getString(R.string.movementResourceAnnounceNone);
+            if (player.getBuildingResource() > 0) resourceAnnounce +=  gameService.getString(R.string.buildingResourceAnnounce, player.getBuildingResource());
             speakTTS(resourceAnnounce);
-            if (!tutorialFirstResource) speakTTS("Walk or jog around to find spirits.");
+            if (!tutorialFirstResource) speakTTS(gameService.getString(R.string.tutorialFirstResource));
             else if (!tutorialHQbuilt) {
-                if (player.getRunningResource() < 10) speakTTS("I wonder what will happen if we get enough spirits?");
-                else speakTTS("10 of the spirits seem ready to settle. Choose a central location to build your headquarters, the spirit well. Double-click to build it.");
+                if (player.getRunningResource() < Headquarters.RUNNING_RESOURCE_BUILD_COST) speakTTS(gameService.getString(R.string.tutorialHQbuilt_notEnoughResources));
+                else speakTTS(gameService.getString(R.string.tutorialHQbuilt_readyToBuild, Headquarters.RUNNING_RESOURCE_BUILD_COST));
             }
             else if (!tutorialResourceBuildingDiscovered) {
-                speakTTS("Let's look around for something to power our headquarters.");
+                speakTTS(gameService.getString(R.string.tutorialResourceBuildingDiscovered));
             }
             else if (!tutorialResourceBuildingUpgraded) {
-                speakTTS("We can install a spirit tap on to a spirit tree to harness its power. It will cost 10 spirits. Double-click near the tree to build it.");
+                speakTTS(gameService.getString(R.string.tutorialResourceBuildingUpgraded, BuildingResourceSite.RUNNING_RESOURCE_UPGRADE_COST));
             }
             else if (!tutorialResourceBuildingCollected) {
-                speakTTS("To collect Ecto, come back to a Spirit Tree Tap after some time and single-click near it.");
+                speakTTS(gameService.getString(R.string.tutorialResourceBuildingCollected));
             } else if (!tutorialCompleted) {
-                speakTTS("You've completed the tutorial, but there is a lot more to discover - get out there!");
+                speakTTS(gameService.getString(R.string.tutorialCompleted));
                 tutorialCompleted = true;
             }
             lastAnnouncementTime = System.currentTimeMillis();
@@ -225,12 +226,12 @@ public class GameWorld {
                 if (newsights.size() == 1) {
                     sightsText += spokenName;
                 } else if (nextSight.hasNext()){
-                    sightsText += spokenName + ", ";
+                    sightsText += spokenName + gameService.getString(R.string.list_separator);
                 } else {
-                    sightsText += "and " + spokenName;
+                    sightsText += gameService.getString(R.string.list_final_and) + spokenName;
                 }
             }
-            speakTTS("You are approaching " + sightsText + ".");
+            speakTTS(gameService.getString(R.string.approachingAnnounce, sightsText));
         }
     }
 

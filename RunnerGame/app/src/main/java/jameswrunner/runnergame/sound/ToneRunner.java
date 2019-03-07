@@ -8,7 +8,7 @@ import android.os.HandlerThread;
 public class ToneRunner {
 
     public static final int MIN_PERIOD = 200;
-    private static final String LOGTAG = "ToneRunner";
+    private static final String LOGTAG = ToneRunner.class.getName();
     private static final int TONE_GENERATOR_VOLUME = 50;
     private static final int TONE_LENGTH = MIN_PERIOD / 2;
     private static final int TONE_TO_PLAY = android.media.ToneGenerator.TONE_CDMA_DIAL_TONE_LITE;

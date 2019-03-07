@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.SphericalUtil;
 
 import jameswrunner.runnergame.GameService;
+import jameswrunner.runnergame.R;
 
 /**
  * Created by james on 6/17/2017.
@@ -23,7 +24,7 @@ public class Player extends GameObject {
     private int buildingResource;
 
     public Player(GameWorld gw, LatLng gp) {
-        super(gw, "player", gp);
+        super(gw, gw.getGameService().getString(R.string.player_spokenName), gp);
         runningResource = 0;
     }
 
