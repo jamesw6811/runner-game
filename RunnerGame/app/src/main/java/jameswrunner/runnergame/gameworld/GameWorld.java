@@ -180,7 +180,7 @@ public class GameWorld {
             if (!tutorialFirstResource) speakTTS(gameService.getString(R.string.tutorialFirstResource));
             else if (!tutorialHQbuilt) {
                 if (player.getRunningResource() < Headquarters.RUNNING_RESOURCE_BUILD_COST) speakTTS(gameService.getString(R.string.tutorialHQbuilt_notEnoughResources));
-                else speakTTS(gameService.getString(R.string.tutorialHQbuilt_readyToBuild, Headquarters.RUNNING_RESOURCE_BUILD_COST));
+                else speakTTS(gameService.getString(R.string.tutorialHQbuilt_readyToBuild));
             }
             else if (!tutorialResourceBuildingDiscovered) {
                 speakTTS(gameService.getString(R.string.tutorialResourceBuildingDiscovered));

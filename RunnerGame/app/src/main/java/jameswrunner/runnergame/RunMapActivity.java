@@ -21,12 +21,14 @@ import com.google.android.gms.maps.model.Marker;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
-//TODO: Convert theme to Tree Spies - Sappy Secrets?
-//TODO: Transition from control points to strategic build game
-//TODO: Add persistent map between sessions
+//TODO: Add sub-resource building site
+//TODO: Add random chases
+//TODO: Add death/regrowth/return to HQ
+//TODO: Add HQ upgrades to discover more buildings/defenses/traps
+//TODO: Build out/tune strategic game
+//TODO: Add persistent map and/or resources between sessions
 //TODO: Add menu
-
-//TODO: Add short tutorial
+//TODO: Complete tutorial
 
 
 public class RunMapActivity extends FragmentActivity implements OnMapReadyCallback {
