@@ -36,7 +36,7 @@ public class GameWorld {
     private GameWorldThread gameWorldThread;
     private GameService gameService;
 
-    private long lastAnnouncementTime = 0;
+    private long lastAnnouncementTime = -ANNOUNCEMENT_PERIOD;
     private RunningMediaController.ClickState clickState;
     private double metersSinceRunningResource = 0;
     private Random random;
@@ -50,6 +50,7 @@ public class GameWorld {
     public boolean tutorialResourceBuildingDiscovered = false;
     public boolean tutorialResourceBuildingUpgraded = false;
     public boolean tutorialResourceBuildingCollected = false;
+    public boolean tutorialSubResourceBuildingCollected = false;
     public boolean tutorialCompleted = false;
 
     public GameWorld(Location firstGPS, GameService gs) {
@@ -94,17 +95,41 @@ public class GameWorld {
     }
 
     public synchronized void tickTime(final float timeDelta) {
-        // Update state from controller input and GPS input
+        updatePlayerState();
+        tickAll(timeDelta);
+        discoverSites();
+        speakSights();
+        handleInteractions();
+        doAnnouncements();
+        checkWinConditions();
+    }
+
+    // Update state from controller input and GPS input
+    private void updatePlayerState() {
         clickState = gameService.getController().getClickState(true);
         player.updatePosition(lastGPS);
+    }
 
-        // Tick all GameWorld objects
+    // Tick all GameWorld objects to handle time-related events
+    private void tickAll(float timeDelta) {
         for (GameObject go : gameObjects) go.tickTime(timeDelta);
+    }
 
-        // Build list of buildings in-range for discovery
+    private LinkedList<GameObject> getObjectsInCircle(LatLng center, double radius) {
+        LinkedList<GameObject> sights = new LinkedList<>();
+        for (GameObject go : gameObjects) {
+            double distance = SphericalUtil.computeDistanceBetween(go.getPosition(), center);
+            if (distance <= radius) {
+                sights.add(go);
+            }
+        }
+        return sights;
+    }
+
+    // Discover new sites
+    private void discoverSites() {
         LinkedList<GameObject> objectsInDiscoveryRange = getObjectsInCircle(player.getPosition(), METERS_DISCOVERY_MINIMUM);
         objectsInDiscoveryRange.remove(player);
-
         // Check discoveries
         // Spirit discovery
         metersSinceRunningResource += player.getLastDistanceTravelled();
@@ -119,21 +144,23 @@ public class GameWorld {
         if (headquarters != null && objectsInDiscoveryRange.size() == 0) {
             double discoverSeed = random.nextDouble();
             GameObject discovery = null;
-            if (discoverSeed < 0.1) {
+            if (discoverSeed < 0.7) {
                 discovery = new BuildingResourceSite(this, player.getPosition());
                 if (!tutorialResourceBuildingDiscovered) refreshAnnouncement();
                 tutorialResourceBuildingDiscovered = true;
+            } else if (discoverSeed < 1.0 && tutorialResourceBuildingDiscovered) {
+                discovery = new BuildingSubResourceSite(this, player.getPosition());
             }
             if (discovery != null) {
                 speakTTS(gameService.getString(R.string.discoveredNotification, discovery.getSpokenName()));
             }
         }
+    }
 
-
-        // Build list of buildings in-range for interaction/upgrade
+    // Handle interaction with nearby sites based on user input
+    private void handleInteractions() {
         LinkedList<GameObject> objectsInInteractionRange = getObjectsInCircle(player.getPosition(), METERS_IN_SIGHT);
         objectsInInteractionRange.remove(player);
-
         // Check building or building upgrade
         if (clickState.doubleClicked) {
             if (headquarters == null && player.getRunningResource() >= Headquarters.RUNNING_RESOURCE_BUILD_COST) {
@@ -153,7 +180,6 @@ public class GameWorld {
                 }
             }
         }
-
         // Check interaction
         if (clickState.singleClicked) {
             Iterator<GameObject> goit = objectsInInteractionRange.iterator();
@@ -166,52 +192,9 @@ public class GameWorld {
                 }
             }
         }
-
-        // Check sights for announcements
-        speakSights();
-
-        // Check announcements
-        if (System.currentTimeMillis() - lastAnnouncementTime > ANNOUNCEMENT_PERIOD) {
-            String resourceAnnounce = "";
-            if (player.getRunningResource() > 0) resourceAnnounce += gameService.getString(R.string.movementResourceAnnounce, player.getRunningResource());
-            else resourceAnnounce += gameService.getString(R.string.movementResourceAnnounceNone);
-            if (player.getBuildingResource() > 0) resourceAnnounce +=  gameService.getString(R.string.buildingResourceAnnounce, player.getBuildingResource());
-            speakTTS(resourceAnnounce);
-            if (!tutorialFirstResource) speakTTS(gameService.getString(R.string.tutorialFirstResource));
-            else if (!tutorialHQbuilt) {
-                if (player.getRunningResource() < Headquarters.RUNNING_RESOURCE_BUILD_COST) speakTTS(gameService.getString(R.string.tutorialHQbuilt_notEnoughResources));
-                else speakTTS(gameService.getString(R.string.tutorialHQbuilt_readyToBuild));
-            }
-            else if (!tutorialResourceBuildingDiscovered) {
-                speakTTS(gameService.getString(R.string.tutorialResourceBuildingDiscovered));
-            }
-            else if (!tutorialResourceBuildingUpgraded) {
-                speakTTS(gameService.getString(R.string.tutorialResourceBuildingUpgraded, BuildingResourceSite.RUNNING_RESOURCE_UPGRADE_COST));
-            }
-            else if (!tutorialResourceBuildingCollected) {
-                speakTTS(gameService.getString(R.string.tutorialResourceBuildingCollected));
-            } else if (!tutorialCompleted) {
-                speakTTS(gameService.getString(R.string.tutorialCompleted));
-                tutorialCompleted = true;
-            }
-            lastAnnouncementTime = System.currentTimeMillis();
-        }
-
-        // Check win conditions and draw
-        checkWinConditions();
     }
 
-    private LinkedList<GameObject> getObjectsInCircle(LatLng center, double radius) {
-        LinkedList<GameObject> sights = new LinkedList<>();
-        for (GameObject go : gameObjects) {
-            double distance = SphericalUtil.computeDistanceBetween(go.getPosition(), center);
-            if (distance <= radius) {
-                sights.add(go);
-            }
-        }
-        return sights;
-    }
-
+    // Speak location names to the player as they approach known locations
     private void speakSights() {
         LinkedList<GameObject> newsights = getObjectsInCircle(player.getPosition(), METERS_IN_SIGHT);
         LinkedList<GameObject> oldsights = getObjectsInCircle(player.getLastPosition(), METERS_IN_SIGHT);
@@ -235,10 +218,44 @@ public class GameWorld {
         }
     }
 
-    private void refreshAnnouncement() {
-        lastAnnouncementTime = 0;
+    // Make announcements about the player's available resources and tutorial messages at a certain time interval
+    private void doAnnouncements() {
+        if (System.currentTimeMillis() - lastAnnouncementTime > ANNOUNCEMENT_PERIOD) {
+            String resourceAnnounce = "";
+            if (player.getRunningResource() > 0) resourceAnnounce += gameService.getString(R.string.movementResourceAnnounce, player.getRunningResource());
+            else resourceAnnounce += gameService.getString(R.string.movementResourceAnnounceNone);
+            if (player.getBuildingResource() > 0) resourceAnnounce +=  gameService.getString(R.string.buildingResourceAnnounce, player.getBuildingResource());
+            speakTTS(resourceAnnounce);
+            if (!tutorialFirstResource) speakTTS(gameService.getString(R.string.tutorialFirstResource));
+            else if (!tutorialHQbuilt) {
+                if (player.getRunningResource() < Headquarters.RUNNING_RESOURCE_BUILD_COST) speakTTS(gameService.getString(R.string.tutorialHQbuilt_notEnoughResources));
+                else speakTTS(gameService.getString(R.string.tutorialHQbuilt_readyToBuild));
+            }
+            else if (!tutorialResourceBuildingDiscovered) {
+                speakTTS(gameService.getString(R.string.tutorialResourceBuildingDiscovered));
+            }
+            else if (!tutorialResourceBuildingUpgraded) {
+                speakTTS(gameService.getString(R.string.tutorialResourceBuildingUpgraded, BuildingResourceSite.RUNNING_RESOURCE_UPGRADE_COST));
+            }
+            else if (!tutorialResourceBuildingCollected) {
+                speakTTS(gameService.getString(R.string.tutorialResourceBuildingCollected));
+            }
+            else if (!tutorialSubResourceBuildingCollected) {
+                speakTTS(gameService.getString(R.string.tutorialSubResourceBuildingCollected));
+            } else if (!tutorialCompleted) {
+                speakTTS(gameService.getString(R.string.tutorialCompleted));
+                tutorialCompleted = true;
+            }
+            lastAnnouncementTime = System.currentTimeMillis();
+        }
     }
 
+    // Refresh the announcement time so that it plays as soon as possible.
+    private void refreshAnnouncement() {
+        lastAnnouncementTime = -ANNOUNCEMENT_PERIOD;
+    }
+
+    // Check if the win/lose conditions for the game have been met and take action accordingly
     private void checkWinConditions() {
 
     }

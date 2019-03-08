@@ -12,6 +12,13 @@
     <string name="buildingresourcesite_upgradeNotEnoughResources">You need at least %d Vine Cred to make this sapling your informant.</string>
     <string name="buildingresourcesite_collectSuccess">You sleuthed %d Secrets from the Sapling.</string>
     <string name="buildingresourcesite_collectOutOfResource">This Seedy Sapling is stumped for now. Come back later.</string>
+    <string name="buildingsubresourcesite_spokenName">an Analyst Aspen with no leads</string>
+    <string name="buildingsubresourcesite_spokenNameBuilt">an Analyst Aspen working on your lead</string>
+    <string name="buildingsubresourcesite_mapName">Aspen</string>
+    <string name="buildingsubresourcesite_upgradeSuccess">The Analyst Aspen found its first lead to analyze for your %d Vine Cred and %d Secrets.</string>
+    <string name="buildingsubresourcesite_upgradeNotEnoughResources">You need at least %d Vine Cred and %d Secrets to get the Aspen its first lead.</string>
+    <string name="buildingsubresourcesite_collectSuccess">After analyzing your %d Secrets, the Aspen gives you %d Intel.</string>
+    <string name="buildingsubresourcesite_collectNotEnoughResources">You need %d Secrets for the Aspen to analyze for Intel.</string>
     <string name="game_started">Game started.</string>
     <string name="receivedMovementResource">You got more Vine Cred!</string>
     <string name="discoveredNotification">You have discovered %s!</string>
@@ -23,10 +30,12 @@
     <string name="tutorialHQbuilt_notEnoughResources">We need some Vine Cred before we can set up our first headquarters.</string>
     <string name="tutorialHQbuilt_readyToBuild">You have enough Vine Cred for your first headquarters, the Shady Grove. Choose a central location to build your headquarters and double-click to build it.</string>
     <string name="tutorialResourceBuildingDiscovered">Now that we\'ve grown our Shady Grove, let\'s go investigate the area.</string>
-    <string name="tutorialResourceBuildingUpgraded">We can use %d Vine Cred to make this Sapling our informant. Double-click near the Sapling to turn it to your side.</string>
-    <string name="tutorialResourceBuildingCollected">Seedy Sapling informants sleuth out Secrets over time. To collect the Secrets, come back after some time and single-click near the Saplings.</string>
+    <string name="tutorialResourceBuildingUpgraded">We can use %d Vine Cred to make a Sapling our informant. Double-click near the Sapling to turn it to your side.</string>
+    <string name="tutorialResourceBuildingCollected">Seedy Sapling informants sleuth out Secrets over time. To collect the Secrets, come back after some time and single-click near a Sapling.</string>
+    <string name="tutorialSubResourceBuildingCollected">Analyst Aspens analyze Secrets into Interesting Intel, which allows you to plan missions. After giving an Aspen its first lead, bring it some Secrets to gain Intel.</string>
     <string name="tutorialCompleted">You\'ve completed the tutorial, but there is a lot more to discover - get out there and Sap some Secrets!</string>
     <string name="list_separator">, </string>
     <string name="list_final_and">and </string>
     <string name="approachingAnnounce">You are approaching %s.</string>
+    <string name="buildingsubresourcesite_buildExpired">One of your Analyst Aspens lost their lead after %d minutes with no new Secrets.</string>
 </resources>

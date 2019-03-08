@@ -17,16 +17,17 @@ import jameswrunner.runnergame.R;
  * Created by james on 6/17/2017.
  */
 
-public class BuildingResourceSite extends GameObject {
+public class BuildingSubResourceSite extends GameObject {
     public static final int RUNNING_RESOURCE_UPGRADE_COST = 10;
-    private static final int MAX_RESOURCE = 10;
-    private static final float RESOURCE_GENERATION_PERIOD = 30f;
+    public static final int BUILDING_RESOURCE_UPGRADE_COST = 10;
+    public static final int BUILDING_RESOURCE_TRADE_COST = 10;
+    public static final int BUILDING_SUBRESOURCE_AMOUNT_PER_TRADE = 1;
+    public static final float BUILT_EXPIRY_DURATION = 10 * 60f;
+    private float timeSinceBuilt = 0;
     private Marker marker;
     private boolean built = false;
-    private int resource = 0;
-    private float timeSinceLastResource = 0;
 
-    public BuildingResourceSite(GameWorld gw, LatLng pos) {
+    public BuildingSubResourceSite(GameWorld gw, LatLng pos) {
         super(gw, gw.getGameService().getString(R.string.buildingresourcesite_spokenName), pos);
     }
 
@@ -54,7 +55,7 @@ public class BuildingResourceSite extends GameObject {
             } else {
                 ig.setColor(Color.BLACK);
             }
-            Bitmap icon = ig.makeIcon(gs.getString(R.string.buildingresourcesite_mapName));
+            Bitmap icon = ig.makeIcon(gs.getString(R.string.buildingsubresourcesite_mapName));
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(icon));
         }
     }
@@ -62,48 +63,45 @@ public class BuildingResourceSite extends GameObject {
     @Override
     public String getSpokenName(){
         if (!built) return super.getSpokenName();
-        else return getGameWorld().getGameService().getString(R.string.buildingresourcesite_spokenNameWithResources, super.getSpokenName(), resource);
+        else return getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_spokenNameBuilt);
     }
 
-    public void setBuilt(boolean b){
+    private void setBuilt(boolean b){
         built = b;
         updateMarker();
     }
 
     @Override
     public boolean isUpgradable() {
-        if (!built) return true;
-        return false;
+        return !built;
     }
 
     @Override
     public void upgrade(Player player) {
         if (built) throw new UnsupportedOperationException("Cannot upgrade further.");
-        if (player.getRunningResource() >= RUNNING_RESOURCE_UPGRADE_COST) {
+        if (player.getRunningResource() >= RUNNING_RESOURCE_UPGRADE_COST && player.getBuildingResource() >= BUILDING_RESOURCE_UPGRADE_COST) {
             player.takeRunningResource(RUNNING_RESOURCE_UPGRADE_COST);
+            player.takeBuildingResource(BUILDING_RESOURCE_UPGRADE_COST);
             setBuilt(true);
-            getGameWorld().tutorialResourceBuildingUpgraded = true;
-            getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingresourcesite_upgradeSuccess, RUNNING_RESOURCE_UPGRADE_COST));
+            getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_upgradeSuccess, RUNNING_RESOURCE_UPGRADE_COST, BUILDING_RESOURCE_UPGRADE_COST));
         } else {
-            getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingresourcesite_upgradeNotEnoughResources, RUNNING_RESOURCE_UPGRADE_COST));
+            getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_upgradeNotEnoughResources, RUNNING_RESOURCE_UPGRADE_COST, BUILDING_RESOURCE_UPGRADE_COST));
         }
     }
 
     @Override
     public boolean isInteractable() {
-        if (built) return true;
-        else return false;
+        return built;
     }
 
     @Override
     public void interact(Player player) {
-        if (resource > 0) {
-            getGameWorld().tutorialResourceBuildingCollected = true;
-            getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingresourcesite_collectSuccess, resource));
-            player.giveBuildingResource(resource);
-            resource = 0;
+        if (player.getBuildingResource() > BUILDING_RESOURCE_TRADE_COST) {
+            getGameWorld().tutorialSubResourceBuildingCollected = true;
+            getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_collectSuccess, BUILDING_RESOURCE_TRADE_COST, BUILDING_SUBRESOURCE_AMOUNT_PER_TRADE));
+            player.giveBuildingSubResource(BUILDING_SUBRESOURCE_AMOUNT_PER_TRADE);
         } else {
-            getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingresourcesite_collectOutOfResource));
+            getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_collectNotEnoughResources));
         }
     }
 
@@ -111,10 +109,10 @@ public class BuildingResourceSite extends GameObject {
     public void tickTime(float timeDelta) {
         super.tickTime(timeDelta);
         if (built) {
-            timeSinceLastResource += timeDelta;
-            if (timeSinceLastResource > RESOURCE_GENERATION_PERIOD) {
-                timeSinceLastResource -= RESOURCE_GENERATION_PERIOD;
-                resource = Math.min(MAX_RESOURCE, resource + 1);
+            timeSinceBuilt += timeDelta;
+            if (timeSinceBuilt > BUILT_EXPIRY_DURATION) {
+                setBuilt(false);
+                getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_buildExpired, (int)Math.round(BUILT_EXPIRY_DURATION/60f)));
             }
         }
     }

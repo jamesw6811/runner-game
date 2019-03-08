@@ -22,6 +22,7 @@ public class Player extends GameObject {
     private double lastHeadingTravelled;
     private int runningResource;
     private int buildingResource;
+    private int buildingSubResource;
 
     public Player(GameWorld gw, LatLng gp) {
         super(gw, gw.getGameService().getString(R.string.player_spokenName), gp);
@@ -96,5 +97,19 @@ public class Player extends GameObject {
     public void takeBuildingResource(int i) {
         if (i < 1) throw new RuntimeException("Taking less than 1 resource");
         buildingResource -= i;
+    }
+
+    public void giveBuildingSubResource(int i) {
+        if (i < 1) throw new RuntimeException("Giving less than 1 resource");
+        buildingSubResource += i;
+    }
+
+    public int getBuildingSubResource() {
+        return buildingSubResource;
+    }
+
+    public void takeBuildingSubResource(int i) {
+        if (i < 1) throw new RuntimeException("Taking less than 1 resource");
+        buildingSubResource -= i;
     }
 }
