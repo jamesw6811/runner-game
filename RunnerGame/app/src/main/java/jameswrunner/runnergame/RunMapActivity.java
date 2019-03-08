@@ -21,7 +21,6 @@ import com.google.android.gms.maps.model.Marker;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
-//TODO: Add sub-resource building site
 //TODO: Add random chases
 //TODO: Add death/regrowth/return to HQ
 //TODO: Add HQ upgrades to discover more buildings/defenses/traps
