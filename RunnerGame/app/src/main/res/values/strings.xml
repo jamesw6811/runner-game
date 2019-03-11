@@ -32,7 +32,7 @@
     <string name="tutorialResourceBuildingDiscovered">Now that we\'ve grown our Shady Grove, let\'s go investigate the area.</string>
     <string name="tutorialResourceBuildingUpgraded">We can use %d Vine Cred to make a Sapling our informant. Double-click near the Sapling to turn it to your side.</string>
     <string name="tutorialResourceBuildingCollected">Seedy Sapling informants sleuth out Secrets over time. To collect the Secrets, come back after some time and single-click near a Sapling.</string>
-    <string name="tutorialSubResourceBuildingCollected">Analyst Aspens analyze Secrets into Interesting Intel, which allows you to plan missions. After giving an Aspen its first lead, bring it some Secrets to gain Intel.</string>
+    <string name="tutorialSubResourceBuildingCollected">Analyst Aspens analyze Secrets into Interesting Intel, which allows you to plan missions. </string>
     <string name="tutorialCompleted">You\'ve completed the tutorial, but there is a lot more to discover - get out there and Sap some Secrets!</string>
     <string name="list_separator">, </string>
     <string name="list_final_and">and </string>
