@@ -101,7 +101,7 @@ public class BuildingSubResourceSite extends GameObject {
             getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_collectSuccess, BUILDING_RESOURCE_TRADE_COST, BUILDING_SUBRESOURCE_AMOUNT_PER_TRADE));
             player.giveBuildingSubResource(BUILDING_SUBRESOURCE_AMOUNT_PER_TRADE);
         } else {
-            getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_collectNotEnoughResources));
+            getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_collectNotEnoughResources, BUILDING_RESOURCE_TRADE_COST));
         }
     }
 
