@@ -21,15 +21,6 @@ import com.google.android.gms.maps.model.Marker;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
-//TODO: Add random chases
-//TODO: Add death/regrowth/return to HQ
-//TODO: Add HQ upgrades to discover more buildings/defenses/traps
-//TODO: Build out/tune strategic game
-//TODO: Add persistent map and/or resources between sessions
-//TODO: Add menu
-//TODO: Complete tutorial
-
-
 public class RunMapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static final String LOGTAG = RunMapActivity.class.getName();
@@ -39,6 +30,7 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
     private Marker lastOpened;
     // A reference to the service used to get location updates.
     private GameService gameService = null;
+
 
     // Tracks the bound state of the service.
 
