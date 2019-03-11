@@ -23,8 +23,8 @@
     <string name="receivedMovementResource">You got more Vine Cred!</string>
     <string name="discoveredNotification">You have discovered %s!</string>
     <string name="headquarters_build">You built a Shady Grove. This is the first headquarters for your sappy sleuthing. Over time, you can upgrade it to support your arborous spy agency.</string>
-    <string name="movementResourceAnnounce">You have %d Vine Cred.</string>
-    <string name="movementResourceAnnounceNone">You have no Vine Cred.</string>
+    <string name="movementResourceAnnounce">You have %d Vine Cred</string>
+    <string name="movementResourceAnnounceNone">You have no Vine Cred</string>
     <string name="buildingResourceAnnounce"> and %d Secrets.</string>
     <string name="tutorialFirstResource">Walk or jog around the neighborhood to get Vine Cred.</string>
     <string name="tutorialHQbuilt_notEnoughResources">We need some Vine Cred before we can set up our first headquarters.</string>
