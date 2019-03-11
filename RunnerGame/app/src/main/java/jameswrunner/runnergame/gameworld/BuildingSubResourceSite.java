@@ -28,7 +28,7 @@ public class BuildingSubResourceSite extends GameObject {
     private boolean built = false;
 
     public BuildingSubResourceSite(GameWorld gw, LatLng pos) {
-        super(gw, gw.getGameService().getString(R.string.buildingresourcesite_spokenName), pos);
+        super(gw, gw.getGameService().getString(R.string.buildingsubresourcesite_spokenName), pos);
     }
 
     protected synchronized void clearMarkerState() {

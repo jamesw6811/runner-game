@@ -24,11 +24,11 @@ import static jameswrunner.runnergame.maputils.MapUtilities.locationToLatLng;
  */
 
 public class GameWorld {
-    private static final int METERS_PER_RUNNING_RESOURCE = 50;
-    private static final double METERS_IN_SIGHT = 15;
-    private static final double METERS_DISCOVERY_MINIMUM = 250;
+    private static final int METERS_PER_RUNNING_RESOURCE = 40;
+    private static final double METERS_IN_SIGHT = 30;
+    private static final double METERS_DISCOVERY_MINIMUM = 100;
 
-    public static final int ANNOUNCEMENT_PERIOD = 60 * 1000;
+    public static final int ANNOUNCEMENT_PERIOD = 120 * 1000;
     public static final double NAV_BEEP_PERIOD_MULTIPLIER = 2500.0 / 300.0; // millis period per meter
     private static final String LOGTAG = GameWorld.class.getName();
 
@@ -144,7 +144,7 @@ public class GameWorld {
         if (headquarters != null && objectsInDiscoveryRange.size() == 0) {
             double discoverSeed = random.nextDouble();
             GameObject discovery = null;
-            if (discoverSeed < 0.7) {
+            if (discoverSeed < 0.5) {
                 discovery = new BuildingResourceSite(this, player.getPosition());
                 if (!tutorialResourceBuildingDiscovered) refreshAnnouncement();
                 tutorialResourceBuildingDiscovered = true;
@@ -221,11 +221,14 @@ public class GameWorld {
     // Make announcements about the player's available resources and tutorial messages at a certain time interval
     private void doAnnouncements() {
         if (System.currentTimeMillis() - lastAnnouncementTime > ANNOUNCEMENT_PERIOD) {
+            // Resources announcement
             String resourceAnnounce = "";
             if (player.getRunningResource() > 0) resourceAnnounce += gameService.getString(R.string.movementResourceAnnounce, player.getRunningResource());
             else resourceAnnounce += gameService.getString(R.string.movementResourceAnnounceNone);
             if (player.getBuildingResource() > 0) resourceAnnounce +=  gameService.getString(R.string.buildingResourceAnnounce, player.getBuildingResource());
             speakTTS(resourceAnnounce);
+
+            // Tutorial announcement
             if (!tutorialFirstResource) speakTTS(gameService.getString(R.string.tutorialFirstResource));
             else if (!tutorialHQbuilt) {
                 if (player.getRunningResource() < Headquarters.RUNNING_RESOURCE_BUILD_COST) speakTTS(gameService.getString(R.string.tutorialHQbuilt_notEnoughResources));
