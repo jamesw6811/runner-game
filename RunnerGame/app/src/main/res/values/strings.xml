@@ -33,7 +33,7 @@
     <string name="movementResourceAnnounceNone">You have no Vine Cred</string>
     <string name="buildingResourceAnnounce"> and %d Secrets.</string>
     <string name="tutorialFirstResource">Walk or jog around the neighborhood to get Vine Cred.</string>
-    <string name="tutorialHQbuilt_notEnoughResources">We need some Vine Cred before we can set up our first headquarters.</string>
+    <string name="tutorialHQbuilt_notEnoughResources">We need %d Vine Cred before we can set up our first headquarters.</string>
     <string name="tutorialHQbuilt_readyToBuild">You have enough Vine Cred for your first headquarters, the Shady Grove. Choose a central location to build your headquarters and double-click your headphones play button to build it.</string>
     <string name="tutorialResourceBuildingDiscovered">Now that we\'ve grown our Shady Grove, let\'s go investigate the area.</string>
     <string name="tutorialResourceBuildingUpgraded">We can use %d Vine Cred to make a Sapling our informant. Double-click the Sapling to turn it to your side.</string>

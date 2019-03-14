@@ -183,6 +183,7 @@ public class GameWorld {
                 player.takeRunningResource(Headquarters.RUNNING_RESOURCE_BUILD_COST);
                 headquarters = new Headquarters(this, player.getPosition());
                 speakTTS(gameService.getString(R.string.headquarters_build));
+                refreshAnnouncement();
                 tutorialHQbuilt = true;
             } else {
                 Iterator<GameObject> goit = objectsInInteractionRange.iterator();
@@ -257,7 +258,7 @@ public class GameWorld {
             // Tutorial announcement
             if (!tutorialFirstResource) speakTTS(gameService.getString(R.string.tutorialFirstResource));
             else if (!tutorialHQbuilt) {
-                if (player.getRunningResource() < Headquarters.RUNNING_RESOURCE_BUILD_COST) speakTTS(gameService.getString(R.string.tutorialHQbuilt_notEnoughResources));
+                if (player.getRunningResource() < Headquarters.RUNNING_RESOURCE_BUILD_COST) speakTTS(gameService.getString(R.string.tutorialHQbuilt_notEnoughResources, Headquarters.RUNNING_RESOURCE_BUILD_COST));
                 else speakTTS(gameService.getString(R.string.tutorialHQbuilt_readyToBuild));
             }
             else if (!tutorialResourceBuildingDiscovered) {

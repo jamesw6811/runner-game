@@ -20,7 +20,7 @@ import jameswrunner.runnergame.R;
 
 public class Headquarters extends GameObject {
     private Marker marker;
-    public static final int RUNNING_RESOURCE_BUILD_COST = 10;
+    public static final int RUNNING_RESOURCE_BUILD_COST = 5;
 
     public Headquarters(GameWorld gw, LatLng pos) {
         super(gw, gw.getGameService().getString(R.string.headquarters_spokenName), pos);
