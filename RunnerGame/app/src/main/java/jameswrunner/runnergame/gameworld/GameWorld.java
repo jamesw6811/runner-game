@@ -152,7 +152,7 @@ public class GameWorld {
                 discovery = new BuildingSubResourceSite(this, player.getPosition());
             }
             if (discovery != null) {
-                speakTTS(gameService.getString(R.string.discoveredNotification, discovery.getSpokenName()));
+                interruptTTS(gameService.getString(R.string.discoveredNotification, discovery.getSpokenName()));
             }
         }
     }
@@ -276,6 +276,10 @@ public class GameWorld {
 
     protected void speakTTS(CharSequence speech) {
         gameService.getTTSRunner().addSpeech(speech);
+    }
+
+    protected void interruptTTS(CharSequence speech) {
+        gameService.getTTSRunner().interruptSpeech(speech);
     }
 
     private void focusCameraOnPosition(final LatLng ll, final float zoom) {

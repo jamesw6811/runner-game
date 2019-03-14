@@ -27,6 +27,14 @@ public class TextToSpeechRunner {
         tts.speak(toSay, TextToSpeech.QUEUE_ADD, null, LOGTAG);
     }
 
+    /*
+    Interrupt existing speech to say 'toSay'
+     */
+    public void interruptSpeech(CharSequence toSay) {
+        stopSpeech();
+        addSpeech(toSay);
+    }
+
     public void stopSpeech() {
         tts.stop();
     }
