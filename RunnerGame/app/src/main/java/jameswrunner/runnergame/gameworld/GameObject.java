@@ -74,7 +74,7 @@ public abstract class GameObject {
         return false;
     }
 
-    public void upgrade(Player player) {
+    public void upgrade() {
         throw new UnsupportedOperationException("This object is not upgradable.");
     }
 
@@ -86,7 +86,15 @@ public abstract class GameObject {
         return false;
     }
 
-    public void interact(Player player) {
+    public void interact() {
         throw new UnsupportedOperationException("This object is not interactable.");
+    }
+
+    public boolean hasApproachActivity() {
+        return false;
+    }
+
+    public void approach() {
+        throw new UnsupportedOperationException("This object does not have an approach activity.");
     }
 }

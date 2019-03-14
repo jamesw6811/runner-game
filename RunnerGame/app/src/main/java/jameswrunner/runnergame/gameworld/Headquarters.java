@@ -50,4 +50,18 @@ public class Headquarters extends GameObject {
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(icon));
         }
     }
+
+    @Override
+    public boolean hasApproachActivity() {
+        return true;
+    }
+
+    @Override
+    public void approach() {
+        Player player = getGameWorld().getPlayer();
+        if (player.isInjured()) {
+            player.fixInjury();
+            getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.headquarters_fixInjuries));
+        }
+    }
 }

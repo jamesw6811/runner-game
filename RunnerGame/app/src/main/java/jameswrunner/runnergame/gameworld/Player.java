@@ -23,6 +23,7 @@ public class Player extends GameObject {
     private int runningResource;
     private int buildingResource;
     private int buildingSubResource;
+    private boolean injured = false;
 
     public Player(GameWorld gw, LatLng gp) {
         super(gw, gw.getGameService().getString(R.string.player_spokenName), gp);
@@ -111,5 +112,17 @@ public class Player extends GameObject {
     public void takeBuildingSubResource(int i) {
         if (i < 1) throw new RuntimeException("Taking less than 1 resource");
         buildingSubResource -= i;
+    }
+
+    public void injure() {
+        injured = true;
+    }
+
+    public boolean isInjured() {
+        return injured;
+    }
+
+    public void fixInjury() {
+        injured = false;
     }
 }

@@ -27,6 +27,9 @@ public class GameWorld {
     private static final int METERS_PER_RUNNING_RESOURCE = 40;
     private static final double METERS_IN_SIGHT = 30;
     private static final double METERS_DISCOVERY_MINIMUM = 100;
+    private static final double CHASE_DEFAULT_DISTANCE_METERS = 50; //meters to outrun other runner
+    private static final double CHASE_DEFAULT_DISTANCE_FAIL_METERS = 100; //meters for other runner to outrun you
+    private static final double CHASE_DEFAULT_SPEED_METERS_PER_SECOND = 3*1.33; //meters per second of racer, average jog speed *1.33 https://www.quora.com/What-is-the-average-running-speed-of-a-human
 
     public static final int ANNOUNCEMENT_PERIOD = 120 * 1000;
     public static final double NAV_BEEP_PERIOD_MULTIPLIER = 2500.0 / 300.0; // millis period per meter
@@ -44,6 +47,14 @@ public class GameWorld {
     private ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
     private Player player;
     private Headquarters headquarters = null;
+
+    private boolean chaseHappening = false;
+    private boolean chaseFlee = false;
+    private double chaseDistance = 0;
+    private double chaseDistanceWin = 0;
+    private double chaseDistanceLose = 0;
+    private double chaseSpeed = 0;
+    private ChaseOriginator chaseSite = null;
 
     public boolean tutorialFirstResource = false;
     public boolean tutorialHQbuilt = false;
@@ -98,8 +109,9 @@ public class GameWorld {
         updatePlayerState();
         tickAll(timeDelta);
         discoverSites();
-        speakSights();
-        handleInteractions();
+        handleApproach();
+        handleChase(timeDelta);
+        if (!player.isInjured()) handleInteractions();
         doAnnouncements();
         checkWinConditions();
     }
@@ -144,15 +156,18 @@ public class GameWorld {
         if (headquarters != null && objectsInDiscoveryRange.size() == 0) {
             double discoverSeed = random.nextDouble();
             GameObject discovery = null;
-            if (discoverSeed < 0.5) {
+            if (discoverSeed < 0.35) {
                 discovery = new BuildingResourceSite(this, player.getPosition());
                 if (!tutorialResourceBuildingDiscovered) refreshAnnouncement();
                 tutorialResourceBuildingDiscovered = true;
-            } else if (discoverSeed < 1.0 && tutorialResourceBuildingDiscovered) {
+            } else if (discoverSeed < 0.70 && tutorialResourceBuildingDiscovered) {
                 discovery = new BuildingSubResourceSite(this, player.getPosition());
+            } else if (discoverSeed < 1.00 && tutorialResourceBuildingDiscovered) {
+                discovery = new ChaseSite(this, player.getPosition());
             }
             if (discovery != null) {
-                interruptTTS(gameService.getString(R.string.discoveredNotification, discovery.getSpokenName()));
+                speakTTS(gameService.getString(R.string.discoveredNotification, discovery.getSpokenName()));
+                if (discovery.hasApproachActivity()) discovery.approach();
             }
         }
     }
@@ -161,6 +176,7 @@ public class GameWorld {
     private void handleInteractions() {
         LinkedList<GameObject> objectsInInteractionRange = getObjectsInCircle(player.getPosition(), METERS_IN_SIGHT);
         objectsInInteractionRange.remove(player);
+
         // Check building or building upgrade
         if (clickState.doubleClicked) {
             if (headquarters == null && player.getRunningResource() >= Headquarters.RUNNING_RESOURCE_BUILD_COST) {
@@ -173,7 +189,7 @@ public class GameWorld {
                 while (goit.hasNext()){
                     GameObject tryUpgrade = goit.next();
                     if (tryUpgrade.isUpgradable()) {
-                        tryUpgrade.upgrade(player);
+                        tryUpgrade.upgrade();
                         refreshAnnouncement();
                         break;
                     }
@@ -186,7 +202,7 @@ public class GameWorld {
             while (goit.hasNext()){
                 GameObject tryInteract = goit.next();
                 if (tryInteract.isInteractable()) {
-                    tryInteract.interact(player);
+                    tryInteract.interact();
                     refreshAnnouncement();
                     break;
                 }
@@ -194,13 +210,23 @@ public class GameWorld {
         }
     }
 
-    // Speak location names to the player as they approach known locations
-    private void speakSights() {
+    // Handle approach activities and speak location names to the player as they approach known locations
+    private void handleApproach() {
         LinkedList<GameObject> newsights = getObjectsInCircle(player.getPosition(), METERS_IN_SIGHT);
         LinkedList<GameObject> oldsights = getObjectsInCircle(player.getLastPosition(), METERS_IN_SIGHT);
         newsights.removeAll(oldsights);
         newsights.remove(player);
 
+        // Handle approach activities
+        Iterator<GameObject> goit = newsights.iterator();
+        while (goit.hasNext()){
+            GameObject tryApproach = goit.next();
+            if (tryApproach.hasApproachActivity()) {
+                tryApproach.approach();
+            }
+        }
+
+        // Speak location names
         if (newsights.size() > 0){
             Iterator<GameObject> nextSight = newsights.iterator();
             String sightsText = "";
@@ -296,8 +322,46 @@ public class GameWorld {
         if (go != null) focusCameraOnPosition(go.getPosition(), 17f);
     }
 
-    protected GameService getGameService(){
+    GameService getGameService(){
         return gameService;
     }
+    Player getPlayer(){
+        return player;
+    }
 
+    public boolean startChase(boolean flee, double chase_difficulty_mod, ChaseOriginator chaseSite) {
+        if (chaseHappening) return false;
+
+        chaseDistance = 0;
+        this.chaseSite = chaseSite;
+        chaseFlee = flee;
+        chaseSpeed = CHASE_DEFAULT_SPEED_METERS_PER_SECOND*chase_difficulty_mod;
+        chaseDistanceWin = CHASE_DEFAULT_DISTANCE_METERS;
+        chaseDistanceLose = -CHASE_DEFAULT_DISTANCE_FAIL_METERS;
+        chaseHappening = true;
+
+        return true;
+    }
+
+    private void handleChase(float timeDelta){
+        if (!chaseHappening) return;
+
+        chaseDistance += player.getLastDistanceTravelled() - timeDelta*chaseSpeed;
+        if (chaseDistance > chaseDistanceWin) {
+            chaseHappening = false;
+            gameService.getToneRunner().stopTone();
+            chaseSite.chaseSuccessful();
+        } else if (chaseDistance < chaseDistanceLose) {
+            chaseHappening = false;
+            gameService.getToneRunner().stopTone();
+            chaseSite.chaseFailed();
+        } else {
+            if (chaseFlee) {
+                gameService.getToneRunner().playTone((int)Math.round((chaseDistance - chaseDistanceLose)*NAV_BEEP_PERIOD_MULTIPLIER));
+            } else {
+                gameService.getToneRunner().playTone((int)Math.round((chaseDistanceWin - chaseDistance)*NAV_BEEP_PERIOD_MULTIPLIER));
+            }
+        }
+    }
 }
+

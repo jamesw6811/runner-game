@@ -77,7 +77,8 @@ public class BuildingSubResourceSite extends GameObject {
     }
 
     @Override
-    public void upgrade(Player player) {
+    public void upgrade() {
+        Player player = getGameWorld().getPlayer();
         if (built) throw new UnsupportedOperationException("Cannot upgrade further.");
         if (player.getRunningResource() >= RUNNING_RESOURCE_UPGRADE_COST && player.getBuildingResource() >= BUILDING_RESOURCE_UPGRADE_COST) {
             player.takeRunningResource(RUNNING_RESOURCE_UPGRADE_COST);
@@ -95,7 +96,8 @@ public class BuildingSubResourceSite extends GameObject {
     }
 
     @Override
-    public void interact(Player player) {
+    public void interact() {
+        Player player = getGameWorld().getPlayer();
         if (player.getBuildingResource() > BUILDING_RESOURCE_TRADE_COST) {
             getGameWorld().tutorialSubResourceBuildingCollected = true;
             getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_collectSuccess, BUILDING_RESOURCE_TRADE_COST, BUILDING_SUBRESOURCE_AMOUNT_PER_TRADE));
