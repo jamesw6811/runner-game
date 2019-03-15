@@ -6,7 +6,7 @@
     <string name="headquarters_spokenName">your Shady Grove</string>
     <string name="headquarters_mapName">HQ</string>
     <string name="headquarters_fixInjuries">You cured your poison at the HQ. Now you feel as spry as a Sequoia!</string>
-    <string name="interaction_injured">You are poisoned by Hemlock, so you can\'t do that.</string>
+    <string name="interaction_injured">You are poisoned by Hemlock, so you can\'t do that. Go back to HQ to get better.</string>
     <string name="buildingresourcesite_spokenName">a Seedy Sapling</string>
     <string name="buildingresourcesite_mapName">Sapling</string>
     <string name="buildingresourcesite_spokenNameWithResources">%s with %d Secrets ready for you</string>
