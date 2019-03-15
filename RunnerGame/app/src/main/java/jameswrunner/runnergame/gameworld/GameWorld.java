@@ -111,7 +111,7 @@ public class GameWorld {
         discoverSites();
         handleApproach();
         handleChase(timeDelta);
-        if (!player.isInjured()) handleInteractions();
+        handleInteractions();
         doAnnouncements();
         checkWinConditions();
     }
@@ -148,7 +148,11 @@ public class GameWorld {
         if (metersSinceRunningResource > METERS_PER_RUNNING_RESOURCE) {
             metersSinceRunningResource -= METERS_PER_RUNNING_RESOURCE;
             player.giveRunningResource(1);
-            speakTTS(gameService.getString(R.string.receivedMovementResource));
+            if (headquarters == null) {
+                speakTTS(gameService.getString(R.string.receivedMovementResource));
+            } else {
+                speakTTS(gameService.getString(R.string.receivedMovementResource_short));
+            }
             if (!tutorialFirstResource) refreshAnnouncement();
             tutorialFirstResource = true;
         }
@@ -174,6 +178,13 @@ public class GameWorld {
 
     // Handle interaction with nearby sites based on user input
     private void handleInteractions() {
+        // Don't allow interaction if injured
+        if (player.isInjured()){
+            speakTTS(getGameService().getString(R.string.interaction_injured));
+            return;
+        }
+
+
         LinkedList<GameObject> objectsInInteractionRange = getObjectsInCircle(player.getPosition(), METERS_IN_SIGHT);
         objectsInInteractionRange.remove(player);
 
