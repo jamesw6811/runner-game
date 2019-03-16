@@ -46,4 +46,7 @@
     <string name="list_final_and">and </string>
     <string name="approachingAnnounce">You are approaching %s.</string>
     <string name="buildingsubresourcesite_buildExpired">One of your Analyst Aspens lost their lead after %d minutes with no new Secrets.</string>
+    <string name="headquarters_build_not_enough_resources">Not enough Vine Cred to build a Shady Grove.</string>
+    <string name="interaction_nothing_to_upgrade">Nothing here that can be built or upgraded.</string>
+    <string name="interaction_nothing_to_interact">Nothing here that can be interacted with.</string>
 </resources>

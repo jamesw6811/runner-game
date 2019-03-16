@@ -190,35 +190,45 @@ public class GameWorld {
 
         // Check building or building upgrade
         if (clickState.doubleClicked) {
-            if (headquarters == null && player.getRunningResource() >= Headquarters.RUNNING_RESOURCE_BUILD_COST) {
-                player.takeRunningResource(Headquarters.RUNNING_RESOURCE_BUILD_COST);
-                headquarters = new Headquarters(this, player.getPosition());
-                speakTTS(gameService.getString(R.string.headquarters_build));
-                refreshAnnouncement();
-                tutorialHQbuilt = true;
+            if (headquarters == null) {
+                if (player.getRunningResource() >= Headquarters.RUNNING_RESOURCE_BUILD_COST) {
+                    player.takeRunningResource(Headquarters.RUNNING_RESOURCE_BUILD_COST);
+                    headquarters = new Headquarters(this, player.getPosition());
+                    speakTTS(gameService.getString(R.string.headquarters_build));
+                    refreshAnnouncement();
+                    tutorialHQbuilt = true;
+                } else {
+                    speakTTS(gameService.getString(R.string.headquarters_build_not_enough_resources));
+                }
             } else {
+                boolean upgraded = false;
                 Iterator<GameObject> goit = objectsInInteractionRange.iterator();
                 while (goit.hasNext()){
                     GameObject tryUpgrade = goit.next();
                     if (tryUpgrade.isUpgradable()) {
                         tryUpgrade.upgrade();
                         refreshAnnouncement();
+                        upgraded = true;
                         break;
                     }
                 }
+                if (!upgraded) speakTTS(gameService.getString(R.string.interaction_nothing_to_upgrade));
             }
         }
         // Check interaction
         if (clickState.singleClicked) {
+            boolean interacted = false;
             Iterator<GameObject> goit = objectsInInteractionRange.iterator();
             while (goit.hasNext()){
                 GameObject tryInteract = goit.next();
                 if (tryInteract.isInteractable()) {
                     tryInteract.interact();
                     refreshAnnouncement();
+                    interacted = true;
                     break;
                 }
             }
+            if (!interacted) speakTTS(gameService.getString(R.string.interaction_nothing_to_interact));
         }
     }
 
