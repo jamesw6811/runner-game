@@ -27,8 +27,8 @@ public class GameWorld {
     private static final int METERS_PER_RUNNING_RESOURCE = 40;
     private static final double METERS_IN_SIGHT = 30;
     private static final double METERS_DISCOVERY_MINIMUM = 100;
-    private static final double CHASE_DEFAULT_DISTANCE_METERS = 50; //meters to outrun other runner
-    private static final double CHASE_DEFAULT_DISTANCE_FAIL_METERS = 100; //meters for other runner to outrun you
+    private static final double CHASE_DEFAULT_DISTANCE_METERS = 25; //meters to outrun other runner
+    private static final double CHASE_DEFAULT_DISTANCE_FAIL_METERS = 50; //meters for other runner to outrun you
     private static final double CHASE_DEFAULT_SPEED_METERS_PER_SECOND = 3*1.33; //meters per second of racer, average jog speed *1.33 https://www.quora.com/What-is-the-average-running-speed-of-a-human
 
     public static final int ANNOUNCEMENT_PERIOD = 120 * 1000;
