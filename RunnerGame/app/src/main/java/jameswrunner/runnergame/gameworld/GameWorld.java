@@ -122,6 +122,7 @@ public class GameWorld {
     private void updatePlayerState() {
         clickState = gameService.getController().getClickState(true);
         player.updatePosition(lastGPS);
+        focusCameraOnGameObject(player);
     }
 
     // Tick all GameWorld objects to handle time-related events
