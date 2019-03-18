@@ -49,4 +49,5 @@
     <string name="headquarters_build_not_enough_resources">Not enough Vine Cred to build a Shady Grove.</string>
     <string name="interaction_nothing_to_upgrade">Nothing here that can be built or upgraded.</string>
     <string name="interaction_nothing_to_interact">Nothing here that can be interacted with.</string>
+    <string name="chasesite_chaseMessage">The Hemlock is chasing you, run fast!</string>
 </resources>

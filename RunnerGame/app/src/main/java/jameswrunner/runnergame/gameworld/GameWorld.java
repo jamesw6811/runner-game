@@ -55,6 +55,8 @@ public class GameWorld {
     private double chaseDistanceLose = 0;
     private double chaseSpeed = 0;
     private ChaseOriginator chaseSite = null;
+    private long CHASE_ANNOUNCEMENT_PERIOD = 30*1000;
+    private long lastChaseAnnouncementTime = -CHASE_ANNOUNCEMENT_PERIOD;
 
     public boolean tutorialFirstResource = false;
     public boolean tutorialHQbuilt = false;
@@ -180,7 +182,7 @@ public class GameWorld {
     private void handleInteractions() {
         // Don't allow interaction if injured
         if (player.isInjured()){
-            speakTTS(getGameService().getString(R.string.interaction_injured));
+            if (clickState.singleClicked || clickState.doubleClicked) speakTTS(getGameService().getString(R.string.interaction_injured));
             return;
         }
 
@@ -361,7 +363,7 @@ public class GameWorld {
         chaseDistanceWin = CHASE_DEFAULT_DISTANCE_METERS;
         chaseDistanceLose = -CHASE_DEFAULT_DISTANCE_FAIL_METERS;
         chaseHappening = true;
-
+        lastChaseAnnouncementTime = System.currentTimeMillis();
         return true;
     }
 
@@ -382,6 +384,10 @@ public class GameWorld {
                 gameService.getToneRunner().playTone((int)Math.round((chaseDistance - chaseDistanceLose)*NAV_BEEP_PERIOD_MULTIPLIER));
             } else {
                 gameService.getToneRunner().playTone((int)Math.round((chaseDistanceWin - chaseDistance)*NAV_BEEP_PERIOD_MULTIPLIER));
+            }
+            if (System.currentTimeMillis() - lastChaseAnnouncementTime > CHASE_ANNOUNCEMENT_PERIOD) {
+                lastChaseAnnouncementTime = System.currentTimeMillis();
+                speakTTS(chaseSite.getChaseMessage());
             }
         }
     }

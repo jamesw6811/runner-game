@@ -68,4 +68,9 @@ public class ChaseSite extends GameObject implements ChaseOriginator {
         getGameWorld().interruptTTS(getGameWorld().getGameService().getString(R.string.chasesite_chaseFailed));
         getGameWorld().getPlayer().injure();
     }
+
+    @Override
+    public CharSequence getChaseMessage() {
+        return getGameWorld().getGameService().getString(R.string.chasesite_chaseMessage);
+    }
 }
