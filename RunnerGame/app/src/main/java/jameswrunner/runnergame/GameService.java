@@ -34,6 +34,8 @@ import jameswrunner.runnergame.sound.ToneRunner;
 
 public class GameService extends Service {
     public static final float MINIMUM_ACCURACY_REQUIRED = 25f;
+    public static GameService runningInstance = null;
+
     private static final String LOGTAG = GameService.class.getName();
     private static final String PACKAGE_NAME =
             "app.jamesw.jameswrunner.runnergame." + LOGTAG;
@@ -57,12 +59,19 @@ public class GameService extends Service {
     private RunningMediaController controller;
     private GameWorld gw;
     private boolean uiBound;
+    private double pace = -1;
 
     public GameService() {
     }
 
+    public static GameService getRunningInstance(){
+        return runningInstance;
+    }
+
+
     @Override
     public void onCreate() {
+        runningInstance = this;
         uiBound = false;
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -108,6 +117,7 @@ public class GameService extends Service {
         MediaButtonReceiver.handleIntent(controller.getMediaSession(), intent);
         boolean startedFromNotification = intent.getBooleanExtra(EXTRA_STARTED_FROM_NOTIFICATION,
                 false);
+
         // We got here because the user decided to remove location updates from the notification.
         if (startedFromNotification) {
             removeLocationUpdates();
@@ -131,6 +141,11 @@ public class GameService extends Service {
         // and binds with this service. The service should cease to be a foreground service
         // when that happens.
         Log.i(LOGTAG, "in onBind()");
+
+        // Set pace setting from extra
+        double paceIntent = intent.getDoubleExtra(RunMapActivity.EXTRA_PACE, -1);
+        if (paceIntent>0) pace = paceIntent;
+
         onAllBind();
         return mBinder;
     }
@@ -147,6 +162,11 @@ public class GameService extends Service {
         // and binds once again with this service. The service should cease to be a foreground
         // service when that happens.
         Log.i(LOGTAG, "in onRebind()");
+
+        // Set pace setting from extra
+        double paceIntent = intent.getDoubleExtra(RunMapActivity.EXTRA_PACE, -1);
+        if (paceIntent>0) pace = paceIntent;
+
         onAllBind();
         super.onRebind(intent);
     }
@@ -165,6 +185,7 @@ public class GameService extends Service {
 
     @Override
     public void onDestroy() {
+        runningInstance = null;
         if (controller != null) {
             controller.release();
         }
@@ -217,8 +238,8 @@ public class GameService extends Service {
     private Notification getNotification() {
         Intent intent = new Intent(this, GameService.class);
 
-        CharSequence text = "Tracking location for ongoing RunnerGame...";
-        CharSequence title = "RunnerGame";
+        CharSequence text = getString(R.string.foreground_service_notification_description);
+        CharSequence title = getString(R.string.foreground_service_notification_title);
 
         // Extra to help us figure out if we arrived in onStartCommand via the notification or not.
         intent.putExtra(EXTRA_STARTED_FROM_NOTIFICATION, true);
@@ -262,11 +283,11 @@ public class GameService extends Service {
     private void onNewLocation(Location location) {
         mLocation = location;
 
-        if (location.getAccuracy() < MINIMUM_ACCURACY_REQUIRED) {
-            if (gw == null) {
-                gw = new GameWorld(location, this);
+        if (ttser.isInitialized() && location.getAccuracy() < MINIMUM_ACCURACY_REQUIRED) {
+            if (gw == null && uiBound) {
+                gw = new GameWorld(location, pace, this);
                 gw.initializeAndStartRunning();
-            } else {
+            } else if (gw != null) {
                 gw.updateGPS(location);
             }
         }

@@ -11,6 +11,7 @@ import android.util.Log;
 
 public class TextToSpeechRunner {
     private static final String LOGTAG = TextToSpeechRunner.class.getName();
+    private boolean initialized = false;
     private TextToSpeech tts;
     private AudioManager mAudioManager;
     private TTSRunnerListener listener;
@@ -87,10 +88,16 @@ public class TextToSpeechRunner {
             if (status != TextToSpeech.ERROR) {
                 Log.d(LOGTAG, "TextToSpeech no error");
             }
+            initialized = true;
         }
 
         @Override
         public void onAudioFocusChange(int focusChange) {
         }
+
+    }
+
+    public boolean isInitialized(){
+        return initialized;
     }
 }

@@ -1,6 +1,7 @@
 package jameswrunner.runnergame.gameworld;
 
 import android.location.Location;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,15 +25,31 @@ import static jameswrunner.runnergame.maputils.MapUtilities.locationToLatLng;
  */
 
 public class GameWorld {
-    private static final int METERS_PER_RUNNING_RESOURCE = 40;
-    private static final double METERS_IN_SIGHT = 30;
-    private static final double METERS_DISCOVERY_MINIMUM = 100;
-    private static final double CHASE_DEFAULT_DISTANCE_METERS = 25; //meters to outrun other runner
-    private static final double CHASE_DEFAULT_DISTANCE_FAIL_METERS = 50; //meters for other runner to outrun you
-    private static final double CHASE_DEFAULT_SPEED_METERS_PER_SECOND = 3*1.33; //meters per second of racer, average jog speed *1.33 https://www.quora.com/What-is-the-average-running-speed-of-a-human
+    private double METERS_PER_RUNNING_RESOURCE = 40;
+    private double METERS_IN_SIGHT = 30;
+    private double METERS_DISCOVERY_MINIMUM = 100;
+    private double CHASE_DEFAULT_DISTANCE_METERS = 25; //meters to outrun other runner
+    private double CHASE_DEFAULT_DISTANCE_FAIL_METERS = 50; //meters for other runner to outrun you
+    private double CHASE_DEFAULT_SPEED_METERS_PER_SECOND = 3*1.33; //meters per second of racer, average jog speed *1.33 https://www.quora.com/What-is-the-average-running-speed-of-a-human
+    private double NAV_BEEP_PERIOD_MULTIPLIER = 2500.0 / 300.0; // millis period per meter
+    // Alter defaults based on pace settings
+    private void setPaceSettings(double pace) {
+        if (pace < PACE_MINIMUM) throw new RuntimeException("Pace too low");
+        double paceModifier = pace/PACE_BASELINE; // unitless pace ratio, higher = slower than baseline; lower = faster than baseline
+        Log.d(LOGTAG, "Pace modifier:" + paceModifier);
+        METERS_PER_RUNNING_RESOURCE = METERS_PER_RUNNING_RESOURCE/paceModifier;
+        METERS_IN_SIGHT = METERS_IN_SIGHT/paceModifier;
+        METERS_DISCOVERY_MINIMUM = METERS_DISCOVERY_MINIMUM/paceModifier;
+        CHASE_DEFAULT_DISTANCE_METERS = CHASE_DEFAULT_DISTANCE_METERS/paceModifier;
+        CHASE_DEFAULT_DISTANCE_FAIL_METERS = CHASE_DEFAULT_DISTANCE_FAIL_METERS/paceModifier;
+        CHASE_DEFAULT_SPEED_METERS_PER_SECOND = CHASE_DEFAULT_SPEED_METERS_PER_SECOND/paceModifier;
+        NAV_BEEP_PERIOD_MULTIPLIER = NAV_BEEP_PERIOD_MULTIPLIER*paceModifier;
+    }
+    private static final double PACE_BASELINE = 8.94; //minutes per mile baseline for setting speeds based on pace, all settings scale off of this number.
+    private static final double PACE_MINIMUM = 1;
 
+    private static final long CHASE_ANNOUNCEMENT_PERIOD = 30*1000;
     public static final int ANNOUNCEMENT_PERIOD = 120 * 1000;
-    public static final double NAV_BEEP_PERIOD_MULTIPLIER = 2500.0 / 300.0; // millis period per meter
     private static final String LOGTAG = GameWorld.class.getName();
 
     private LatLng lastGPS;
@@ -55,7 +72,6 @@ public class GameWorld {
     private double chaseDistanceLose = 0;
     private double chaseSpeed = 0;
     private ChaseOriginator chaseSite = null;
-    private long CHASE_ANNOUNCEMENT_PERIOD = 30*1000;
     private long lastChaseAnnouncementTime = -CHASE_ANNOUNCEMENT_PERIOD;
 
     public boolean tutorialFirstResource = false;
@@ -66,7 +82,8 @@ public class GameWorld {
     public boolean tutorialSubResourceBuildingCollected = false;
     public boolean tutorialCompleted = false;
 
-    public GameWorld(Location firstGPS, GameService gs) {
+    public GameWorld(Location firstGPS, double pace, GameService gs) {
+        setPaceSettings(pace);
         gameService = gs;
         lastGPS = locationToLatLng(firstGPS);
         clickState = gameService.getController().getClickState(true);
@@ -74,6 +91,8 @@ public class GameWorld {
         random = new Random();
         focusCameraOnGameObject(player);
     }
+
+
 
     public synchronized void clearUIState() {
         for (GameObject go : gameObjects) {

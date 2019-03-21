@@ -1,6 +1,11 @@
 <resources>
-    <string name="app_name">RunnerGame</string>
-    <string name="title_activity_run_map">RunMap</string>
+    <string name="app_name">Sappy Secrets</string>
+
+    <string name="title_activity_run_map">Sappy Mappy</string>
+    <string name="start_button_text">Start Spying</string>
+    <string name="settings_header">Settings</string>
+    <string name="pace_setting_text">Average Pace: %d minute mile</string>
+
     <string name="AI_runner_spokenName">AI runner</string>
     <string name="player_spokenName">player</string>
     <string name="headquarters_spokenName">your Shady Grove</string>
@@ -50,4 +55,6 @@
     <string name="interaction_nothing_to_upgrade">Nothing here that can be built or upgraded.</string>
     <string name="interaction_nothing_to_interact">Nothing here that can be interacted with.</string>
     <string name="chasesite_chaseMessage">The Hemlock is chasing you, run fast!</string>
+    <string name="foreground_service_notification_title">Sappy Secrets GPS Tracker</string>
+    <string name="foreground_service_notification_description">Tracking location for Sappy Secrets...</string>
 </resources>

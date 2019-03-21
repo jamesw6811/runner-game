@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentActivity;
 
 public class RunMapActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    public static final String EXTRA_PACE = "jameswrunner.runnergame.RunMapActivity.EXTRA_PACE";
     private static final String LOGTAG = RunMapActivity.class.getName();
     SupportMapFragment mapFragment;
     private Button button_quit;
@@ -59,6 +60,7 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_run_map);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -115,7 +117,14 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
 
     private void bindGameService() {
         Log.d(LOGTAG, "Binding GameService");
-        bindService(new Intent(this, GameService.class), mServiceConnection,
+
+        // Handle starting settings
+        Intent intent = getIntent();
+        double pace = intent.getDoubleExtra(EXTRA_PACE, -1);
+        Intent serviceIntent = new Intent(this, GameService.class);
+        serviceIntent.putExtra(EXTRA_PACE, pace);
+
+        bindService(serviceIntent, mServiceConnection,
                 Context.BIND_AUTO_CREATE);
     }
 
