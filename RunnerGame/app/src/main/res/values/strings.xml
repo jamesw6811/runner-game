@@ -57,4 +57,5 @@
     <string name="chasesite_chaseMessage">The Hemlock is chasing you, run fast!</string>
     <string name="foreground_service_notification_title">Sappy Secrets GPS Tracker</string>
     <string name="foreground_service_notification_description">Tracking location for Sappy Secrets...</string>
+    <string name="tutorialplayerinjured">You\'ve been poisoned. Go back to HQ for antidote.</string>
 </resources>

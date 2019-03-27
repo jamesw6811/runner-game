@@ -299,7 +299,8 @@ public class GameWorld {
             speakTTS(resourceAnnounce);
 
             // Tutorial announcement
-            if (!tutorialFirstResource) speakTTS(gameService.getString(R.string.tutorialFirstResource));
+            if (player.isInjured()) speakTTS(gameService.getString(R.string.tutorialplayerinjured));
+            else if (!tutorialFirstResource) speakTTS(gameService.getString(R.string.tutorialFirstResource));
             else if (!tutorialHQbuilt) {
                 if (player.getRunningResource() < Headquarters.RUNNING_RESOURCE_BUILD_COST) speakTTS(gameService.getString(R.string.tutorialHQbuilt_notEnoughResources, Headquarters.RUNNING_RESOURCE_BUILD_COST));
                 else speakTTS(gameService.getString(R.string.tutorialHQbuilt_readyToBuild));
