@@ -14,7 +14,7 @@ import jameswrunner.runnergame.GameService;
 import jameswrunner.runnergame.R;
 
 public class ChaseSite extends GameObject implements ChaseOriginator {
-    private double CHASE_DIFFICULTY = 0.75;
+    private static final double CHASE_DIFFICULTY = 0.66; // 2/3rd the player pace
     private Marker marker;
     public ChaseSite(GameWorld gw, LatLng position) {
         super(gw, gw.getGameService().getString(R.string.chasesite_spokenName), position);

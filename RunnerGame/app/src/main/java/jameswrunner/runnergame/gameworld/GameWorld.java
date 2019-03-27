@@ -29,8 +29,8 @@ public class GameWorld {
     private double METERS_IN_SIGHT = 30;
     private double METERS_DISCOVERY_MINIMUM = 100;
     private double CHASE_DEFAULT_DISTANCE_METERS = 25; //meters to outrun other runner
-    private double CHASE_DEFAULT_DISTANCE_FAIL_METERS = 50; //meters for other runner to outrun you
-    private double CHASE_DEFAULT_SPEED_METERS_PER_SECOND = 3*1.33; //meters per second of racer, average jog speed *1.33 https://www.quora.com/What-is-the-average-running-speed-of-a-human
+    private double CHASE_DEFAULT_DISTANCE_FAIL_METERS = 25; //meters for other runner to outrun you
+    private double CHASE_DEFAULT_SPEED_METERS_PER_SECOND = 2.98; //meters per second of racer at baseline, 9 mine mile, average jog speed
     private double NAV_BEEP_PERIOD_MULTIPLIER = 2500.0 / 300.0; // millis period per meter
     // Alter defaults based on pace settings
     private void setPaceSettings(double pace) {
@@ -45,7 +45,7 @@ public class GameWorld {
         CHASE_DEFAULT_SPEED_METERS_PER_SECOND = CHASE_DEFAULT_SPEED_METERS_PER_SECOND/paceModifier;
         NAV_BEEP_PERIOD_MULTIPLIER = NAV_BEEP_PERIOD_MULTIPLIER*paceModifier;
     }
-    private static final double PACE_BASELINE = 8.94; //minutes per mile baseline for setting speeds based on pace, all settings scale off of this number.
+    private static final double PACE_BASELINE = 9; //minutes per mile baseline for setting speeds based on pace, all settings scale off of this number.
     private static final double PACE_MINIMUM = 1;
 
     private static final long CHASE_ANNOUNCEMENT_PERIOD = 30*1000;
@@ -373,7 +373,14 @@ public class GameWorld {
         return player;
     }
 
-    public boolean startChase(boolean flee, double chase_difficulty_mod, ChaseOriginator chaseSite) {
+
+    /** Starts a chase.
+     * @param flee Sets rather or not the chase is running away or running after something.
+     * @param chase_difficulty_mod Sets the difficulty of the chase as a multiplier on average speed (1=average speed)
+     * @param chaseSite Sets the callback for chase-related handling
+     * @return true if the chase is started successfully, false otherwise
+     */
+    boolean startChase(boolean flee, double chase_difficulty_mod, ChaseOriginator chaseSite) {
         if (chaseHappening) return false;
 
         chaseDistance = 0;
