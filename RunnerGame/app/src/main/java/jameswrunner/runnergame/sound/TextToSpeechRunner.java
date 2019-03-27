@@ -9,12 +9,15 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 
+import jameswrunner.runnergame.R;
+
 public class TextToSpeechRunner {
     private static final String LOGTAG = TextToSpeechRunner.class.getName();
     private boolean initialized = false;
     private TextToSpeech tts;
     private AudioManager mAudioManager;
     private TTSRunnerListener listener;
+    public static final String CRED_EARCON = "[cred]";
 
     public TextToSpeechRunner(Context ctx) {
         // initialization of the audio attributes and focus request
@@ -88,6 +91,7 @@ public class TextToSpeechRunner {
             if (status != TextToSpeech.ERROR) {
                 Log.d(LOGTAG, "TextToSpeech no error");
             }
+            tts.addSpeech(CRED_EARCON, "jameswrunner.runnergame", R.raw.cred);
             initialized = true;
         }
 

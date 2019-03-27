@@ -17,6 +17,7 @@ import jameswrunner.runnergame.GameService;
 import jameswrunner.runnergame.R;
 import jameswrunner.runnergame.RunMapActivity;
 import jameswrunner.runnergame.controls.RunningMediaController;
+import jameswrunner.runnergame.sound.TextToSpeechRunner;
 
 import static jameswrunner.runnergame.maputils.MapUtilities.locationToLatLng;
 
@@ -170,11 +171,7 @@ public class GameWorld {
         if (metersSinceRunningResource > METERS_PER_RUNNING_RESOURCE) {
             metersSinceRunningResource -= METERS_PER_RUNNING_RESOURCE;
             player.giveRunningResource(1);
-            if (headquarters == null) {
-                speakTTS(gameService.getString(R.string.receivedMovementResource));
-            } else {
-                speakTTS(gameService.getString(R.string.receivedMovementResource_short));
-            }
+            speakTTS(TextToSpeechRunner.CRED_EARCON);
             if (!tutorialFirstResource) refreshAnnouncement();
             tutorialFirstResource = true;
         }
@@ -300,7 +297,10 @@ public class GameWorld {
 
             // Tutorial announcement
             if (player.isInjured()) speakTTS(gameService.getString(R.string.tutorialplayerinjured));
-            else if (!tutorialFirstResource) speakTTS(gameService.getString(R.string.tutorialFirstResource));
+            else if (!tutorialFirstResource) {
+                speakTTS(gameService.getString(R.string.tutorialFirstResource));
+                speakTTS(TextToSpeechRunner.CRED_EARCON);
+            }
             else if (!tutorialHQbuilt) {
                 if (player.getRunningResource() < Headquarters.RUNNING_RESOURCE_BUILD_COST) speakTTS(gameService.getString(R.string.tutorialHQbuilt_notEnoughResources, Headquarters.RUNNING_RESOURCE_BUILD_COST));
                 else speakTTS(gameService.getString(R.string.tutorialHQbuilt_readyToBuild));
