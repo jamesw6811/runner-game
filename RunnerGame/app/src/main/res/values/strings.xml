@@ -38,7 +38,8 @@
     <string name="headquarters_build">You built a Shady Grove. Double clicking builds or upgrades various sites. This site is the first headquarters for your sappy sleuthing. Over time, you can upgrade it to support your arborous spy agency.</string>
     <string name="movementResourceAnnounce">You have %d Vine Cred</string>
     <string name="movementResourceAnnounceNone">You have no Vine Cred</string>
-    <string name="buildingResourceAnnounce"> and %d Secrets.</string>
+    <string name="buildingResourceAnnounce"> %d Secrets</string>
+    <string name="buildingSubResourceAnnounce"> %d Intel</string>
     <string name="tutorialFirstResource">Walk or jog around the neighborhood to get Vine Cred. You will hear this sound when you collect a Vine Cred.</string>
     <string name="tutorialHQbuilt_notEnoughResources">We need %d Vine Cred before we can set up our first headquarters.</string>
     <string name="tutorialHQbuilt_readyToBuild">You have enough Vine Cred for your first headquarters, the Shady Grove. Choose a central location to build your headquarters and double-click your headphones play button to build it.</string>

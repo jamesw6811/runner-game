@@ -293,6 +293,7 @@ public class GameWorld {
             if (player.getRunningResource() > 0) resourceAnnounce += gameService.getString(R.string.movementResourceAnnounce, player.getRunningResource());
             else resourceAnnounce += gameService.getString(R.string.movementResourceAnnounceNone);
             if (player.getBuildingResource() > 0) resourceAnnounce +=  gameService.getString(R.string.buildingResourceAnnounce, player.getBuildingResource());
+            if (player.getBuildingSubResource() > 0) resourceAnnounce +=  gameService.getString(R.string.buildingSubResourceAnnounce, player.getBuildingSubResource());
             addSpeechToQueue(resourceAnnounce);
 
             // Tutorial announcement
