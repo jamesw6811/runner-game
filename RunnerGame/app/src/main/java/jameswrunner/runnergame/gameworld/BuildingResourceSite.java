@@ -86,9 +86,9 @@ public class BuildingResourceSite extends GameObject {
             setBuilt(true);
             resource = RESOURCE_AMOUNT_ON_BUILD;
             getGameWorld().tutorialResourceBuildingUpgraded = true;
-            getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingresourcesite_upgradeSuccess, RUNNING_RESOURCE_UPGRADE_COST));
+            getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.buildingresourcesite_upgradeSuccess, RUNNING_RESOURCE_UPGRADE_COST));
         } else {
-            getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingresourcesite_upgradeNotEnoughResources, RUNNING_RESOURCE_UPGRADE_COST));
+            getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.buildingresourcesite_upgradeNotEnoughResources, RUNNING_RESOURCE_UPGRADE_COST));
         }
     }
 
@@ -103,11 +103,11 @@ public class BuildingResourceSite extends GameObject {
         Player player = getGameWorld().getPlayer();
         if (resource > 0) {
             getGameWorld().tutorialResourceBuildingCollected = true;
-            getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingresourcesite_collectSuccess, resource));
+            getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.buildingresourcesite_collectSuccess, resource));
             player.giveBuildingResource(resource);
             resource = 0;
         } else {
-            getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingresourcesite_collectOutOfResource));
+            getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.buildingresourcesite_collectOutOfResource));
         }
     }
 

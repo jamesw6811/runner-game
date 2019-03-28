@@ -1,6 +1,5 @@
 package jameswrunner.runnergame.gameworld;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
@@ -61,7 +60,7 @@ public class Headquarters extends GameObject {
         Player player = getGameWorld().getPlayer();
         if (player.isInjured()) {
             player.fixInjury();
-            getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.headquarters_fixInjuries));
+            getGameWorld().addSpeechToQueue(getGameWorld().getGameService().getString(R.string.headquarters_fixInjuries));
         }
     }
 }

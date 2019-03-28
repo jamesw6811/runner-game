@@ -117,7 +117,7 @@ public class GameWorld {
         if (gameWorldThread == null || !gameWorldThread.isAlive()) {
             gameWorldThread = new GameWorldThread(this);
             gameWorldThread.start();
-            speakTTS(gameService.getString(R.string.game_started));
+            addSpeechToQueue(gameService.getString(R.string.game_started));
         }
     }
 
@@ -171,7 +171,7 @@ public class GameWorld {
         if (metersSinceRunningResource > METERS_PER_RUNNING_RESOURCE) {
             metersSinceRunningResource -= METERS_PER_RUNNING_RESOURCE;
             player.giveRunningResource(1);
-            speakTTS(TextToSpeechRunner.CRED_EARCON);
+            addSpeechToQueue(TextToSpeechRunner.CRED_EARCON);
             if (!tutorialFirstResource) refreshAnnouncement();
             tutorialFirstResource = true;
         }
@@ -189,7 +189,7 @@ public class GameWorld {
                 discovery = new ChaseSite(this, player.getPosition());
             }
             if (discovery != null) {
-                speakTTS(gameService.getString(R.string.discoveredNotification, discovery.getSpokenName()));
+                addSpeechToQueue(gameService.getString(R.string.discoveredNotification, discovery.getSpokenName()));
                 if (discovery.hasApproachActivity()) discovery.approach();
             }
         }
@@ -199,7 +199,7 @@ public class GameWorld {
     private void handleInteractions() {
         // Don't allow interaction if injured
         if (player.isInjured()){
-            if (clickState.singleClicked || clickState.doubleClicked) speakTTS(getGameService().getString(R.string.interaction_injured));
+            if (clickState.singleClicked || clickState.doubleClicked) addSpeechToQueue(getGameService().getString(R.string.interaction_injured));
             return;
         }
 
@@ -213,11 +213,11 @@ public class GameWorld {
                 if (player.getRunningResource() >= Headquarters.RUNNING_RESOURCE_BUILD_COST) {
                     player.takeRunningResource(Headquarters.RUNNING_RESOURCE_BUILD_COST);
                     headquarters = new Headquarters(this, player.getPosition());
-                    speakTTS(gameService.getString(R.string.headquarters_build));
+                    interruptQueueWithSpeech(gameService.getString(R.string.headquarters_build));
                     refreshAnnouncement();
                     tutorialHQbuilt = true;
                 } else {
-                    speakTTS(gameService.getString(R.string.headquarters_build_not_enough_resources));
+                    interruptQueueWithSpeech(gameService.getString(R.string.headquarters_build_not_enough_resources));
                 }
             } else {
                 boolean upgraded = false;
@@ -231,7 +231,7 @@ public class GameWorld {
                         break;
                     }
                 }
-                if (!upgraded) speakTTS(gameService.getString(R.string.interaction_nothing_to_upgrade));
+                if (!upgraded) interruptQueueWithSpeech(gameService.getString(R.string.interaction_nothing_to_upgrade));
             }
         }
         // Check interaction
@@ -247,7 +247,7 @@ public class GameWorld {
                     break;
                 }
             }
-            if (!interacted) speakTTS(gameService.getString(R.string.interaction_nothing_to_interact));
+            if (!interacted) interruptQueueWithSpeech(gameService.getString(R.string.interaction_nothing_to_interact));
         }
     }
 
@@ -281,7 +281,7 @@ public class GameWorld {
                     sightsText += gameService.getString(R.string.list_final_and) + spokenName;
                 }
             }
-            speakTTS(gameService.getString(R.string.approachingAnnounce, sightsText));
+            addSpeechToQueue(gameService.getString(R.string.approachingAnnounce, sightsText));
         }
     }
 
@@ -293,31 +293,31 @@ public class GameWorld {
             if (player.getRunningResource() > 0) resourceAnnounce += gameService.getString(R.string.movementResourceAnnounce, player.getRunningResource());
             else resourceAnnounce += gameService.getString(R.string.movementResourceAnnounceNone);
             if (player.getBuildingResource() > 0) resourceAnnounce +=  gameService.getString(R.string.buildingResourceAnnounce, player.getBuildingResource());
-            speakTTS(resourceAnnounce);
+            addSpeechToQueue(resourceAnnounce);
 
             // Tutorial announcement
-            if (player.isInjured()) speakTTS(gameService.getString(R.string.tutorialplayerinjured));
+            if (player.isInjured()) addSpeechToQueue(gameService.getString(R.string.tutorialplayerinjured));
             else if (!tutorialFirstResource) {
-                speakTTS(gameService.getString(R.string.tutorialFirstResource));
-                speakTTS(TextToSpeechRunner.CRED_EARCON);
+                addSpeechToQueue(gameService.getString(R.string.tutorialFirstResource));
+                addSpeechToQueue(TextToSpeechRunner.CRED_EARCON);
             }
             else if (!tutorialHQbuilt) {
-                if (player.getRunningResource() < Headquarters.RUNNING_RESOURCE_BUILD_COST) speakTTS(gameService.getString(R.string.tutorialHQbuilt_notEnoughResources, Headquarters.RUNNING_RESOURCE_BUILD_COST));
-                else speakTTS(gameService.getString(R.string.tutorialHQbuilt_readyToBuild));
+                if (player.getRunningResource() < Headquarters.RUNNING_RESOURCE_BUILD_COST) addSpeechToQueue(gameService.getString(R.string.tutorialHQbuilt_notEnoughResources, Headquarters.RUNNING_RESOURCE_BUILD_COST));
+                else addSpeechToQueue(gameService.getString(R.string.tutorialHQbuilt_readyToBuild));
             }
             else if (!tutorialResourceBuildingDiscovered) {
-                speakTTS(gameService.getString(R.string.tutorialResourceBuildingDiscovered));
+                addSpeechToQueue(gameService.getString(R.string.tutorialResourceBuildingDiscovered));
             }
             else if (!tutorialResourceBuildingUpgraded) {
-                speakTTS(gameService.getString(R.string.tutorialResourceBuildingUpgraded, BuildingResourceSite.RUNNING_RESOURCE_UPGRADE_COST));
+                addSpeechToQueue(gameService.getString(R.string.tutorialResourceBuildingUpgraded, BuildingResourceSite.RUNNING_RESOURCE_UPGRADE_COST));
             }
             else if (!tutorialResourceBuildingCollected) {
-                speakTTS(gameService.getString(R.string.tutorialResourceBuildingCollected));
+                addSpeechToQueue(gameService.getString(R.string.tutorialResourceBuildingCollected));
             }
             else if (!tutorialSubResourceBuildingCollected) {
-                speakTTS(gameService.getString(R.string.tutorialSubResourceBuildingCollected));
+                addSpeechToQueue(gameService.getString(R.string.tutorialSubResourceBuildingCollected));
             } else if (!tutorialCompleted) {
-                speakTTS(gameService.getString(R.string.tutorialCompleted));
+                addSpeechToQueue(gameService.getString(R.string.tutorialCompleted));
                 tutorialCompleted = true;
             }
             lastAnnouncementTime = System.currentTimeMillis();
@@ -345,11 +345,11 @@ public class GameWorld {
     }
 
 
-    protected void speakTTS(CharSequence speech) {
+    protected void addSpeechToQueue(CharSequence speech) {
         gameService.getTTSRunner().addSpeech(speech);
     }
 
-    protected void interruptTTS(CharSequence speech) {
+    protected void interruptQueueWithSpeech(CharSequence speech) {
         gameService.getTTSRunner().interruptSpeech(speech);
     }
 
@@ -415,7 +415,7 @@ public class GameWorld {
             }
             if (System.currentTimeMillis() - lastChaseAnnouncementTime > CHASE_ANNOUNCEMENT_PERIOD) {
                 lastChaseAnnouncementTime = System.currentTimeMillis();
-                speakTTS(chaseSite.getChaseMessage());
+                addSpeechToQueue(chaseSite.getChaseMessage());
             }
         }
     }

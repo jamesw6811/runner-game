@@ -55,17 +55,17 @@ public class ChaseSite extends GameObject implements ChaseOriginator {
     @Override
     public void approach() {
         getGameWorld().startChase(true, CHASE_DIFFICULTY, this);
-        getGameWorld().interruptTTS(getGameWorld().getGameService().getString(R.string.chasesite_chaseStarted));
+        getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.chasesite_chaseStarted));
     }
 
     @Override
     public void chaseSuccessful() {
-        getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.chasesite_chaseSuccess));
+        getGameWorld().addSpeechToQueue(getGameWorld().getGameService().getString(R.string.chasesite_chaseSuccess));
     }
 
     @Override
     public void chaseFailed() {
-        getGameWorld().interruptTTS(getGameWorld().getGameService().getString(R.string.chasesite_chaseFailed));
+        getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.chasesite_chaseFailed));
         getGameWorld().getPlayer().injure();
     }
 

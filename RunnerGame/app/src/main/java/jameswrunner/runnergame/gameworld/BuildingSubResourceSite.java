@@ -84,9 +84,9 @@ public class BuildingSubResourceSite extends GameObject {
             player.takeRunningResource(RUNNING_RESOURCE_UPGRADE_COST);
             player.takeBuildingResource(BUILDING_RESOURCE_UPGRADE_COST);
             setBuilt(true);
-            getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_upgradeSuccess, RUNNING_RESOURCE_UPGRADE_COST, BUILDING_RESOURCE_UPGRADE_COST));
+            getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_upgradeSuccess, RUNNING_RESOURCE_UPGRADE_COST, BUILDING_RESOURCE_UPGRADE_COST));
         } else {
-            getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_upgradeNotEnoughResources, RUNNING_RESOURCE_UPGRADE_COST, BUILDING_RESOURCE_UPGRADE_COST));
+            getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_upgradeNotEnoughResources, RUNNING_RESOURCE_UPGRADE_COST, BUILDING_RESOURCE_UPGRADE_COST));
         }
     }
 
@@ -100,10 +100,10 @@ public class BuildingSubResourceSite extends GameObject {
         Player player = getGameWorld().getPlayer();
         if (player.getBuildingResource() > BUILDING_RESOURCE_TRADE_COST) {
             getGameWorld().tutorialSubResourceBuildingCollected = true;
-            getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_collectSuccess, BUILDING_RESOURCE_TRADE_COST, BUILDING_SUBRESOURCE_AMOUNT_PER_TRADE));
+            getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_collectSuccess, BUILDING_RESOURCE_TRADE_COST, BUILDING_SUBRESOURCE_AMOUNT_PER_TRADE));
             player.giveBuildingSubResource(BUILDING_SUBRESOURCE_AMOUNT_PER_TRADE);
         } else {
-            getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_collectNotEnoughResources, BUILDING_RESOURCE_TRADE_COST));
+            getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_collectNotEnoughResources, BUILDING_RESOURCE_TRADE_COST));
         }
     }
 
@@ -114,7 +114,7 @@ public class BuildingSubResourceSite extends GameObject {
             timeSinceBuilt += timeDelta;
             if (timeSinceBuilt > BUILT_EXPIRY_DURATION) {
                 setBuilt(false);
-                getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_buildExpired, (int)Math.round(BUILT_EXPIRY_DURATION/60f)));
+                getGameWorld().addSpeechToQueue(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_buildExpired, (int)Math.round(BUILT_EXPIRY_DURATION/60f)));
             }
         }
     }
