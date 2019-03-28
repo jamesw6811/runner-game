@@ -8,10 +8,17 @@
 
     <string name="AI_runner_spokenName">AI runner</string>
     <string name="player_spokenName">player</string>
+
+    <string name="interaction_injured">You are poisoned by Hemlock, so you can\'t do that. Go back to HQ to get better.</string>
+    <string name="interaction_nothing_to_upgrade">Nothing here that can be built or upgraded.</string>
+    <string name="interaction_nothing_to_interact">Nothing here that can be interacted with.</string>
+
     <string name="headquarters_spokenName">your Shady Grove</string>
     <string name="headquarters_mapName">HQ</string>
+    <string name="headquarters_build_not_enough_resources">Not enough Vine Cred to build a Shady Grove.</string>
+    <string name="headquarters_build">You built a Shady Grove, your first sappy sleuthing headquarters.</string>
     <string name="headquarters_fixInjuries">You cured your poison at the HQ. Now you feel as spry as a Sequoia!</string>
-    <string name="interaction_injured">You are poisoned by Hemlock, so you can\'t do that. Go back to HQ to get better.</string>
+
     <string name="buildingresourcesite_spokenName">a Seedy Sapling</string>
     <string name="buildingresourcesite_mapName">Sapling</string>
     <string name="buildingresourcesite_spokenNameWithResources">%s with %d Secrets ready for you</string>
@@ -19,6 +26,7 @@
     <string name="buildingresourcesite_upgradeNotEnoughResources">You need at least %d Vine Cred to make this sapling your informant.</string>
     <string name="buildingresourcesite_collectSuccess">You sleuthed %d Secrets from the Sapling.</string>
     <string name="buildingresourcesite_collectOutOfResource">This Seedy Sapling is stumped for now. Come back later.</string>
+
     <string name="buildingsubresourcesite_spokenName">an Analyst Aspen with no leads</string>
     <string name="buildingsubresourcesite_spokenNameBuilt">an Analyst Aspen working on your lead</string>
     <string name="buildingsubresourcesite_mapName">Aspen</string>
@@ -26,37 +34,38 @@
     <string name="buildingsubresourcesite_upgradeNotEnoughResources">You need at least %d Vine Cred and %d Secrets to get the Aspen its first lead.</string>
     <string name="buildingsubresourcesite_collectSuccess">After analyzing your %d Secrets, the Aspen gives you %d Intel.</string>
     <string name="buildingsubresourcesite_collectNotEnoughResources">You need %d Secrets for the Aspen to analyze for Intel.</string>
+    <string name="buildingsubresourcesite_buildExpired">One of your Analyst Aspens lost their lead after too long with no new Secrets.</string>
+
     <string name="chasesite_spokenName">a Hemlock Haven</string>
     <string name="chasesite_mapName">Hemlock</string>
     <string name="chasesite_chaseStarted">A Hemlock begins chasing you! Run away! Quick!</string>
     <string name="chasesite_chaseSuccess">You outran the Hemlock. Whew! Good work.</string>
     <string name="chasesite_chaseFailed">The Hemlock caught you and poisoned you. Go back to HQ to get better.</string>
+
     <string name="game_started">Game started.</string>
     <string name="receivedMovementResource">You got more Vine Cred!</string>
     <string name="receivedMovementResource_short">Vine Cred!</string>
     <string name="discoveredNotification">You have discovered %s!</string>
-    <string name="headquarters_build">You built a Shady Grove. Double clicking builds or upgrades various sites. This site is the first headquarters for your sappy sleuthing. Over time, you can upgrade it to support your arborous spy agency.</string>
     <string name="movementResourceAnnounce">You have %d Vine Cred</string>
     <string name="movementResourceAnnounceNone">You have no Vine Cred</string>
     <string name="buildingResourceAnnounce"> %d Secrets</string>
     <string name="buildingSubResourceAnnounce"> %d Intel</string>
+
     <string name="tutorialFirstResource">Walk or jog around the neighborhood to get Vine Cred. You will hear this sound when you collect a Vine Cred.</string>
     <string name="tutorialHQbuilt_notEnoughResources">We need %d Vine Cred before we can set up our first headquarters.</string>
     <string name="tutorialHQbuilt_readyToBuild">You have enough Vine Cred for your first headquarters, the Shady Grove. Choose a central location to build your headquarters and double-click your headphones play button to build it.</string>
-    <string name="tutorialResourceBuildingDiscovered">Now that we\'ve grown our Shady Grove, let\'s go investigate the area.</string>
-    <string name="tutorialResourceBuildingUpgraded">We can use %d Vine Cred to make a Sapling our informant. Double-click the Sapling to turn it to your side.</string>
-    <string name="tutorialResourceBuildingCollected">Seedy Sapling informants sleuth out Secrets over time. To interact with a site, single-click it.</string>
-    <string name="tutorialSubResourceBuildingCollected">Analyst Aspens analyze Interesting Intel for your missions. Upgrade one!</string>
-    <string name="tutorialCompleted">You\'ve completed the tutorial, but there is a lot more to discover - get out there and Sap some Secrets!</string>
+    <string name="tutorialResourceBuildingDiscovered">Now that we\'ve grown our Shady Grove, let\'s go investigate the area. Try double-clicking to upgrade and clicking to interact with every site you discover.</string>
+    <string name="tutorialResourceBuildingUpgraded">Nice work finding a Seedy Sapling. Can we turn it to our side?</string>
+    <string name="tutorialResourceBuildingCollected">I\'m glad that Seedy Sapling is working for us now.</string>
+    <string name="tutorialSubResourceBuildingCollected">Now we have Secrets, but we need to find a way to understand them.</string>
+    <string name="tutorialCompleted">Something has gone wrong. Take that Intel back to HQ!</string>
+    <string name="tutorialplayerinjured">You\'ve been poisoned. Go back to HQ for antidote.</string>
+
     <string name="list_separator">, </string>
     <string name="list_final_and">and </string>
+
     <string name="approachingAnnounce">You are approaching %s.</string>
-    <string name="buildingsubresourcesite_buildExpired">One of your Analyst Aspens lost their lead after %d minutes with no new Secrets.</string>
-    <string name="headquarters_build_not_enough_resources">Not enough Vine Cred to build a Shady Grove.</string>
-    <string name="interaction_nothing_to_upgrade">Nothing here that can be built or upgraded.</string>
-    <string name="interaction_nothing_to_interact">Nothing here that can be interacted with.</string>
     <string name="chasesite_chaseMessage">The Hemlock is chasing you, run fast!</string>
     <string name="foreground_service_notification_title">Sappy Secrets GPS Tracker</string>
-    <string name="foreground_service_notification_description">Tracking location for Sappy Secrets...</string>
-    <string name="tutorialplayerinjured">You\'ve been poisoned. Go back to HQ for antidote.</string>
+    <string name="foreground_service_notification_description">Tracking location for Sappy Secrets…</string>
 </resources>
