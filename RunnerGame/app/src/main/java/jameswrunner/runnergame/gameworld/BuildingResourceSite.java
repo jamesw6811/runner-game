@@ -21,6 +21,7 @@ public class BuildingResourceSite extends GameObject {
     public static final int RUNNING_RESOURCE_UPGRADE_COST = 10;
     private static final int MAX_RESOURCE = 10;
     private static final float RESOURCE_GENERATION_PERIOD = 30f;
+    private static final int RESOURCE_AMOUNT_ON_BUILD = 10;
     private Marker marker;
     private boolean built = false;
     private int resource = 0;
@@ -83,6 +84,7 @@ public class BuildingResourceSite extends GameObject {
         if (player.getRunningResource() >= RUNNING_RESOURCE_UPGRADE_COST) {
             player.takeRunningResource(RUNNING_RESOURCE_UPGRADE_COST);
             setBuilt(true);
+            resource = RESOURCE_AMOUNT_ON_BUILD;
             getGameWorld().tutorialResourceBuildingUpgraded = true;
             getGameWorld().speakTTS(getGameWorld().getGameService().getString(R.string.buildingresourcesite_upgradeSuccess, RUNNING_RESOURCE_UPGRADE_COST));
         } else {
