@@ -17,7 +17,9 @@ import jameswrunner.runnergame.R;
  * Created by james on 6/17/2017.
  */
 
-public class Headquarters extends GameObject {
+public class Headquarters extends GameObject implements ChaseOriginator {
+    private static final int FIRST_UPGRADE_COST_SUB_RESOURCE = 1;
+    private static final double CHASE_DIFFICULTY = 0.9;
     private Marker marker;
     public static final int RUNNING_RESOURCE_BUILD_COST = 5;
 
@@ -62,5 +64,38 @@ public class Headquarters extends GameObject {
             player.fixInjury();
             getGameWorld().addSpeechToQueue(getGameWorld().getGameService().getString(R.string.headquarters_fixInjuries));
         }
+    }
+
+    @Override
+    public boolean isUpgradable() {
+        return true;
+    }
+
+    @Override
+    public void upgrade() {
+        Player player = getGameWorld().getPlayer();
+        if (player.getBuildingSubResource() >= FIRST_UPGRADE_COST_SUB_RESOURCE) {
+            player.takeBuildingSubResource(FIRST_UPGRADE_COST_SUB_RESOURCE);
+            getGameWorld().startChase(false, CHASE_DIFFICULTY, this);
+            getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.headquarters_chaseStarted));
+        } else {
+            getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.headquarters_upgradeNotEnoughResources, FIRST_UPGRADE_COST_SUB_RESOURCE));
+        }
+    }
+
+    @Override
+    public void chaseSuccessful() {
+        getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.headquarters_chaseSuccess));
+        getGameWorld().winCondition = true;
+    }
+
+    @Override
+    public void chaseFailed() {
+        getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.headquarters_chaseFailed));
+    }
+
+    @Override
+    public CharSequence getChaseMessage() {
+        return getGameWorld().getGameService().getString(R.string.headquarters_chase_message);
     }
 }

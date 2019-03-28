@@ -82,6 +82,7 @@ public class GameWorld {
     public boolean tutorialResourceBuildingCollected = false;
     public boolean tutorialSubResourceBuildingCollected = false;
     public boolean tutorialCompleted = false;
+    public boolean winCondition = false;
 
     public GameWorld(Location firstGPS, double pace, GameService gs) {
         setPaceSettings(pace);
@@ -332,7 +333,14 @@ public class GameWorld {
 
     // Check if the win/lose conditions for the game have been met and take action accordingly
     private void checkWinConditions() {
-
+        if (winCondition){
+            addSpeechToQueue(getGameService().getString(R.string.win_message));
+            addSpeechToQueue(TextToSpeechRunner.CRED_EARCON);
+            addSpeechToQueue(TextToSpeechRunner.CRED_EARCON);
+            addSpeechToQueue(TextToSpeechRunner.CRED_EARCON);
+            addSpeechToQueue(getGameService().getString(R.string.demo_end_message));
+            gameWorldThread.stopRunning();
+        }
     }
 
     // Only called from GameObject
