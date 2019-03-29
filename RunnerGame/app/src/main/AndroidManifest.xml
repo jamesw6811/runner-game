@@ -28,6 +28,8 @@
 
         <activity android:name=".BriefingActivity" />
 
+        <activity android:name=".DebriefingActivity" />
+
         <activity android:name=".LaunchMenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

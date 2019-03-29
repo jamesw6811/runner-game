@@ -43,6 +43,10 @@ public class TextToSpeechRunner {
         tts.stop();
     }
 
+    public boolean isStillSpeaking() {
+        return tts.isSpeaking();
+    }
+
     public void release() {
         stopSpeech();
         tts.shutdown();

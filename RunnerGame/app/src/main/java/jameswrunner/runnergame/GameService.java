@@ -331,6 +331,13 @@ public class GameService extends Service {
         this.stopSelf();
     }
 
+    public void finishAndDebrief() {
+        Intent intent = new Intent(this, DebriefingActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
+
     /**
      * Class used for the client Binder.  Since this service runs in the same process as its
      * clients, we don't need to deal with IPC.

@@ -1,5 +1,6 @@
 package jameswrunner.runnergame.gameworld;
 
+import android.content.Intent;
 import android.location.Location;
 import android.util.Log;
 
@@ -13,6 +14,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 
+import jameswrunner.runnergame.BriefingActivity;
+import jameswrunner.runnergame.DebriefingActivity;
 import jameswrunner.runnergame.GameService;
 import jameswrunner.runnergame.R;
 import jameswrunner.runnergame.RunMapActivity;
@@ -336,6 +339,14 @@ public class GameWorld {
         if (winCondition){
             addSpeechToQueue(getGameService().getString(R.string.win_message));
             gameWorldThread.stopRunning();
+            while (gameService.getTTSRunner().isStillSpeaking()){
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            gameService.finishAndDebrief();
         }
     }
 
