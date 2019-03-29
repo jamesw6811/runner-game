@@ -336,17 +336,16 @@ public class GameWorld {
 
     // Check if the win/lose conditions for the game have been met and take action accordingly
     private void checkWinConditions() {
+        winCondition = true;
         if (winCondition){
             addSpeechToQueue(getGameService().getString(R.string.win_message));
             gameWorldThread.stopRunning();
-            while (gameService.getTTSRunner().isStillSpeaking()){
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            gameService.getTTSRunner().setOnDoneSpeaking(new Runnable(){
+                @Override
+                public void run() {
+                    gameService.finishAndDebrief();
                 }
-            }
-            gameService.finishAndDebrief();
+            });
         }
     }
 

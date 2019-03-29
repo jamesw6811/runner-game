@@ -18,6 +18,7 @@ public class TextToSpeechRunner {
     private AudioManager mAudioManager;
     private TTSRunnerListener listener;
     public static final String CRED_EARCON = "[cred]";
+    private Runnable onDoneSpeaking;
 
     public TextToSpeechRunner(Context ctx) {
         // initialization of the audio attributes and focus request
@@ -53,6 +54,10 @@ public class TextToSpeechRunner {
         mAudioManager.abandonAudioFocus(listener);
     }
 
+    public void setOnDoneSpeaking(Runnable runnable) {
+        onDoneSpeaking = runnable;
+    }
+
     private class TTSRunnerListener extends UtteranceProgressListener implements AudioManager.OnAudioFocusChangeListener, TextToSpeech.OnInitListener {
         final TextToSpeechRunner ttsr;
 
@@ -81,7 +86,11 @@ public class TextToSpeechRunner {
 
         @Override
         public void onDone(String utteranceId) {
-            mAudioManager.abandonAudioFocus(this);
+            if (!isStillSpeaking()) {
+                mAudioManager.abandonAudioFocus(this);
+                if (onDoneSpeaking != null) onDoneSpeaking.run();
+                onDoneSpeaking = null;
+            }
         }
 
         @Override
