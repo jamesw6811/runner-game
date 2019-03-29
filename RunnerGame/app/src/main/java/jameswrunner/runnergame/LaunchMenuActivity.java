@@ -1,9 +1,13 @@
 package jameswrunner.runnergame;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
@@ -29,10 +33,14 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startGameActivity();
+                startBriefingScreen();
             }
         });
 
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        int defaultValue = getResources().getInteger(R.integer.default_pace_key);
+        int pacePref = sharedPref.getInt(getString(R.string.saved_pace_key), defaultValue);
+        speedSettingBar.setProgress(pacePref-SPEED_OFFSET);
         updateSpeedFromBar();
     }
 
@@ -52,9 +60,8 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
         finish();
     }
 
-    private void startGameActivity() {
-        Intent intent = new Intent(this, RunMapActivity.class);
-        intent.putExtra(RunMapActivity.EXTRA_PACE, (double)speedSettingPace);
+    private void startBriefingScreen() {
+        Intent intent = new Intent(this, BriefingActivity.class);
         startActivity(intent);
         finish();
     }
@@ -67,6 +74,10 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
     private void updateSpeedFromBar() {
         speedSettingPace = speedSettingBar.getProgress() + SPEED_OFFSET;
         speedSettingText.setText(this.getResources().getString(R.string.pace_setting_text, speedSettingPace));
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(getString(R.string.saved_pace_key), speedSettingPace);
+        editor.apply();
     }
 
     @Override
