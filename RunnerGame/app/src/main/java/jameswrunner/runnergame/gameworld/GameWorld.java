@@ -311,7 +311,7 @@ public class GameWorld {
                 addSpeechToQueue(gameService.getString(R.string.tutorialResourceBuildingDiscovered));
             }
             else if (!tutorialResourceBuildingUpgraded) {
-                addSpeechToQueue(gameService.getString(R.string.tutorialResourceBuildingUpgraded, BuildingResourceSite.RUNNING_RESOURCE_UPGRADE_COST));
+                addSpeechToQueue(gameService.getString(R.string.tutorialResourceBuildingUpgraded));
             }
             else if (!tutorialResourceBuildingCollected) {
                 addSpeechToQueue(gameService.getString(R.string.tutorialResourceBuildingCollected));
@@ -335,10 +335,6 @@ public class GameWorld {
     private void checkWinConditions() {
         if (winCondition){
             addSpeechToQueue(getGameService().getString(R.string.win_message));
-            addSpeechToQueue(TextToSpeechRunner.CRED_EARCON);
-            addSpeechToQueue(TextToSpeechRunner.CRED_EARCON);
-            addSpeechToQueue(TextToSpeechRunner.CRED_EARCON);
-            addSpeechToQueue(getGameService().getString(R.string.demo_end_message));
             gameWorldThread.stopRunning();
         }
     }
