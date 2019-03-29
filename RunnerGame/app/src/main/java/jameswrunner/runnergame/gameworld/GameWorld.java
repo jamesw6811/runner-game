@@ -184,9 +184,9 @@ public class GameWorld {
                 discovery = new BuildingResourceSite(this, player.getPosition());
                 if (!tutorialResourceBuildingDiscovered) refreshAnnouncement();
                 tutorialResourceBuildingDiscovered = true;
-            } else if (discoverSeed < 0.70 && tutorialResourceBuildingDiscovered) {
+            } else if (discoverSeed < 0.70) {
                 discovery = new BuildingSubResourceSite(this, player.getPosition());
-            } else if (discoverSeed < 1.00 && tutorialResourceBuildingDiscovered) {
+            } else if (discoverSeed < 1.00) {
                 discovery = new ChaseSite(this, player.getPosition());
             }
             if (discovery != null) {
