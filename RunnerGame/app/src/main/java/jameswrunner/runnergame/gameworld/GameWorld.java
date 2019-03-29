@@ -336,7 +336,6 @@ public class GameWorld {
 
     // Check if the win/lose conditions for the game have been met and take action accordingly
     private void checkWinConditions() {
-        winCondition = true;
         if (winCondition){
             addSpeechToQueue(getGameService().getString(R.string.win_message));
             gameWorldThread.stopRunning();
