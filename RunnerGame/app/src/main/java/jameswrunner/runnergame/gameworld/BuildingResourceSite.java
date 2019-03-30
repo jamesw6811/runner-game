@@ -21,7 +21,7 @@ public class BuildingResourceSite extends GameObject {
     public static final int RUNNING_RESOURCE_UPGRADE_COST = 10;
     private static final int MAX_RESOURCE = 10;
     private static final float RESOURCE_GENERATION_PERIOD = 30f;
-    private static final int RESOURCE_AMOUNT_ON_BUILD = 10;
+    private static final int RESOURCE_AMOUNT_ON_BUILD = 5;
     private Marker marker;
     private boolean built = false;
     private int resource = 0;

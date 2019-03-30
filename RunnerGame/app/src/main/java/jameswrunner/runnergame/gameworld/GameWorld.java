@@ -29,12 +29,12 @@ import static jameswrunner.runnergame.maputils.MapUtilities.locationToLatLng;
  */
 
 public class GameWorld {
-    private double METERS_PER_RUNNING_RESOURCE = 40;
-    private double METERS_IN_SIGHT = 30;
-    private double METERS_DISCOVERY_MINIMUM = 100;
-    private double CHASE_DEFAULT_DISTANCE_METERS = 25; //meters to outrun other runner
-    private double CHASE_DEFAULT_DISTANCE_FAIL_METERS = 25; //meters for other runner to outrun you
-    private double CHASE_DEFAULT_SPEED_METERS_PER_SECOND = 2.98; //meters per second of racer at baseline, 9 mine mile, average jog speed
+    private double METERS_PER_RUNNING_RESOURCE = 50;
+    private double METERS_IN_SIGHT = 50;
+    private double METERS_DISCOVERY_MINIMUM = 130;
+    private double CHASE_DEFAULT_DISTANCE_METERS = 35; //meters to outrun other runner
+    private double CHASE_DEFAULT_DISTANCE_FAIL_METERS = 35; //meters for other runner to outrun you
+    private double CHASE_DEFAULT_SPEED_METERS_PER_SECOND = 3; //meters per second of racer at baseline, 9 mine mile, average jog speed
     private double NAV_BEEP_PERIOD_MULTIPLIER = 2500.0 / 300.0; // millis period per meter
     // Alter defaults based on pace settings
     private void setPaceSettings(double pace) {
