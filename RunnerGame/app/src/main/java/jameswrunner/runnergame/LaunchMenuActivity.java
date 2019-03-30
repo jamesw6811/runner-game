@@ -42,6 +42,12 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
         int pacePref = sharedPref.getInt(getString(R.string.saved_pace_key), defaultValue);
         speedSettingBar.setProgress(pacePref-SPEED_OFFSET);
         updateSpeedFromBar();
+
+        int num_medals = sharedPref.getInt(getString(R.string.magnolia_medals_key), 0);
+        if (num_medals > 0) {
+            TextView medalsText = findViewById(R.id.contents_medals);
+            medalsText.setText(String.format(getString(R.string.text_medals), num_medals));
+        }
     }
 
     @Override
@@ -50,7 +56,6 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
         // If the game is already running, resume the game map
         if (GameService.runningInstance != null){
             resumeGameActivity();
-            return;
         }
     }
 

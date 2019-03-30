@@ -75,4 +75,6 @@
 
     <string name="win_message">Nice work! It\'s a Dogwood Double Agent. We need to find out what this means for the Oak Empire, but you\'ve earned your mission reward.</string>
     <string name="saved_pace_key">saved_pace</string>
+    <string name="magnolia_medals_key">magnolia_medals</string>
+    <string name="text_medals">%dx Magnolia Medals</string>
 </resources>

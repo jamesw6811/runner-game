@@ -30,6 +30,11 @@ public class DebriefingActivity extends Activity {
     }
 
     private void finishDebrief() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        int num_medals = sharedPref.getInt(getString(R.string.magnolia_medals_key), 0);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(getString(R.string.magnolia_medals_key), num_medals+1);
+        editor.apply();
         composeEmail(EMAILSFEEDBACK, EMAILFEEDBACK_SUBJECT, EMAILFEEDBACK_TEMPLATE);
         finish();
     }
