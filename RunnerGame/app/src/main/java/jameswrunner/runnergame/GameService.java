@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Binder;
@@ -14,6 +15,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -332,6 +334,12 @@ public class GameService extends Service {
     }
 
     public void finishAndDebrief() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        int num_medals = sharedPref.getInt(getString(R.string.magnolia_medals_key), 0);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(getString(R.string.magnolia_medals_key), num_medals+1);
+        editor.apply();
+
         Intent intent = new Intent(this, DebriefingActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

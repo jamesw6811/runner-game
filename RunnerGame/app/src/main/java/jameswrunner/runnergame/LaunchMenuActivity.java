@@ -26,7 +26,7 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
 
         Intent intent = getIntent();
         boolean hasSeenIntroScreen = intent.hasExtra(EXTRA_SEEN_INTRO_ALREADY);
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         int num_medals = sharedPref.getInt(getString(R.string.magnolia_medals_key), 0);
 
         // If the game is already running, resume the game map
