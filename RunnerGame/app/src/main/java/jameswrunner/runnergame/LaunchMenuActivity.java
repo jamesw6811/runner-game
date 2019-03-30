@@ -14,6 +14,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarChangeListener {
+    public static final String EXTRA_SEEN_INTRO_ALREADY = "LaunchMenuActivity.EXTRA_SEEN_INTRO_ALREADY";
     private static final int SPEED_OFFSET = 4; // minutes per mile
     private TextView speedSettingText;
     private int speedSettingPace = 0;
@@ -22,6 +23,18 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        boolean hasSeenIntroScreen = intent.hasExtra(EXTRA_SEEN_INTRO_ALREADY);
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        int num_medals = sharedPref.getInt(getString(R.string.magnolia_medals_key), 0);
+
+        // If the game is already running, resume the game map
+        if (GameService.runningInstance != null) {
+            resumeGameActivity();
+        } else if (!hasSeenIntroScreen && num_medals == 0) {
+            showIntroScreen();
+        }
 
         // Set up the settings/start screen
         setContentView(R.layout.activity_launch_menu);
@@ -37,13 +50,11 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
             }
         });
 
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         int defaultValue = getResources().getInteger(R.integer.default_pace_key);
         int pacePref = sharedPref.getInt(getString(R.string.saved_pace_key), defaultValue);
         speedSettingBar.setProgress(pacePref-SPEED_OFFSET);
         updateSpeedFromBar();
 
-        int num_medals = sharedPref.getInt(getString(R.string.magnolia_medals_key), 0);
         if (num_medals > 0) {
             TextView medalsText = findViewById(R.id.contents_medals);
             medalsText.setText(String.format(getString(R.string.text_medals), num_medals));
@@ -61,6 +72,12 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
 
     private void resumeGameActivity() {
         Intent intent = new Intent(this, RunMapActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void showIntroScreen() {
+        Intent intent = new Intent(this, IntroActivity.class);
         startActivity(intent);
         finish();
     }
