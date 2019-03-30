@@ -86,8 +86,8 @@ public class TextToSpeechRunner {
 
         @Override
         public void onDone(String utteranceId) {
+            mAudioManager.abandonAudioFocus(this);
             if (!isStillSpeaking()) {
-                mAudioManager.abandonAudioFocus(this);
                 if (onDoneSpeaking != null) onDoneSpeaking.run();
                 onDoneSpeaking = null;
             }
