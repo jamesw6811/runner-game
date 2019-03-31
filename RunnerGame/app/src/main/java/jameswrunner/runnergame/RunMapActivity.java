@@ -134,13 +134,13 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         mMap.clear();
         mMap.getUiSettings().setAllGesturesEnabled(false);
         disableMarkerScrolling();
+        mMapReady = true;
         // Check permissions
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             String[] perms = {android.Manifest.permission.ACCESS_FINE_LOCATION};
             ActivityCompat.requestPermissions(this, perms, 0);
             return;
         }
-        mMapReady = true;
         bindGameService();
     }
 
