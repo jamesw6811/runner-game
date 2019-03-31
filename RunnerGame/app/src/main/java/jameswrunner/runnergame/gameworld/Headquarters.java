@@ -19,7 +19,7 @@ import jameswrunner.runnergame.R;
 
 public class Headquarters extends GameObject implements ChaseOriginator {
     private static final int FIRST_UPGRADE_COST_SUB_RESOURCE = 1;
-    private static final double CHASE_DIFFICULTY = 0.9;
+    private static final double CHASE_DIFFICULTY = 1.1;
     private Marker marker;
     public static final int RUNNING_RESOURCE_BUILD_COST = 5;
 
