@@ -92,11 +92,16 @@ public class BuildingSubResourceSite extends GameObject {
 
     @Override
     public boolean isInteractable() {
-        return built;
+        return true;
     }
 
     @Override
     public void interact() {
+        if (!built){
+            getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.upgrade_needed_to_interact));
+            return;
+        }
+
         Player player = getGameWorld().getPlayer();
         if (player.getBuildingResource() >= BUILDING_RESOURCE_TRADE_COST) {
             getGameWorld().tutorialSubResourceBuildingCollected = true;

@@ -94,12 +94,16 @@ public class BuildingResourceSite extends GameObject {
 
     @Override
     public boolean isInteractable() {
-        if (built) return true;
-        else return false;
+        return true;
     }
 
     @Override
     public void interact() {
+        if (!built){
+            getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.upgrade_needed_to_interact));
+            return;
+        }
+
         Player player = getGameWorld().getPlayer();
         if (resource > 0) {
             getGameWorld().tutorialResourceBuildingCollected = true;

@@ -14,6 +14,7 @@
     <string name="interaction_injured">You are poisoned by Hemlock, so you can\'t do that. Go back to HQ to get better.</string>
     <string name="interaction_nothing_to_upgrade">Nothing here that can be built or upgraded.</string>
     <string name="interaction_nothing_to_interact">Nothing here that can be interacted with.</string>
+    <string name="upgrade_needed_to_interact">Before you are able to interact with this site, you must upgrade or build it using double-click.</string>
 
     <string name="headquarters_spokenName">your Shady Grove</string>
     <string name="headquarters_mapName">HQ</string>
