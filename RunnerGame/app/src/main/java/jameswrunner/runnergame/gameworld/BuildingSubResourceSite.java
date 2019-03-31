@@ -98,7 +98,7 @@ public class BuildingSubResourceSite extends GameObject {
     @Override
     public void interact() {
         Player player = getGameWorld().getPlayer();
-        if (player.getBuildingResource() > BUILDING_RESOURCE_TRADE_COST) {
+        if (player.getBuildingResource() >= BUILDING_RESOURCE_TRADE_COST) {
             getGameWorld().tutorialSubResourceBuildingCollected = true;
             player.takeBuildingResource(BUILDING_RESOURCE_TRADE_COST);
             getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_collectSuccess, BUILDING_RESOURCE_TRADE_COST, BUILDING_SUBRESOURCE_AMOUNT_PER_TRADE));
