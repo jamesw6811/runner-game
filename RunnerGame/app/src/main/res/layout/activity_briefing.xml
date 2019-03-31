@@ -26,7 +26,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:text="As an agent of the Oaken Empire, it is your job to make sure all arborous threats to the Empire are well-researched and that seedy schemes never blossom. There are rumors of a double agent in the Tangle Woods. Your first mission is to plant a headquarters there and root out the opposing spy."
+        android:text="@string/mission_1_briefing"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

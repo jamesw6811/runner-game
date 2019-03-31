@@ -50,7 +50,6 @@
     <string name="chasesite_chaseFailed">The Hemlock caught you and poisoned you. Go back to HQ to get better.</string>
     <string name="chasesite_chaseMessage">The Hemlock is chasing you, run fast!</string>
 
-    <string name="game_started">Game started.</string>
     <string name="receivedMovementResource">You got more Vine Cred!</string>
     <string name="receivedMovementResource_short">Vine Cred!</string>
     <string name="discoveredNotification">You have discovered %s!</string>
@@ -60,21 +59,26 @@
     <string name="buildingSubResourceAnnounce"> %d Intel</string>
     <string name="approachingAnnounce">You are approaching %s.</string>
 
-    <string name="tutorialFirstResource">Walk or jog around the neighborhood to get Vine Cred. You will hear this sound when you collect a Vine Cred.</string>
-    <string name="tutorialHQbuilt_notEnoughResources">We need %d Vine Cred before we can set up our first headquarters.</string>
+    <string name="game_started">Hello Agent Almond. I\'m a complex artificially intelligent holographic lifeform. But you can call me Holly for short.</string>
+    <string name="tutorialFirstResource">To build the Shady Grove, our first headquarters, you need to walk or jog around the neighborhood to get Vine Cred. You will hear this sound when you collect a Vine Cred.</string>
+    <string name="tutorialHQbuilt_notEnoughResources">We need %d Vine Cred before we can set up the Shady Grove.</string>
     <string name="tutorialHQbuilt_readyToBuild">You have enough Vine Cred for your first headquarters, the Shady Grove. Choose a central location to build your headquarters and double-click your headphones play button to build it.</string>
     <string name="tutorialResourceBuildingDiscovered">Now that we\'ve grown our Shady Grove, let\'s go investigate the area. Try double-clicking to upgrade and clicking to interact with every site you discover.</string>
     <string name="tutorialResourceBuildingUpgraded">Nice work finding a Seedy Sapling. Can we turn it to our side?</string>
     <string name="tutorialResourceBuildingCollected">I\'m glad that Seedy Sapling is working for us now.</string>
     <string name="tutorialSubResourceBuildingCollected">Now we have Secrets, but we need to find a way to understand them.</string>
-    <string name="tutorialCompleted">Something has gone wrong. Take that Intel back to HQ!</string>
+    <string name="tutorialCompleted">I\'m picking up strange signals from HQ. Take that Intel back to the Shady Grove and upgrade it!</string>
     <string name="tutorialplayerinjured">You\'ve been poisoned. Go back to HQ for antidote.</string>
 
     <string name="list_separator">, </string>
     <string name="list_final_and">and </string>
 
-    <string name="win_message">Nice work! It\'s a Dogwood Double Agent. We need to find out what this means for the Oak Empire, but you\'ve earned your mission reward.</string>
+    <string name="win_message">Nice work, Agent Almond! It\'s a Dogwood double agent. We need to find out what this means for the Oaken Empire. I\'ll send the debriefing to your mobile device.</string>
     <string name="saved_pace_key">saved_pace</string>
+
     <string name="magnolia_medals_key">magnolia_medals</string>
     <string name="text_medals">%dx Magnolia Medals</string>
+
+    <string name="mission_1_briefing">As Agent Almond, a new recruit of the Oaken Empire, you ensure any arborous threats to the Empire are well-researched and that seedy schemes never blossom.\nThere are rumors of a double agent in the Tangle Woods. Your first mission is to plant a headquarters there and root out the opposing spy.</string>
+    <string name="mission_1_debriefing">You managed to catch the double agent. The agent is part of a crop of rogues named the Dogwood Derelicts. We need to figure out why this treacherous tree was spying on the Oaken Empire and strip the bark off this conspiracy. But first, you deserve your reward.   -Holly</string>
 </resources>
