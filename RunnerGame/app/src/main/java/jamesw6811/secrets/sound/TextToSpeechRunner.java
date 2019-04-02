@@ -104,7 +104,7 @@ public class TextToSpeechRunner {
             if (status != TextToSpeech.ERROR) {
                 Log.d(LOGTAG, "TextToSpeech no error");
             }
-            tts.addSpeech(CRED_EARCON, "jameswrunner.runnergame", R.raw.cred);
+            tts.addSpeech(CRED_EARCON, "jamesw6811.secrets", R.raw.cred);
             initialized = true;
         }
 

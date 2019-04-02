@@ -1,10 +1,18 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            keyAlias 'upload'
+            keyPassword 'Ckw4T7tkakeC'
+            storeFile file('C:/Users/james/Documents/Android Key Store/jamesw6811.secrets.jks')
+            storePassword '3g1yOTEp412f'
+        }
+    }
     buildToolsVersion '28.0.3'
     compileSdkVersion 28
     defaultConfig {
-        applicationId "jameswrunner.runnergame"
+        applicationId "jamesw6811.secrets"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 2
@@ -16,6 +24,8 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            debuggable true
         }
     }
     testOptions {
@@ -24,12 +34,11 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-alpha4', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
     implementation 'com.google.maps.android:android-maps-utils:0.5'

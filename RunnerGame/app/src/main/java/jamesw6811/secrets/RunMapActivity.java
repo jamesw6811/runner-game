@@ -23,7 +23,7 @@ import androidx.fragment.app.FragmentActivity;
 
 public class RunMapActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    public static final String EXTRA_PACE = "jameswrunner.runnergame.RunMapActivity.EXTRA_PACE";
+    public static final String EXTRA_PACE = "jamesw6811.secrets.RunMapActivity.EXTRA_PACE";
     private static final String LOGTAG = RunMapActivity.class.getName();
     SupportMapFragment mapFragment;
     private Button button_quit;

@@ -40,7 +40,7 @@ public class GameService extends Service {
 
     private static final String LOGTAG = GameService.class.getName();
     private static final String PACKAGE_NAME =
-            "app.jamesw.jameswrunner.runnergame." + LOGTAG;
+            "jamesw6811.secrets." + LOGTAG;
     private static final String CHANNEL_ID = "gameservice_notifications";
     private static final String EXTRA_STARTED_FROM_NOTIFICATION = PACKAGE_NAME +
             ".started_from_notification";
