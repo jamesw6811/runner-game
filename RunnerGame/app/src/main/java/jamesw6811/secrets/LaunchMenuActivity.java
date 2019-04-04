@@ -30,7 +30,7 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
         // If the game is already running, resume the game map
         if (GameService.runningInstance != null) {
             resumeGameActivity();
-        } else if (!hasSeenIntroScreen && num_medals == 0) {
+        } else if (!hasSeenIntroScreen) {
             showIntroScreen();
         }
 
