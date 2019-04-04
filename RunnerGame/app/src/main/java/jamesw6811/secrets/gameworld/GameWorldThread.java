@@ -1,15 +1,18 @@
 package jamesw6811.secrets.gameworld;
 
+import android.util.Log;
+
 /**
  * Created by james on 6/17/2017.
  */
 
 public class GameWorldThread extends Thread {
-    static final long FPS = 30;
+    private static final long FPS = 30;
+    private static final String LOGTAG = GameWorldThread.class.getName();
     private boolean running = false;
     private GameWorld gw;
 
-    public GameWorldThread(GameWorld world) {
+    GameWorldThread(GameWorld world) {
         gw = world;
     }
 
@@ -19,7 +22,7 @@ public class GameWorldThread extends Thread {
         super.start();
     }
 
-    public void stopRunning() {
+    void stopRunning() {
         running = false;
     }
 
@@ -39,7 +42,8 @@ public class GameWorldThread extends Thread {
                     sleep(sleepTime);
                 else
                     sleep(10);
-            } catch (Exception e) {
+            } catch (InterruptedException ie){
+                Log.e(LOGTAG, "GameWorldThread thread sleep interrupted, trying to recover.");
             }
         }
     }

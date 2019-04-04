@@ -11,7 +11,7 @@ public abstract class GameObject {
     private String spokenName;
     private LatLng position;
 
-    public GameObject(GameWorld gw, String spokenName, LatLng position) {
+    GameObject(GameWorld gw, String spokenName, LatLng position) {
         gameWorld = gw;
         gameWorld.addObject(this);
         this.spokenName = spokenName;
@@ -19,7 +19,7 @@ public abstract class GameObject {
         updateMarker();
     }
 
-    protected void updateMarker() {
+    void updateMarker() {
         final GameService gs = getGameService();
         boolean activeUI = gs.passMapUpdate(new RunMapActivity.MapUpdate() {
             @Override
@@ -30,13 +30,13 @@ public abstract class GameObject {
         if (!activeUI) clearMarkerState();
     }
 
-    protected abstract void drawMarker(GameService gs, GoogleMap gm);
+    abstract void drawMarker(GameService gs, GoogleMap gm);
 
-    protected abstract void clearMarkerState();
+    abstract void clearMarkerState();
 
-    protected abstract void removeMarker();
+    abstract void removeMarker();
 
-    public void destroy() {
+    void destroy() {
         getGameService().passMapUpdate(new RunMapActivity.MapUpdate() {
             @Override
             public void updateMap(GoogleMap map) {
@@ -51,50 +51,50 @@ public abstract class GameObject {
         return gameWorld.getGameService();
     }
 
-    protected GameWorld getGameWorld() { return gameWorld; }
+    GameWorld getGameWorld() { return gameWorld; }
 
-    public String getSpokenName() {
+    String getSpokenName() {
         return spokenName;
     }
 
-    public void setSpokenName(String spokenName) {
+    void setSpokenName(String spokenName) {
         this.spokenName = spokenName;
     }
 
-    public LatLng getPosition() {
+    LatLng getPosition() {
         return position;
     }
 
-    public void setPosition(LatLng position) {
+    void setPosition(LatLng position) {
         this.position = position;
         updateMarker();
     }
 
-    public boolean isUpgradable() {
+    boolean isUpgradable() {
         return false;
     }
 
-    public void upgrade() {
+    void upgrade() {
         throw new UnsupportedOperationException("This object is not upgradable.");
     }
 
-    public void tickTime(float timeDelta) {
+    void tickTime(float timeDelta) {
 
     }
 
-    public boolean isInteractable() {
+    boolean isInteractable() {
         return false;
     }
 
-    public void interact() {
+    void interact() {
         throw new UnsupportedOperationException("This object is not interactable.");
     }
 
-    public boolean hasApproachActivity() {
+    boolean hasApproachActivity() {
         return false;
     }
 
-    public void approach() {
+    void approach() {
         throw new UnsupportedOperationException("This object does not have an approach activity.");
     }
 }

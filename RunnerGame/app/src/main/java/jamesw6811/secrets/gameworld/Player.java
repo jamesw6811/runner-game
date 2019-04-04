@@ -15,7 +15,7 @@ import jamesw6811.secrets.R;
  * Created by james on 6/17/2017.
  */
 
-public class Player extends GameObject {
+class Player extends GameObject {
     private Circle circle;
     private LatLng lastPosition;
     private double lastDistanceTravelled;
@@ -25,13 +25,13 @@ public class Player extends GameObject {
     private int buildingSubResource;
     private boolean injured = false;
 
-    public Player(GameWorld gw, LatLng gp) {
+    Player(GameWorld gw, LatLng gp) {
         super(gw, gw.getGameService().getString(R.string.player_spokenName), gp);
         runningResource = 0;
     }
 
     @Override
-    protected void drawMarker(GameService gs, GoogleMap gm) {
+    void drawMarker(GameService gs, GoogleMap gm) {
         if (circle == null) {
             circle = gm.addCircle(new CircleOptions().center(getPosition())
                     .radius(10f)
@@ -42,16 +42,16 @@ public class Player extends GameObject {
     }
 
     @Override
-    protected void clearMarkerState() {
+    void clearMarkerState() {
         circle = null;
     }
 
     @Override
-    protected void removeMarker() {
+    void removeMarker() {
         if (circle != null) circle.remove();
     }
 
-    public void updatePosition(LatLng lastGPS) {
+    void updatePosition(LatLng lastGPS) {
         lastPosition = getPosition();
         if (lastGPS.equals(getPosition())) {
             lastDistanceTravelled = 0;
@@ -62,67 +62,67 @@ public class Player extends GameObject {
         }
     }
 
-    public LatLng getLastPosition() { return  lastPosition; }
+    LatLng getLastPosition() { return  lastPosition; }
 
-    public double getLastDistanceTravelled() {
+    double getLastDistanceTravelled() {
         return lastDistanceTravelled;
     }
 
-    public double getLastHeadingTravelled() {
+    double getLastHeadingTravelled() {
         return lastHeadingTravelled;
     }
 
-    public void giveRunningResource(int i) {
+    void giveRunningResource(int i) {
         if (i < 1) throw new RuntimeException("Giving less than 1 resource");
         runningResource += i;
     }
 
-    public int getRunningResource() {
+    int getRunningResource() {
         return runningResource;
     }
 
-    public void takeRunningResource(int i) {
+    void takeRunningResource(int i) {
         if (i < 1) throw new RuntimeException("Taking less than 1 resource");
         runningResource -= i;
     }
 
-    public void giveBuildingResource(int i) {
+    void giveBuildingResource(int i) {
         if (i < 1) throw new RuntimeException("Giving less than 1 resource");
         buildingResource += i;
     }
 
-    public int getBuildingResource() {
+    int getBuildingResource() {
         return buildingResource;
     }
 
-    public void takeBuildingResource(int i) {
+    void takeBuildingResource(int i) {
         if (i < 1) throw new RuntimeException("Taking less than 1 resource");
         buildingResource -= i;
     }
 
-    public void giveBuildingSubResource(int i) {
+    void giveBuildingSubResource(int i) {
         if (i < 1) throw new RuntimeException("Giving less than 1 resource");
         buildingSubResource += i;
     }
 
-    public int getBuildingSubResource() {
+    int getBuildingSubResource() {
         return buildingSubResource;
     }
 
-    public void takeBuildingSubResource(int i) {
+    void takeBuildingSubResource(int i) {
         if (i < 1) throw new RuntimeException("Taking less than 1 resource");
         buildingSubResource -= i;
     }
 
-    public void injure() {
+    void injure() {
         injured = true;
     }
 
-    public boolean isInjured() {
+    boolean isInjured() {
         return injured;
     }
 
-    public void fixInjury() {
+    void fixInjury() {
         injured = false;
     }
 }

@@ -21,22 +21,22 @@ public class Headquarters extends GameObject implements ChaseOriginator {
     private static final int FIRST_UPGRADE_COST_SUB_RESOURCE = 1;
     private static final double CHASE_DIFFICULTY = 1.1;
     private Marker marker;
-    public static final int RUNNING_RESOURCE_BUILD_COST = 5;
+    static final int RUNNING_RESOURCE_BUILD_COST = 5;
 
-    public Headquarters(GameWorld gw, LatLng pos) {
+    Headquarters(GameWorld gw, LatLng pos) {
         super(gw, gw.getGameService().getString(R.string.headquarters_spokenName), pos);
     }
 
-    protected synchronized void clearMarkerState() {
+    synchronized void clearMarkerState() {
         marker = null;
     }
 
     @Override
-    protected synchronized void removeMarker() {
+    synchronized void removeMarker() {
         if (marker != null) marker.remove();
     }
 
-    protected synchronized void drawMarker(GameService gs, GoogleMap map) {
+    synchronized void drawMarker(GameService gs, GoogleMap map) {
         if (marker == null) {
             MarkerOptions mo = new MarkerOptions().position(getPosition()).visible(true);
             marker = map.addMarker(mo);
@@ -53,12 +53,12 @@ public class Headquarters extends GameObject implements ChaseOriginator {
     }
 
     @Override
-    public boolean hasApproachActivity() {
+    boolean hasApproachActivity() {
         return true;
     }
 
     @Override
-    public void approach() {
+    void approach() {
         Player player = getGameWorld().getPlayer();
         if (player.isInjured()) {
             player.fixInjury();
@@ -67,12 +67,12 @@ public class Headquarters extends GameObject implements ChaseOriginator {
     }
 
     @Override
-    public boolean isUpgradable() {
+    boolean isUpgradable() {
         return true;
     }
 
     @Override
-    public void upgrade() {
+    void upgrade() {
         Player player = getGameWorld().getPlayer();
         if (player.getBuildingSubResource() >= FIRST_UPGRADE_COST_SUB_RESOURCE) {
             player.takeBuildingSubResource(FIRST_UPGRADE_COST_SUB_RESOURCE);

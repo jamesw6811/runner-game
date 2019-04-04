@@ -15,7 +15,6 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
     public static final String EXTRA_SEEN_INTRO_ALREADY = "LaunchMenuActivity.EXTRA_SEEN_INTRO_ALREADY";
     private static final int SPEED_OFFSET = 4; // minutes per mile
     private TextView speedSettingText;
-    private int speedSettingPace = 0;
     private SeekBar speedSettingBar;
 
     @Override
@@ -92,7 +91,7 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
     }
 
     private void updateSpeedFromBar() {
-        speedSettingPace = speedSettingBar.getProgress() + SPEED_OFFSET;
+        int speedSettingPace = speedSettingBar.getProgress() + SPEED_OFFSET;
         speedSettingText.setText(this.getResources().getString(R.string.pace_setting_text, speedSettingPace));
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPref.edit();

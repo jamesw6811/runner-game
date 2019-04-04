@@ -36,17 +36,14 @@ public class ToneRunner {
     private void toneLoop() {
         if (looping) {
             final int period = mPeriod;
-            mToneHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    tonegen.startTone(TONE_TO_PLAY, TONE_LENGTH);
-                    try {
-                        Thread.sleep(period);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    ToneRunner.this.toneLoop();
+            mToneHandler.post(() -> {
+                tonegen.startTone(TONE_TO_PLAY, TONE_LENGTH);
+                try {
+                    Thread.sleep(period);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+                ToneRunner.this.toneLoop();
             });
         }
     }
