@@ -18,6 +18,8 @@ import jamesw6811.secrets.R;
 import jamesw6811.secrets.RunMapActivity;
 import jamesw6811.secrets.controls.RunningMediaController;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
+import jamesw6811.secrets.time.TimeTicked;
+import jamesw6811.secrets.time.TimeTickerThread;
 
 import static jamesw6811.secrets.maputils.MapUtilities.locationToLatLng;
 
@@ -25,7 +27,7 @@ import static jamesw6811.secrets.maputils.MapUtilities.locationToLatLng;
  * Created by james on 6/17/2017.
  */
 
-public class GameWorld {
+public class GameWorld implements TimeTicked {
     private double METERS_PER_RUNNING_RESOURCE = 50;
     private double METERS_IN_SIGHT = 50;
     private double METERS_DISCOVERY_MINIMUM = 130;
@@ -54,7 +56,7 @@ public class GameWorld {
     private static final String LOGTAG = GameWorld.class.getName();
 
     private LatLng lastGPS;
-    private GameWorldThread gameWorldThread;
+    private TimeTickerThread timeTickerThread;
     private GameService gameService;
 
     private long lastAnnouncementTime = -ANNOUNCEMENT_PERIOD;
@@ -115,16 +117,16 @@ public class GameWorld {
     }
 
     public void initializeAndStartRunning() {
-        if (gameWorldThread == null || !gameWorldThread.isAlive()) {
-            gameWorldThread = new GameWorldThread(this);
-            gameWorldThread.start();
+        if (timeTickerThread == null || !timeTickerThread.isAlive()) {
+            timeTickerThread = new TimeTickerThread(this);
+            timeTickerThread.start();
             addSpeechToQueue(gameService.getString(R.string.game_started));
         }
     }
 
     public void stopRunning() {
-        if (gameWorldThread != null) {
-            gameWorldThread.stopRunning();
+        if (timeTickerThread != null) {
+            timeTickerThread.stopRunning();
         }
     }
 
@@ -335,7 +337,7 @@ public class GameWorld {
     private void checkWinConditions() {
         if (winCondition){
             addSpeechToQueue(getGameService().getString(R.string.win_message));
-            gameWorldThread.stopRunning();
+            timeTickerThread.stopRunning();
             gameService.getTTSRunner().setOnDoneSpeaking(new Runnable(){
                 @Override
                 public void run() {
