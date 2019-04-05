@@ -6,7 +6,7 @@ import com.google.android.gms.maps.model.LatLng;
 import jamesw6811.secrets.GameService;
 import jamesw6811.secrets.RunMapActivity;
 
-public abstract class GameObject {
+abstract class GameObject {
     private GameWorld gameWorld;
     private String spokenName;
     private LatLng position;

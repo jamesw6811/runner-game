@@ -19,28 +19,29 @@ import jamesw6811.secrets.R;
 
 public class BuildingSubResourceSite extends GameObject {
     public static final int RUNNING_RESOURCE_UPGRADE_COST = 10;
-    public static final int BUILDING_RESOURCE_UPGRADE_COST = 10;
-    public static final int BUILDING_RESOURCE_TRADE_COST = 10;
+    public final int BUILDING_RESOURCE_UPGRADE_COST = 10;
+    public final int BUILDING_RESOURCE_TRADE_COST = 10;
     public static final int BUILDING_SUBRESOURCE_AMOUNT_PER_TRADE = 1;
     public static final float BUILT_EXPIRY_DURATION = 10 * 60f;
+
     private float timeSinceBuilt = 0;
     private Marker marker;
     private boolean built = false;
 
-    public BuildingSubResourceSite(GameWorld gw, LatLng pos) {
+    BuildingSubResourceSite(GameWorld gw, LatLng pos) {
         super(gw, gw.getGameService().getString(R.string.buildingsubresourcesite_spokenName), pos);
     }
 
-    protected synchronized void clearMarkerState() {
+    synchronized void clearMarkerState() {
         marker = null;
     }
 
     @Override
-    protected synchronized void removeMarker() {
+    synchronized void removeMarker() {
         if (marker != null) marker.remove();
     }
 
-    protected synchronized void drawMarker(GameService gs, GoogleMap map) {
+    synchronized void drawMarker(GameService gs, GoogleMap map) {
         if (marker == null) {
             MarkerOptions mo = new MarkerOptions().position(getPosition()).visible(true);
             marker = map.addMarker(mo);
@@ -61,7 +62,7 @@ public class BuildingSubResourceSite extends GameObject {
     }
 
     @Override
-    public String getSpokenName(){
+    String getSpokenName(){
         if (!built) return super.getSpokenName();
         else return getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_spokenNameBuilt);
     }
@@ -72,12 +73,12 @@ public class BuildingSubResourceSite extends GameObject {
     }
 
     @Override
-    public boolean isUpgradable() {
+    boolean isUpgradable() {
         return !built;
     }
 
     @Override
-    public void upgrade() {
+    void upgrade() {
         Player player = getGameWorld().getPlayer();
         if (built) throw new UnsupportedOperationException("Cannot upgrade further.");
         if (player.getRunningResource() >= RUNNING_RESOURCE_UPGRADE_COST && player.getBuildingResource() >= BUILDING_RESOURCE_UPGRADE_COST) {
@@ -91,12 +92,12 @@ public class BuildingSubResourceSite extends GameObject {
     }
 
     @Override
-    public boolean isInteractable() {
+    boolean isInteractable() {
         return true;
     }
 
     @Override
-    public void interact() {
+    void interact() {
         if (!built){
             getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.upgrade_needed_to_interact));
             return;
@@ -114,13 +115,13 @@ public class BuildingSubResourceSite extends GameObject {
     }
 
     @Override
-    public void tickTime(float timeDelta) {
+    void tickTime(float timeDelta) {
         super.tickTime(timeDelta);
         if (built) {
             timeSinceBuilt += timeDelta;
             if (timeSinceBuilt > BUILT_EXPIRY_DURATION) {
                 setBuilt(false);
-                getGameWorld().addSpeechToQueue(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_buildExpired, (int)Math.round(BUILT_EXPIRY_DURATION/60f)));
+                getGameWorld().addSpeechToQueue(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_buildExpired));
             }
         }
     }

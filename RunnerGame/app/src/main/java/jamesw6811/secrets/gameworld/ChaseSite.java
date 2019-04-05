@@ -13,15 +13,15 @@ import com.google.maps.android.ui.IconGenerator;
 import jamesw6811.secrets.GameService;
 import jamesw6811.secrets.R;
 
-public class ChaseSite extends GameObject implements ChaseOriginator {
+class ChaseSite extends GameObject implements ChaseOriginator {
     private static final double CHASE_DIFFICULTY = 0.66; // 2/3rd the player pace
     private Marker marker;
-    public ChaseSite(GameWorld gw, LatLng position) {
+    ChaseSite(GameWorld gw, LatLng position) {
         super(gw, gw.getGameService().getString(R.string.chasesite_spokenName), position);
     }
 
     @Override
-    protected void drawMarker(GameService gs, GoogleMap map) {
+    void drawMarker(GameService gs, GoogleMap map) {
         if (marker == null) {
             MarkerOptions mo = new MarkerOptions().position(getPosition()).visible(true);
             marker = map.addMarker(mo);
@@ -38,22 +38,22 @@ public class ChaseSite extends GameObject implements ChaseOriginator {
     }
 
     @Override
-    protected void clearMarkerState() {
+    void clearMarkerState() {
         marker = null;
     }
 
     @Override
-    protected void removeMarker() {
+    void removeMarker() {
         if (marker != null) marker.remove();
     }
 
     @Override
-    public boolean hasApproachActivity() {
+    boolean hasApproachActivity() {
         return true;
     }
 
     @Override
-    public void approach() {
+    void approach() {
         getGameWorld().startChase(true, CHASE_DIFFICULTY, this);
         getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.chasesite_chaseStarted));
     }
