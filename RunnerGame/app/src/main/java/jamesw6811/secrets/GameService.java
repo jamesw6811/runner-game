@@ -14,48 +14,29 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
-import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-
-import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.media.session.MediaButtonReceiver;
 import jamesw6811.secrets.controls.RunningMediaController;
 import jamesw6811.secrets.gameworld.GameWorld;
+import jamesw6811.secrets.location.GameLocationPoller;
+import jamesw6811.secrets.location.NewLocationListener;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
 import jamesw6811.secrets.sound.ToneRunner;
 
 public class GameService extends Service {
-    public static final float MINIMUM_ACCURACY_REQUIRED = 25f;
     public static GameService runningInstance = null;
 
     private static final String LOGTAG = GameService.class.getName();
-    private static final String PACKAGE_NAME =
-            "jamesw6811.secrets." + LOGTAG;
     private static final String CHANNEL_ID = "gameservice_notifications";
-    private static final String EXTRA_STARTED_FROM_NOTIFICATION = PACKAGE_NAME +
-            ".started_from_notification";
-    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 500;
-    private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
-            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
     private static final int NOTIFICATION_ID = 1;
+
     private final IBinder mBinder = new LocalBinder();
-    private NotificationManager mNotificationManager;
-    private LocationRequest mLocationRequest;
-    private FusedLocationProviderClient mFusedLocationClient;
-    private LocationCallback mLocationCallback;
     private Handler mServiceHandler;
-    private Location mLocation;
     private RunMapActivity mActivity;
+    private GameLocationPoller gameLocationPoller;
     private TextToSpeechRunner ttser;
     private ToneRunner toner;
     private RunningMediaController controller;
@@ -63,72 +44,35 @@ public class GameService extends Service {
     private boolean uiBound;
     private double pace = -1;
 
-    public GameService() {
-    }
-
     public static GameService getRunningInstance(){
         return runningInstance;
     }
 
-
     @Override
     public void onCreate() {
+        // Set running state
         runningInstance = this;
         uiBound = false;
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        mLocationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-                onNewLocation(locationResult.getLastLocation());
-            }
-        };
-
-        createLocationRequest();
-        getLastLocation();
-
+        // Initialize handler
         HandlerThread handlerThread = new HandlerThread(LOGTAG);
         handlerThread.start();
         mServiceHandler = new Handler(handlerThread.getLooper());
 
-        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        setupNotificationsChannel();
 
-        // Android O requires a Notification Channel.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.app_name);
-            // Create the channel for the notification
-            NotificationChannel mChannel =
-                    new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
-
-            // Set the Notification Channel for the Notification Manager.
-            mNotificationManager.createNotificationChannel(mChannel);
-        }
-
+        // Setup services
         ttser = new TextToSpeechRunner(this);
         toner = new ToneRunner();
         controller = new RunningMediaController(this);
-        requestLocationUpdates();
+        gameLocationPoller = new GameLocationPoller(this, GameService.this::startGameOrUpdateLocation);
+        gameLocationPoller.startPolling();
     }
-
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i(LOGTAG, "Service started");
-
         MediaButtonReceiver.handleIntent(controller.getMediaSession(), intent);
-        boolean startedFromNotification = intent.getBooleanExtra(EXTRA_STARTED_FROM_NOTIFICATION,
-                false);
-
-        // We got here because the user decided to remove location updates from the notification.
-        if (startedFromNotification) {
-            removeLocationUpdates();
-            stopSelf();
-        } else {
-            startForeground(NOTIFICATION_ID, getNotification());
-        }
-
-        // Tells the system to not try to recreate the service after it has been killed.
+        startForeground(NOTIFICATION_ID, getNotification());
         return START_NOT_STICKY;
     }
 
@@ -139,15 +83,7 @@ public class GameService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        // Called when a client (MainActivity in case of this sample) comes to the foreground
-        // and binds with this service. The service should cease to be a foreground service
-        // when that happens.
-        Log.i(LOGTAG, "in onBind()");
-
-        // Set pace setting from extra
-        double paceIntent = intent.getDoubleExtra(RunMapActivity.EXTRA_PACE, -1);
-        if (paceIntent>0) pace = paceIntent;
-
+        setPaceFromIntent(intent);
         onAllBind();
         return mBinder;
     }
@@ -160,17 +96,15 @@ public class GameService extends Service {
 
     @Override
     public void onRebind(Intent intent) {
-        // Called when a client (MainActivity in case of this sample) returns to the foreground
-        // and binds once again with this service. The service should cease to be a foreground
-        // service when that happens.
-        Log.i(LOGTAG, "in onRebind()");
+        setPaceFromIntent(intent);
+        onAllBind();
+        super.onRebind(intent);
+    }
 
+    private void setPaceFromIntent(Intent intent){
         // Set pace setting from extra
         double paceIntent = intent.getDoubleExtra(RunMapActivity.EXTRA_PACE, -1);
         if (paceIntent>0) pace = paceIntent;
-
-        onAllBind();
-        super.onRebind(intent);
     }
 
     private void onAllBind() {
@@ -188,6 +122,7 @@ public class GameService extends Service {
     @Override
     public void onDestroy() {
         runningInstance = null;
+        gameLocationPoller.stopPolling();
         if (controller != null) {
             controller.release();
         }
@@ -205,32 +140,16 @@ public class GameService extends Service {
         mServiceHandler.removeCallbacksAndMessages(null);
     }
 
-    /**
-     * Makes a request for location updates. Note that in this sample we merely log the
-     * {@link SecurityException}.
-     */
-    public void requestLocationUpdates() {
-        Log.i(LOGTAG, "Requesting location updates");
-        startService(new Intent(getApplicationContext(), GameService.class));
-        try {
-            mFusedLocationClient.requestLocationUpdates(mLocationRequest,
-                    mLocationCallback, Looper.myLooper());
-        } catch (SecurityException unlikely) {
-            Log.e(LOGTAG, "Lost location permission. Could not request updates. " + unlikely);
-        }
-    }
+    private void setupNotificationsChannel() {
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { // Android O requires a Notification Channel.
+            CharSequence name = getString(R.string.app_name);
+            // Create the channel for the notification
+            NotificationChannel mChannel =
+                    new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
 
-    /**
-     * Removes location updates. Note that in this sample we merely log the
-     * {@link SecurityException}.
-     */
-    public void removeLocationUpdates() {
-        Log.i(LOGTAG, "Removing location updates");
-        try {
-            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-            stopSelf();
-        } catch (SecurityException unlikely) {
-            Log.e(LOGTAG, "Lost location permission. Could not remove updates. " + unlikely);
+            // Set the Notification Channel for the Notification Manager.
+            mNotificationManager.createNotificationChannel(mChannel);
         }
     }
 
@@ -238,13 +157,8 @@ public class GameService extends Service {
      * Returns the {@link NotificationCompat} used as part of the foreground service.
      */
     private Notification getNotification() {
-        Intent intent = new Intent(this, GameService.class);
-
         CharSequence text = getString(R.string.foreground_service_notification_description);
         CharSequence title = getString(R.string.foreground_service_notification_title);
-
-        // Extra to help us figure out if we arrived in onStartCommand via the notification or not.
-        intent.putExtra(EXTRA_STARTED_FROM_NOTIFICATION, true);
 
         // The PendingIntent to launch activity with no back stack
         PendingIntent activityPendingIntent = PendingIntent.getActivity(this, 0,
@@ -262,48 +176,6 @@ public class GameService extends Service {
                 .setWhen(System.currentTimeMillis());
 
         return builder.build();
-    }
-
-    private void getLastLocation() {
-        try {
-            mFusedLocationClient.getLastLocation()
-                    .addOnCompleteListener(new OnCompleteListener<Location>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Location> task) {
-                            if (task.isSuccessful() && task.getResult() != null) {
-                                mLocation = task.getResult();
-                            } else {
-                                Log.w(LOGTAG, "Failed to get location.");
-                            }
-                        }
-                    });
-        } catch (SecurityException unlikely) {
-            Log.e(LOGTAG, "Lost location permission." + unlikely);
-        }
-    }
-
-    private void onNewLocation(Location location) {
-        mLocation = location;
-
-        if (ttser.isInitialized() && location.getAccuracy() < MINIMUM_ACCURACY_REQUIRED) {
-            if (gw == null && uiBound) {
-                gw = new GameWorld(location, pace, this);
-                gw.initializeAndStartRunning();
-            } else if (gw != null) {
-                gw.updateGPS(location);
-            }
-        }
-    }
-
-
-    /**
-     * Sets the location request parameters.
-     */
-    private void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
-        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
     public boolean passMapUpdate(RunMapActivity.MapUpdate mu) {
@@ -344,6 +216,17 @@ public class GameService extends Service {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
+    }
+
+    public void startGameOrUpdateLocation(Location location) {
+        if(ttser.isInitialized()) {
+            if (gw == null && uiBound) {
+                gw = new GameWorld(location, pace, this);
+                gw.initializeAndStartRunning();
+            } else if (gw != null) {
+                gw.updateGPS(location);
+            }
+        }
     }
 
     /**

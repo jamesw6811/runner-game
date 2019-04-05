@@ -21,7 +21,7 @@ import jamesw6811.secrets.sound.TextToSpeechRunner;
 import jamesw6811.secrets.time.TimeTicked;
 import jamesw6811.secrets.time.TimeTickerThread;
 
-import static jamesw6811.secrets.maputils.MapUtilities.locationToLatLng;
+import static jamesw6811.secrets.location.MapUtilities.locationToLatLng;
 
 /**
  * Created by james on 6/17/2017.

@@ -1,4 +1,4 @@
-package jamesw6811.secrets.maputils;
+package jamesw6811.secrets.location;
 
 import android.location.Location;
 
@@ -6,8 +6,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.SphericalUtil;
 
 import java.util.Random;
-
-import jamesw6811.secrets.R;
 
 /**
  * Created by james on 6/17/2017.
