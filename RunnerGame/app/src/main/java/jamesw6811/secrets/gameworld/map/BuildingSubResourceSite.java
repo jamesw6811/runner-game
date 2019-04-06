@@ -1,4 +1,4 @@
-package jamesw6811.secrets.gameworld;
+package jamesw6811.secrets.gameworld.map;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -10,14 +10,13 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 
-import jamesw6811.secrets.GameService;
 import jamesw6811.secrets.R;
 
 /**
  * Created by james on 6/17/2017.
  */
 
-public class BuildingSubResourceSite extends GameObject {
+public class BuildingSubResourceSite extends MapManager.GameObject {
     public static final int RUNNING_RESOURCE_UPGRADE_COST = 10;
     public final int BUILDING_RESOURCE_UPGRADE_COST = 10;
     public final int BUILDING_RESOURCE_TRADE_COST = 10;
@@ -28,8 +27,8 @@ public class BuildingSubResourceSite extends GameObject {
     private Marker marker;
     private boolean built = false;
 
-    BuildingSubResourceSite(GameWorld gw, LatLng pos) {
-        super(gw, gw.getGameService().getString(R.string.buildingsubresourcesite_spokenName), pos);
+    BuildingSubResourceSite(MapManager mm, LatLng pos) {
+        super(mm, mm.getContext().getString(R.string.buildingsubresourcesite_spokenName), pos);
     }
 
     synchronized void clearMarkerState() {
@@ -41,7 +40,7 @@ public class BuildingSubResourceSite extends GameObject {
         if (marker != null) marker.remove();
     }
 
-    synchronized void drawMarker(GameService gs, GoogleMap map) {
+    synchronized void drawMarker(GoogleMap map) {
         if (marker == null) {
             MarkerOptions mo = new MarkerOptions().position(getPosition()).visible(true);
             marker = map.addMarker(mo);
@@ -50,13 +49,13 @@ public class BuildingSubResourceSite extends GameObject {
         }
 
         if (marker != null) {
-            IconGenerator ig = new IconGenerator(gs);
+            IconGenerator ig = new IconGenerator(ctx);
             if (built){
                 ig.setColor(Color.GREEN);
             } else {
                 ig.setColor(Color.BLACK);
             }
-            Bitmap icon = ig.makeIcon(gs.getString(R.string.buildingsubresourcesite_mapName));
+            Bitmap icon = ig.makeIcon(ctx.getString(R.string.buildingsubresourcesite_mapName));
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(icon));
         }
     }
@@ -64,7 +63,7 @@ public class BuildingSubResourceSite extends GameObject {
     @Override
     String getSpokenName(){
         if (!built) return super.getSpokenName();
-        else return getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_spokenNameBuilt);
+        else return ctx.getString(R.string.buildingsubresourcesite_spokenNameBuilt);
     }
 
     private void setBuilt(boolean b){
@@ -79,15 +78,14 @@ public class BuildingSubResourceSite extends GameObject {
 
     @Override
     void upgrade() {
-        Player player = getGameWorld().getPlayer();
         if (built) throw new UnsupportedOperationException("Cannot upgrade further.");
         if (player.getRunningResource() >= RUNNING_RESOURCE_UPGRADE_COST && player.getBuildingResource() >= BUILDING_RESOURCE_UPGRADE_COST) {
             player.takeRunningResource(RUNNING_RESOURCE_UPGRADE_COST);
             player.takeBuildingResource(BUILDING_RESOURCE_UPGRADE_COST);
             setBuilt(true);
-            getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_upgradeSuccess, RUNNING_RESOURCE_UPGRADE_COST, BUILDING_RESOURCE_UPGRADE_COST));
+            story.interruptQueueWithSpeech(ctx.getString(R.string.buildingsubresourcesite_upgradeSuccess, RUNNING_RESOURCE_UPGRADE_COST, BUILDING_RESOURCE_UPGRADE_COST));
         } else {
-            getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_upgradeNotEnoughResources, RUNNING_RESOURCE_UPGRADE_COST, BUILDING_RESOURCE_UPGRADE_COST));
+            story.interruptQueueWithSpeech(ctx.getString(R.string.buildingsubresourcesite_upgradeNotEnoughResources, RUNNING_RESOURCE_UPGRADE_COST, BUILDING_RESOURCE_UPGRADE_COST));
         }
     }
 
@@ -99,18 +97,17 @@ public class BuildingSubResourceSite extends GameObject {
     @Override
     void interact() {
         if (!built){
-            getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.upgrade_needed_to_interact));
+            story.interruptQueueWithSpeech(ctx.getString(R.string.upgrade_needed_to_interact));
             return;
         }
 
-        Player player = getGameWorld().getPlayer();
         if (player.getBuildingResource() >= BUILDING_RESOURCE_TRADE_COST) {
-            getGameWorld().tutorialSubResourceBuildingCollected = true;
+            story.tutorialSubResourceBuildingCollected = true;
             player.takeBuildingResource(BUILDING_RESOURCE_TRADE_COST);
-            getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_collectSuccess, BUILDING_RESOURCE_TRADE_COST, BUILDING_SUBRESOURCE_AMOUNT_PER_TRADE));
+            story.interruptQueueWithSpeech(ctx.getString(R.string.buildingsubresourcesite_collectSuccess, BUILDING_RESOURCE_TRADE_COST, BUILDING_SUBRESOURCE_AMOUNT_PER_TRADE));
             player.giveBuildingSubResource(BUILDING_SUBRESOURCE_AMOUNT_PER_TRADE);
         } else {
-            getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_collectNotEnoughResources, BUILDING_RESOURCE_TRADE_COST));
+            story.interruptQueueWithSpeech(ctx.getString(R.string.buildingsubresourcesite_collectNotEnoughResources, BUILDING_RESOURCE_TRADE_COST));
         }
     }
 
@@ -121,7 +118,7 @@ public class BuildingSubResourceSite extends GameObject {
             timeSinceBuilt += timeDelta;
             if (timeSinceBuilt > BUILT_EXPIRY_DURATION) {
                 setBuilt(false);
-                getGameWorld().addSpeechToQueue(getGameWorld().getGameService().getString(R.string.buildingsubresourcesite_buildExpired));
+                story.addSpeechToQueue(ctx.getString(R.string.buildingsubresourcesite_buildExpired));
             }
         }
     }

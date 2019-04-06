@@ -1,4 +1,4 @@
-package jamesw6811.secrets.gameworld;
+package jamesw6811.secrets.gameworld.map;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -10,21 +10,22 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 
-import jamesw6811.secrets.GameService;
 import jamesw6811.secrets.R;
+import jamesw6811.secrets.gameworld.chase.ChaseOriginator;
+import jamesw6811.secrets.sound.TextToSpeechRunner;
 
 /**
  * Created by james on 6/17/2017.
  */
 
-public class Headquarters extends GameObject implements ChaseOriginator {
+public class Headquarters extends MapManager.GameObject implements ChaseOriginator {
     private static final int FIRST_UPGRADE_COST_SUB_RESOURCE = 1;
     private static final double CHASE_DIFFICULTY = 1.1;
     private Marker marker;
-    static final int RUNNING_RESOURCE_BUILD_COST = 5;
+    public static final int RUNNING_RESOURCE_BUILD_COST = 5;
 
-    Headquarters(GameWorld gw, LatLng pos) {
-        super(gw, gw.getGameService().getString(R.string.headquarters_spokenName), pos);
+    Headquarters(MapManager mm, LatLng pos) {
+        super(mm, mm.getContext().getString(R.string.headquarters_spokenName), pos);
     }
 
     synchronized void clearMarkerState() {
@@ -36,7 +37,7 @@ public class Headquarters extends GameObject implements ChaseOriginator {
         if (marker != null) marker.remove();
     }
 
-    synchronized void drawMarker(GameService gs, GoogleMap map) {
+    synchronized void drawMarker(GoogleMap map) {
         if (marker == null) {
             MarkerOptions mo = new MarkerOptions().position(getPosition()).visible(true);
             marker = map.addMarker(mo);
@@ -45,9 +46,9 @@ public class Headquarters extends GameObject implements ChaseOriginator {
         }
 
         if (marker != null) {
-            IconGenerator ig = new IconGenerator(gs);
+            IconGenerator ig = new IconGenerator(ctx);
             ig.setColor(Color.GREEN);
-            Bitmap icon = ig.makeIcon(gs.getString(R.string.headquarters_mapName));
+            Bitmap icon = ig.makeIcon(ctx.getString(R.string.headquarters_mapName));
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(icon));
         }
     }
@@ -59,10 +60,9 @@ public class Headquarters extends GameObject implements ChaseOriginator {
 
     @Override
     void approach() {
-        Player player = getGameWorld().getPlayer();
         if (player.isInjured()) {
             player.fixInjury();
-            getGameWorld().addSpeechToQueue(getGameWorld().getGameService().getString(R.string.headquarters_fixInjuries));
+            story.addSpeechToQueue(ctx.getString(R.string.headquarters_fixInjuries));
         }
     }
 
@@ -73,29 +73,28 @@ public class Headquarters extends GameObject implements ChaseOriginator {
 
     @Override
     void upgrade() {
-        Player player = getGameWorld().getPlayer();
         if (player.getBuildingSubResource() >= FIRST_UPGRADE_COST_SUB_RESOURCE) {
             player.takeBuildingSubResource(FIRST_UPGRADE_COST_SUB_RESOURCE);
-            getGameWorld().startChase(false, CHASE_DIFFICULTY, this);
-            getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.headquarters_chaseStarted));
+            chase.startChase(false, CHASE_DIFFICULTY, this);
+            story.interruptQueueWithSpeech(ctx.getString(R.string.headquarters_chaseStarted));
         } else {
-            getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.headquarters_upgradeNotEnoughResources, FIRST_UPGRADE_COST_SUB_RESOURCE));
+            story.interruptQueueWithSpeech(ctx.getString(R.string.headquarters_upgradeNotEnoughResources, FIRST_UPGRADE_COST_SUB_RESOURCE) + TextToSpeechRunner.CRED_EARCON);
         }
     }
 
     @Override
     public void chaseSuccessful() {
-        getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.headquarters_chaseSuccess));
-        getGameWorld().winCondition = true;
+        story.interruptQueueWithSpeech(ctx.getString(R.string.headquarters_chaseSuccess));
+        story.winCondition = true;
     }
 
     @Override
     public void chaseFailed() {
-        getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.headquarters_chaseFailed));
+        story.interruptQueueWithSpeech(ctx.getString(R.string.headquarters_chaseFailed));
     }
 
     @Override
     public CharSequence getChaseMessage() {
-        return getGameWorld().getGameService().getString(R.string.headquarters_chase_message);
+        return ctx.getString(R.string.headquarters_chase_message);
     }
 }

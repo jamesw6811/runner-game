@@ -1,4 +1,4 @@
-package jamesw6811.secrets.gameworld;
+package jamesw6811.secrets.gameworld.map;
 
 import android.graphics.Color;
 
@@ -8,14 +8,13 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.SphericalUtil;
 
-import jamesw6811.secrets.GameService;
 import jamesw6811.secrets.R;
 
 /**
  * Created by james on 6/17/2017.
  */
 
-class Player extends GameObject {
+public class Player extends MapManager.GameObject {
     private Circle circle;
     private LatLng lastPosition;
     private double lastDistanceTravelled;
@@ -25,13 +24,13 @@ class Player extends GameObject {
     private int buildingSubResource;
     private boolean injured = false;
 
-    Player(GameWorld gw, LatLng gp) {
-        super(gw, gw.getGameService().getString(R.string.player_spokenName), gp);
+    Player(MapManager mm, LatLng gp) {
+        super(mm, mm.getContext().getString(R.string.player_spokenName), gp);
         runningResource = 0;
     }
 
     @Override
-    void drawMarker(GameService gs, GoogleMap gm) {
+    void drawMarker(GoogleMap gm) {
         if (circle == null) {
             circle = gm.addCircle(new CircleOptions().center(getPosition())
                     .radius(10f)
@@ -51,7 +50,7 @@ class Player extends GameObject {
         if (circle != null) circle.remove();
     }
 
-    void updatePosition(LatLng lastGPS) {
+    public void updatePosition(LatLng lastGPS) {
         lastPosition = getPosition();
         if (lastGPS.equals(getPosition())) {
             lastDistanceTravelled = 0;
@@ -62,9 +61,9 @@ class Player extends GameObject {
         }
     }
 
-    LatLng getLastPosition() { return  lastPosition; }
+    public LatLng getLastPosition() { return  lastPosition; }
 
-    double getLastDistanceTravelled() {
+    public double getLastDistanceTravelled() {
         return lastDistanceTravelled;
     }
 
@@ -77,11 +76,11 @@ class Player extends GameObject {
         runningResource += i;
     }
 
-    int getRunningResource() {
+    public int getRunningResource() {
         return runningResource;
     }
 
-    void takeRunningResource(int i) {
+    public void takeRunningResource(int i) {
         if (i < 1) throw new RuntimeException("Taking less than 1 resource");
         runningResource -= i;
     }
@@ -91,7 +90,7 @@ class Player extends GameObject {
         buildingResource += i;
     }
 
-    int getBuildingResource() {
+    public int getBuildingResource() {
         return buildingResource;
     }
 
@@ -105,7 +104,7 @@ class Player extends GameObject {
         buildingSubResource += i;
     }
 
-    int getBuildingSubResource() {
+    public int getBuildingSubResource() {
         return buildingSubResource;
     }
 
@@ -118,7 +117,7 @@ class Player extends GameObject {
         injured = true;
     }
 
-    boolean isInjured() {
+    public boolean isInjured() {
         return injured;
     }
 
