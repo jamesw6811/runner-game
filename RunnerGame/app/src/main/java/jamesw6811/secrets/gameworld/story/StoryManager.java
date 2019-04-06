@@ -24,12 +24,10 @@ public class StoryManager {
     public boolean winCondition = false;
     
     private Context ctx;
-    private Player player;
     private TextToSpeechRunner tts;
 
-    public StoryManager(Context c, Player p, TextToSpeechRunner tts) {
+    public StoryManager(Context c, TextToSpeechRunner tts) {
         ctx = c;
-        player = p;
         this.tts = tts;
     }
 
@@ -50,7 +48,7 @@ public class StoryManager {
     }
 
     // Make announcements about the player's available resources and tutorial messages at a certain time interval
-    public void doAnnouncements() {
+    public void doAnnouncements(Player player) {
         if (System.currentTimeMillis() - lastAnnouncementTime > ANNOUNCEMENT_PERIOD) {
             // Resources announcement
             String resourceAnnounce = "";
@@ -66,7 +64,7 @@ public class StoryManager {
                 addSpeechToQueue(ctx.getString(R.string.tutorialFirstResource));
             }
             else if (!tutorialHQbuilt) {
-                if (player.getRunningResource() < Headquarters.RUNNING_RESOURCE_BUILD_COST) addSpeechToQueue(ctx.getString(R.string.tutorialHQbuilt_notEnoughResources, Headquarters.RUNNING_RESOURCE_BUILD_COST));
+                if (player.getRunningResource() < Headquarters.RUNNING_RESOURCE_BUILD_COST) addSpeechToQueue(ctx.getString(R.string.tutorialHQbuilt_notEnoughResources));
                 else addSpeechToQueue(ctx.getString(R.string.tutorialHQbuilt_readyToBuild));
             }
             else if (!tutorialResourceBuildingDiscovered) {

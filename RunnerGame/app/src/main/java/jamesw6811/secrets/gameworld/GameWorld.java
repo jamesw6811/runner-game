@@ -53,13 +53,12 @@ public class GameWorld implements TimeTicked {
         difficultySettings = new DifficultySettings();
         difficultySettings.setPaceSettings(pace);
 
-        storyManager = new StoryManager(ctx, player, tts) // Player is null here because both map manager relies on storymanager and vice versa
-
-        mapManager = new MapManager(difficultySettings, storyManager, chaseManager, ui, ctx, locationToLatLng(firstGPS));
-        player = mapManager.getPlayer();
+        storyManager = new StoryManager(ctx, tts);
 
         chaseManager = new ChaseManager(difficultySettings, storyManager, tone);
 
+        mapManager = new MapManager(difficultySettings, storyManager, chaseManager, ui, ctx, locationToLatLng(firstGPS));
+        player = mapManager.getPlayer();
 
         focusCameraOnPlayer();
     }
@@ -96,7 +95,7 @@ public class GameWorld implements TimeTicked {
         mapManager.handleInteractions(lastClickState);
 
         // Handle story & announcements
-        storyManager.doAnnouncements();
+        storyManager.doAnnouncements(player);
         if (storyManager.checkWinConditions()) {
             timeTickerThread.stopRunning();
             storyManager.setOnDoneSpeaking(() -> ui.finishAndDebrief());

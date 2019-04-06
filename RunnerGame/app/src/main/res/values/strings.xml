@@ -18,7 +18,7 @@
 
     <string name="headquarters_spokenName">your Shady Grove</string>
     <string name="headquarters_mapName">HQ</string>
-    <string name="headquarters_build_not_enough_resources">Not enough Vine Cred to build a Shady Grove.</string>
+    <string name="headquarters_build_not_enough_resources">It seems we need %d Vine Cred to set up the Shady Grove. Walk or jog around the neighborhood to get Vine Cred. You will hear this sound when you collect a Vine Cred.</string>
     <string name="headquarters_build">You built a Shady Grove, your first sappy sleuthing headquarters.</string>
     <string name="headquarters_fixInjuries">You cured your poison at the HQ. Now you feel as spry as a Sequoia!</string>
     <string name="headquarters_upgradeNotEnoughResources">You don\'t have the %d Intel required to upgrade your HQ.</string>
@@ -62,7 +62,7 @@
 
     <string name="game_started">Hello Agent Almond. I\'m a complex artificially intelligent holographic lifeform. But you can call me Holly for short.</string>
     <string name="tutorialFirstResource">To build the Shady Grove, our first headquarters, double-click somewhere.</string>
-    <string name="tutorialHQbuilt_notEnoughResources">It seems we need %d Vine Cred to set up the Shady Grove. Walk or jog around the neighborhood to get Vine Cred. You will hear this sound when you collect a Vine Cred.</string>
+    <string name="tutorialHQbuilt_notEnoughResources">Keep collecting Vine Cred for the Shady Grove.</string>
     <string name="tutorialHQbuilt_readyToBuild">You have enough Vine Cred for your first headquarters, the Shady Grove. Choose a central location to build your headquarters and double-click to build it.</string>
     <string name="tutorialResourceBuildingDiscovered">Now that we\'ve grown our Shady Grove, let\'s go investigate the area. Try double-clicking to upgrade or build and clicking to interact with every site you discover.</string>
     <string name="tutorialResourceBuildingUpgraded">Nice work finding a Seedy Sapling. Can we turn it to our side?</string>

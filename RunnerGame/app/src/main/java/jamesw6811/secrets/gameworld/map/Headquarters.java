@@ -10,9 +10,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 
+import jamesw6811.secrets.GameService;
 import jamesw6811.secrets.R;
 import jamesw6811.secrets.gameworld.chase.ChaseOriginator;
-import jamesw6811.secrets.sound.TextToSpeechRunner;
 
 /**
  * Created by james on 6/17/2017.
@@ -78,7 +78,7 @@ public class Headquarters extends MapManager.GameObject implements ChaseOriginat
             chase.startChase(false, CHASE_DIFFICULTY, this);
             story.interruptQueueWithSpeech(ctx.getString(R.string.headquarters_chaseStarted));
         } else {
-            story.interruptQueueWithSpeech(ctx.getString(R.string.headquarters_upgradeNotEnoughResources, FIRST_UPGRADE_COST_SUB_RESOURCE) + TextToSpeechRunner.CRED_EARCON);
+            story.interruptQueueWithSpeech(ctx.getString(R.string.headquarters_upgradeNotEnoughResources, FIRST_UPGRADE_COST_SUB_RESOURCE));
         }
     }
 

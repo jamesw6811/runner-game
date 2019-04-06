@@ -18,6 +18,7 @@ import jamesw6811.secrets.gameworld.chase.ChaseManager;
 import jamesw6811.secrets.gameworld.difficulty.DifficultySettings;
 import jamesw6811.secrets.gameworld.story.StoryManager;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
+import jamesw6811.secrets.sound.ToneRunner;
 
 public class MapManager {
     private Random random;
@@ -99,7 +100,8 @@ public class MapManager {
                     story.refreshAnnouncement();
                     story.tutorialHQbuilt = true;
                 } else {
-                    story.interruptQueueWithSpeech(ctx.getString(R.string.headquarters_build_not_enough_resources));
+                    story.interruptQueueWithSpeech(ctx.getString(R.string.headquarters_build_not_enough_resources, Headquarters.RUNNING_RESOURCE_BUILD_COST));
+                    story.addSpeechToQueue(TextToSpeechRunner.CRED_EARCON);
                 }
             } else {
                 boolean upgraded = false;
