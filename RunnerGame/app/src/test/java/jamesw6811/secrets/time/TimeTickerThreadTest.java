@@ -2,7 +2,7 @@ package jamesw6811.secrets.time;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class TimeTickerThreadTest {
     class TimeCounter implements TimeTicked {

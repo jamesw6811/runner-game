@@ -22,7 +22,6 @@ import androidx.media.session.MediaButtonReceiver;
 import jamesw6811.secrets.controls.RunningMediaController;
 import jamesw6811.secrets.gameworld.GameWorld;
 import jamesw6811.secrets.location.GameLocationPoller;
-import jamesw6811.secrets.location.NewLocationListener;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
 import jamesw6811.secrets.sound.ToneRunner;
 

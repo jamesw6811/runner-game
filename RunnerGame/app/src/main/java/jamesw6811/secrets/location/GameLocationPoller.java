@@ -1,7 +1,6 @@
 package jamesw6811.secrets.location;
 
 import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
 import android.os.Looper;
 import android.util.Log;
