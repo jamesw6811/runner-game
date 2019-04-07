@@ -68,4 +68,5 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:1.10.19'
 
     testImplementation 'androidx.test.espresso:espresso-intents:3.1.1'
+    implementation 'org.jetbrains:annotations:15.0'
 }

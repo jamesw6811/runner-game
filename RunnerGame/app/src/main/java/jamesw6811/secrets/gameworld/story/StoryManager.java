@@ -9,11 +9,7 @@ import jamesw6811.secrets.sound.TextToSpeechRunner;
 
 public class StoryManager {
     public static final int ANNOUNCEMENT_PERIOD = 120 * 1000;
-    private long lastAnnouncementTime = -ANNOUNCEMENT_PERIOD;
-
-    private static final long CHASE_ANNOUNCEMENT_PERIOD = 30*1000;
-    private long lastChaseAnnouncementTime = -CHASE_ANNOUNCEMENT_PERIOD;
-
+    private static final long CHASE_ANNOUNCEMENT_PERIOD = 30 * 1000;
     public boolean tutorialFirstResource = false;
     public boolean tutorialHQbuilt = false;
     public boolean tutorialResourceBuildingDiscovered = false;
@@ -22,7 +18,8 @@ public class StoryManager {
     public boolean tutorialSubResourceBuildingCollected = false;
     public boolean tutorialCompleted = false;
     public boolean winCondition = false;
-    
+    private long lastAnnouncementTime = -ANNOUNCEMENT_PERIOD;
+    private long lastChaseAnnouncementTime = -CHASE_ANNOUNCEMENT_PERIOD;
     private Context ctx;
     private TextToSpeechRunner tts;
 
@@ -40,7 +37,7 @@ public class StoryManager {
         lastChaseAnnouncementTime = System.currentTimeMillis();
     }
 
-    public void doChaseAnnouncements(CharSequence chaseMessage){
+    public void doChaseAnnouncements(CharSequence chaseMessage) {
         if (System.currentTimeMillis() - lastChaseAnnouncementTime > CHASE_ANNOUNCEMENT_PERIOD) {
             lastChaseAnnouncementTime = System.currentTimeMillis();
             addSpeechToQueue(chaseMessage);
@@ -52,31 +49,30 @@ public class StoryManager {
         if (System.currentTimeMillis() - lastAnnouncementTime > ANNOUNCEMENT_PERIOD) {
             // Resources announcement
             String resourceAnnounce = "";
-            if (player.getRunningResource() > 0) resourceAnnounce += ctx.getString(R.string.movementResourceAnnounce, player.getRunningResource());
+            if (player.getRunningResource() > 0)
+                resourceAnnounce += ctx.getString(R.string.movementResourceAnnounce, player.getRunningResource());
             else resourceAnnounce += ctx.getString(R.string.movementResourceAnnounceNone);
-            if (player.getBuildingResource() > 0) resourceAnnounce +=  ctx.getString(R.string.buildingResourceAnnounce, player.getBuildingResource());
-            if (player.getBuildingSubResource() > 0) resourceAnnounce +=  ctx.getString(R.string.buildingSubResourceAnnounce, player.getBuildingSubResource());
+            if (player.getBuildingResource() > 0)
+                resourceAnnounce += ctx.getString(R.string.buildingResourceAnnounce, player.getBuildingResource());
+            if (player.getBuildingSubResource() > 0)
+                resourceAnnounce += ctx.getString(R.string.buildingSubResourceAnnounce, player.getBuildingSubResource());
             addSpeechToQueue(resourceAnnounce);
 
             // Tutorial announcement
             if (player.isInjured()) addSpeechToQueue(ctx.getString(R.string.tutorialplayerinjured));
             else if (!tutorialFirstResource) {
                 addSpeechToQueue(ctx.getString(R.string.tutorialFirstResource));
-            }
-            else if (!tutorialHQbuilt) {
-                if (player.getRunningResource() < Headquarters.RUNNING_RESOURCE_BUILD_COST) addSpeechToQueue(ctx.getString(R.string.tutorialHQbuilt_notEnoughResources));
+            } else if (!tutorialHQbuilt) {
+                if (player.getRunningResource() < Headquarters.RUNNING_RESOURCE_BUILD_COST)
+                    addSpeechToQueue(ctx.getString(R.string.tutorialHQbuilt_notEnoughResources));
                 else addSpeechToQueue(ctx.getString(R.string.tutorialHQbuilt_readyToBuild));
-            }
-            else if (!tutorialResourceBuildingDiscovered) {
+            } else if (!tutorialResourceBuildingDiscovered) {
                 addSpeechToQueue(ctx.getString(R.string.tutorialResourceBuildingDiscovered));
-            }
-            else if (!tutorialResourceBuildingUpgraded) {
+            } else if (!tutorialResourceBuildingUpgraded) {
                 addSpeechToQueue(ctx.getString(R.string.tutorialResourceBuildingUpgraded));
-            }
-            else if (!tutorialResourceBuildingCollected) {
+            } else if (!tutorialResourceBuildingCollected) {
                 addSpeechToQueue(ctx.getString(R.string.tutorialResourceBuildingCollected));
-            }
-            else if (!tutorialSubResourceBuildingCollected) {
+            } else if (!tutorialSubResourceBuildingCollected) {
                 addSpeechToQueue(ctx.getString(R.string.tutorialSubResourceBuildingCollected));
             } else if (!tutorialCompleted) {
                 addSpeechToQueue(ctx.getString(R.string.tutorialCompleted));
@@ -101,7 +97,7 @@ public class StoryManager {
 
     // Check if the win/lose conditions for the game have been met and take action accordingly
     public boolean checkWinConditions() {
-        if (winCondition){
+        if (winCondition) {
             addSpeechToQueue(ctx.getString(R.string.win_message));
             return true;
         }

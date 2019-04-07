@@ -16,6 +16,7 @@ import jamesw6811.secrets.gameworld.chase.ChaseOriginator;
 class ChaseSite extends MapManager.GameObject implements ChaseOriginator {
     private static final double CHASE_DIFFICULTY = 0.66; // 2/3rd the player pace
     private Marker marker;
+
     ChaseSite(MapManager mm, LatLng position) {
         super(mm, mm.getContext().getString(R.string.chasesite_spokenName), position);
     }

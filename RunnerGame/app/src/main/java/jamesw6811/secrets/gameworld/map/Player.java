@@ -61,7 +61,9 @@ public class Player extends MapManager.GameObject {
         }
     }
 
-    public LatLng getLastPosition() { return  lastPosition; }
+    public LatLng getLastPosition() {
+        return lastPosition;
+    }
 
     public double getLastDistanceTravelled() {
         return lastDistanceTravelled;

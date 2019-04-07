@@ -58,8 +58,8 @@ public class GameWorld implements TimeTicked {
         chaseManager = new ChaseManager(difficultySettings, storyManager, tone);
 
         mapManager = new MapManager(difficultySettings, storyManager, chaseManager, ui, ctx, locationToLatLng(firstGPS));
-        player = mapManager.getPlayer();
 
+        player = mapManager.getPlayer();
         focusCameraOnPlayer();
     }
 

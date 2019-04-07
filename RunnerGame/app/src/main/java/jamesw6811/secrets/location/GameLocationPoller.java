@@ -12,9 +12,9 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
 public class GameLocationPoller {
-    private static final String LOGTAG = GameLocationPoller.class.getName();
     public static final float MINIMUM_ACCURACY_REQUIRED = 25f;
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 500;
+    private static final String LOGTAG = GameLocationPoller.class.getName();
     private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
@@ -23,7 +23,7 @@ public class GameLocationPoller {
     private LocationRequest mLocationRequest;
     private NewLocationListener newLocationListener;
 
-    public GameLocationPoller(Context ctx, NewLocationListener newLocationListener){
+    public GameLocationPoller(Context ctx, NewLocationListener newLocationListener) {
         this.newLocationListener = newLocationListener;
         // Start location listening
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(ctx);

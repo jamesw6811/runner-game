@@ -50,7 +50,7 @@ class BuildingResourceSite extends MapManager.GameObject {
 
         if (marker != null) {
             IconGenerator ig = new IconGenerator(ctx);
-            if (built){
+            if (built) {
                 ig.setColor(Color.GREEN);
             } else {
                 ig.setColor(Color.BLACK);
@@ -61,12 +61,13 @@ class BuildingResourceSite extends MapManager.GameObject {
     }
 
     @Override
-    String getSpokenName(){
+    String getSpokenName() {
         if (!built) return super.getSpokenName();
-        else return ctx.getString(R.string.buildingresourcesite_spokenNameWithResources, super.getSpokenName(), resource);
+        else
+            return ctx.getString(R.string.buildingresourcesite_spokenNameWithResources, super.getSpokenName(), resource);
     }
 
-    private void setBuilt(boolean b){
+    private void setBuilt(boolean b) {
         built = b;
         updateMarker();
     }
@@ -97,7 +98,7 @@ class BuildingResourceSite extends MapManager.GameObject {
 
     @Override
     void interact() {
-        if (!built){
+        if (!built) {
             story.interruptQueueWithSpeech(ctx.getString(R.string.upgrade_needed_to_interact));
             return;
         }

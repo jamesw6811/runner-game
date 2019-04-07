@@ -18,11 +18,10 @@ import jamesw6811.secrets.R;
 
 public class BuildingSubResourceSite extends MapManager.GameObject {
     public static final int RUNNING_RESOURCE_UPGRADE_COST = 10;
-    public final int BUILDING_RESOURCE_UPGRADE_COST = 10;
-    public final int BUILDING_RESOURCE_TRADE_COST = 10;
     public static final int BUILDING_SUBRESOURCE_AMOUNT_PER_TRADE = 1;
     public static final float BUILT_EXPIRY_DURATION = 10 * 60f;
-
+    public final int BUILDING_RESOURCE_UPGRADE_COST = 10;
+    public final int BUILDING_RESOURCE_TRADE_COST = 10;
     private float timeSinceBuilt = 0;
     private Marker marker;
     private boolean built = false;
@@ -50,7 +49,7 @@ public class BuildingSubResourceSite extends MapManager.GameObject {
 
         if (marker != null) {
             IconGenerator ig = new IconGenerator(ctx);
-            if (built){
+            if (built) {
                 ig.setColor(Color.GREEN);
             } else {
                 ig.setColor(Color.BLACK);
@@ -61,12 +60,12 @@ public class BuildingSubResourceSite extends MapManager.GameObject {
     }
 
     @Override
-    String getSpokenName(){
+    String getSpokenName() {
         if (!built) return super.getSpokenName();
         else return ctx.getString(R.string.buildingsubresourcesite_spokenNameBuilt);
     }
 
-    private void setBuilt(boolean b){
+    private void setBuilt(boolean b) {
         built = b;
         updateMarker();
     }
@@ -96,7 +95,7 @@ public class BuildingSubResourceSite extends MapManager.GameObject {
 
     @Override
     void interact() {
-        if (!built){
+        if (!built) {
             story.interruptQueueWithSpeech(ctx.getString(R.string.upgrade_needed_to_interact));
             return;
         }

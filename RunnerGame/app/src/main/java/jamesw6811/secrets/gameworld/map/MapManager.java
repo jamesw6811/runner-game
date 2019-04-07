@@ -18,7 +18,6 @@ import jamesw6811.secrets.gameworld.chase.ChaseManager;
 import jamesw6811.secrets.gameworld.difficulty.DifficultySettings;
 import jamesw6811.secrets.gameworld.story.StoryManager;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
-import jamesw6811.secrets.sound.ToneRunner;
 
 public class MapManager {
     private Random random;
@@ -32,7 +31,7 @@ public class MapManager {
     private Context ctx;
     private GameUIUpdateProcessor ui;
 
-    public MapManager(DifficultySettings dm, StoryManager st, ChaseManager cm, GameUIUpdateProcessor ui, Context ctx, LatLng playerStart){
+    public MapManager(DifficultySettings dm, StoryManager st, ChaseManager cm, GameUIUpdateProcessor ui, Context ctx, LatLng playerStart) {
         this.ctx = ctx;
         difficultySettings = dm;
         story = st;
@@ -42,7 +41,7 @@ public class MapManager {
         player = new Player(this, playerStart);
     }
 
-    public Player getPlayer(){
+    public Player getPlayer() {
         return player;
     }
 
@@ -61,14 +60,14 @@ public class MapManager {
         }
 
         // Speak location names
-        if (newsights.size() > 0){
+        if (newsights.size() > 0) {
             Iterator<GameObject> nextSight = newsights.iterator();
             String sightsText = "";
             while (nextSight.hasNext()) {
                 String spokenName = nextSight.next().getSpokenName();
                 if (newsights.size() == 1) {
                     sightsText += spokenName;
-                } else if (nextSight.hasNext()){
+                } else if (nextSight.hasNext()) {
                     sightsText += spokenName + ctx.getString(R.string.list_separator);
                 } else {
                     sightsText += ctx.getString(R.string.list_final_and) + spokenName;
@@ -81,8 +80,9 @@ public class MapManager {
     // Handle interaction with nearby sites based on user input
     public void handleInteractions(RunningMediaController.ClickState clickState) {
         // Don't allow interaction if injured
-        if (player.isInjured()){
-            if (clickState.singleClicked || clickState.doubleClicked) story.addSpeechToQueue(ctx.getString(R.string.interaction_injured));
+        if (player.isInjured()) {
+            if (clickState.singleClicked || clickState.doubleClicked)
+                story.addSpeechToQueue(ctx.getString(R.string.interaction_injured));
             return;
         }
 
@@ -113,7 +113,8 @@ public class MapManager {
                         break;
                     }
                 }
-                if (!upgraded) story.interruptQueueWithSpeech(ctx.getString(R.string.interaction_nothing_to_upgrade));
+                if (!upgraded)
+                    story.interruptQueueWithSpeech(ctx.getString(R.string.interaction_nothing_to_upgrade));
             }
         }
         // Check interaction
@@ -127,7 +128,8 @@ public class MapManager {
                     break;
                 }
             }
-            if (!interacted) story.interruptQueueWithSpeech(ctx.getString(R.string.interaction_nothing_to_interact));
+            if (!interacted)
+                story.interruptQueueWithSpeech(ctx.getString(R.string.interaction_nothing_to_interact));
         }
     }
 
@@ -193,17 +195,21 @@ public class MapManager {
         return sights;
     }
 
+    Context getContext() {
+        return ctx;
+    }
+
     static abstract class GameObject {
-        private MapManager mm;
-        private String spokenName;
-        private LatLng position;
         GameUIUpdateProcessor ui;
         StoryManager story;
         ChaseManager chase;
         Player player;
         Context ctx;
+        private MapManager mm;
+        private String spokenName;
+        private LatLng position;
 
-        GameObject(MapManager mm, String spokenName, LatLng latLng){
+        GameObject(MapManager mm, String spokenName, LatLng latLng) {
             this.mm = mm;
             this.ui = mm.ui;
             this.story = mm.story;
@@ -216,7 +222,7 @@ public class MapManager {
             updateMarker();
         }
 
-        MapManager getMap(){
+        MapManager getMap() {
             return mm;
         }
 
@@ -291,10 +297,6 @@ public class MapManager {
         void approach() {
             throw new UnsupportedOperationException("This object does not have an approach activity.");
         }
-    }
-
-    Context getContext(){
-        return ctx;
     }
 
 }

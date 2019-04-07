@@ -10,7 +10,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 
-import jamesw6811.secrets.GameService;
 import jamesw6811.secrets.R;
 import jamesw6811.secrets.gameworld.chase.ChaseOriginator;
 
@@ -19,10 +18,10 @@ import jamesw6811.secrets.gameworld.chase.ChaseOriginator;
  */
 
 public class Headquarters extends MapManager.GameObject implements ChaseOriginator {
+    public static final int RUNNING_RESOURCE_BUILD_COST = 5;
     private static final int FIRST_UPGRADE_COST_SUB_RESOURCE = 1;
     private static final double CHASE_DIFFICULTY = 1.1;
     private Marker marker;
-    public static final int RUNNING_RESOURCE_BUILD_COST = 5;
 
     Headquarters(MapManager mm, LatLng pos) {
         super(mm, mm.getContext().getString(R.string.headquarters_spokenName), pos);

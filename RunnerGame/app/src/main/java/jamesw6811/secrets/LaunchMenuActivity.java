@@ -49,7 +49,7 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
 
         int defaultValue = getResources().getInteger(R.integer.default_pace_key);
         int pacePref = sharedPref.getInt(getString(R.string.saved_pace_key), defaultValue);
-        speedSettingBar.setProgress(pacePref-SPEED_OFFSET);
+        speedSettingBar.setProgress(pacePref - SPEED_OFFSET);
         updateSpeedFromBar();
 
         if (num_medals > 0) {
@@ -62,7 +62,7 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
     protected void onResume() {
         super.onResume();
         // If the game is already running, resume the game map
-        if (GameService.runningInstance != null){
+        if (GameService.runningInstance != null) {
             resumeGameActivity();
         }
     }
