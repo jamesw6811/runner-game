@@ -16,11 +16,14 @@ import jamesw6811.secrets.RunMapActivity;
 import jamesw6811.secrets.controls.RunningMediaController;
 import jamesw6811.secrets.gameworld.chase.ChaseManager;
 import jamesw6811.secrets.gameworld.difficulty.DifficultySettings;
+import jamesw6811.secrets.gameworld.map.discovery.DiscoveryScheme;
+import jamesw6811.secrets.gameworld.map.discovery.SiteDiscoverySchemes;
+import jamesw6811.secrets.gameworld.map.site.Headquarters;
+import jamesw6811.secrets.gameworld.map.site.SiteFactory;
 import jamesw6811.secrets.gameworld.story.StoryManager;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
 
 public class MapManager {
-    private Random random;
     private ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
     private Headquarters headquarters = null;
     private double metersSinceRunningResource = 0;
@@ -30,6 +33,7 @@ public class MapManager {
     private ChaseManager chase;
     private Context ctx;
     private GameUIUpdateProcessor ui;
+    private SiteDiscoverySchemes discovery;
 
     public MapManager(DifficultySettings dm, StoryManager st, ChaseManager cm, GameUIUpdateProcessor ui, Context ctx, LatLng playerStart) {
         this.ctx = ctx;
@@ -37,7 +41,7 @@ public class MapManager {
         story = st;
         chase = cm;
         this.ui = ui;
-        random = new Random();
+        discovery = new SiteDiscoverySchemes(new Random());
         player = new Player(this, playerStart);
     }
 
@@ -137,8 +141,8 @@ public class MapManager {
     public void discoverResourcesAndSites() {
         LinkedList<GameObject> objectsInDiscoveryRange = getObjectsInCircle(player.getPosition(), difficultySettings.getMetersDiscoveryMinimum());
         objectsInDiscoveryRange.remove(player);
-        // Check discoveries
-        // Spirit discovery
+
+        // Resource discovery
         metersSinceRunningResource += player.getLastDistanceTravelled();
         if (metersSinceRunningResource > difficultySettings.getMetersPerRunningResource()) {
             metersSinceRunningResource -= difficultySettings.getMetersPerRunningResource();
@@ -147,22 +151,16 @@ public class MapManager {
             if (!story.tutorialFirstResource) story.refreshAnnouncement();
             story.tutorialFirstResource = true;
         }
-        // Discovery - no other buildings in range
-        if (headquarters != null && objectsInDiscoveryRange.size() == 0) {
-            double discoverSeed = random.nextDouble();
-            GameObject discovery = null;
-            if (discoverSeed < 0.35) {
-                discovery = new BuildingResourceSite(this, player.getPosition());
-                if (!story.tutorialResourceBuildingDiscovered) story.refreshAnnouncement();
-                story.tutorialResourceBuildingDiscovered = true;
-            } else if (discoverSeed < 0.70) {
-                discovery = new BuildingSubResourceSite(this, player.getPosition());
-            } else if (discoverSeed < 1.00) {
-                discovery = new ChaseSite(this, player.getPosition());
-            }
-            if (discovery != null) {
-                story.addSpeechToQueue(ctx.getString(R.string.discoveredNotification, discovery.getSpokenName()));
-                if (discovery.hasApproachActivity()) discovery.approach();
+
+        // Site discovery
+        if (objectsInDiscoveryRange.size() == 0) {
+            DiscoveryScheme scheme;
+            if (headquarters == null) scheme = discovery.Empty;
+            else scheme = discovery.Mission1;
+            GameObject discovered = SiteFactory.getSite(scheme.discoverSite(), this, player.getPosition());
+            if (discovered != null) {
+                story.addSpeechToQueue(ctx.getString(R.string.discoveredNotification, discovered.getSpokenName()));
+                if (discovered.hasApproachActivity()) discovered.approach();
             }
         }
     }
@@ -195,21 +193,21 @@ public class MapManager {
         return sights;
     }
 
-    Context getContext() {
+    public Context getContext() {
         return ctx;
     }
 
-    static abstract class GameObject {
+    public static abstract class GameObject {
         GameUIUpdateProcessor ui;
-        StoryManager story;
-        ChaseManager chase;
-        Player player;
-        Context ctx;
+        protected StoryManager story;
+        protected ChaseManager chase;
+        protected Player player;
+        protected Context ctx;
         private MapManager mm;
         private String spokenName;
         private LatLng position;
 
-        GameObject(MapManager mm, String spokenName, LatLng latLng) {
+        public GameObject(MapManager mm, String spokenName, LatLng latLng) {
             this.mm = mm;
             this.ui = mm.ui;
             this.story = mm.story;
@@ -222,11 +220,11 @@ public class MapManager {
             updateMarker();
         }
 
-        MapManager getMap() {
+        public MapManager getMap() {
             return mm;
         }
 
-        void destroy() {
+        public void destroy() {
             ui.processMapUpdate(new RunMapActivity.MapUpdate() {
                 @Override
                 public void updateMap(GoogleMap map) {
@@ -237,7 +235,7 @@ public class MapManager {
             mm.gameObjects.remove(this);
         }
 
-        void updateMarker() {
+        protected void updateMarker() {
             boolean activeUI = ui.processMapUpdate(new RunMapActivity.MapUpdate() {
                 @Override
                 public void updateMap(GoogleMap map) {
@@ -247,17 +245,17 @@ public class MapManager {
             if (!activeUI) clearMarkerState();
         }
 
-        abstract void drawMarker(GoogleMap gm);
+        protected abstract void drawMarker(GoogleMap gm);
 
-        abstract void clearMarkerState();
+        protected abstract void clearMarkerState();
 
-        abstract void removeMarker();
+        protected abstract void removeMarker();
 
-        String getSpokenName() {
+        protected String getSpokenName() {
             return spokenName;
         }
 
-        void setSpokenName(String spokenName) {
+        protected void setSpokenName(String spokenName) {
             this.spokenName = spokenName;
         }
 
@@ -265,36 +263,36 @@ public class MapManager {
             return position;
         }
 
-        void setPosition(LatLng position) {
+        protected void setPosition(LatLng position) {
             this.position = position;
             updateMarker();
         }
 
-        boolean isUpgradable() {
+        protected boolean isUpgradable() {
             return false;
         }
 
-        void upgrade() {
+        protected void upgrade() {
             throw new UnsupportedOperationException("This object is not upgradable.");
         }
 
-        void tickTime(float timeDelta) {
+        protected void tickTime(float timeDelta) {
 
         }
 
-        boolean isInteractable() {
+        protected boolean isInteractable() {
             return false;
         }
 
-        void interact() {
+        protected void interact() {
             throw new UnsupportedOperationException("This object is not interactable.");
         }
 
-        boolean hasApproachActivity() {
+        protected boolean hasApproachActivity() {
             return false;
         }
 
-        void approach() {
+        protected void approach() {
             throw new UnsupportedOperationException("This object does not have an approach activity.");
         }
     }

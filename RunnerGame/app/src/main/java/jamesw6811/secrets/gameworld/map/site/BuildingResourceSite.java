@@ -1,4 +1,4 @@
-package jamesw6811.secrets.gameworld.map;
+package jamesw6811.secrets.gameworld.map.site;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -11,12 +11,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 
 import jamesw6811.secrets.R;
+import jamesw6811.secrets.gameworld.map.MapManager;
 
 /**
  * Created by james on 6/17/2017.
  */
 
-class BuildingResourceSite extends MapManager.GameObject {
+public class BuildingResourceSite extends MapManager.GameObject {
     public static final int RUNNING_RESOURCE_UPGRADE_COST = 10;
     public static final int MAX_RESOURCE = 10;
     public static final float RESOURCE_GENERATION_PERIOD = 30f;
@@ -27,20 +28,22 @@ class BuildingResourceSite extends MapManager.GameObject {
     private int resource = 0;
     private float timeSinceLastResource = 0;
 
-    BuildingResourceSite(MapManager mm, LatLng pos) {
+    public BuildingResourceSite(MapManager mm, LatLng pos) {
         super(mm, mm.getContext().getString(R.string.buildingresourcesite_spokenName), pos);
+        if (!story.tutorialResourceBuildingDiscovered) story.refreshAnnouncement();
+        story.tutorialResourceBuildingDiscovered = true;
     }
 
-    synchronized void clearMarkerState() {
+    protected synchronized void clearMarkerState() {
         marker = null;
     }
 
     @Override
-    synchronized void removeMarker() {
+    protected synchronized void removeMarker() {
         if (marker != null) marker.remove();
     }
 
-    synchronized void drawMarker(GoogleMap map) {
+    protected synchronized void drawMarker(GoogleMap map) {
         if (marker == null) {
             MarkerOptions mo = new MarkerOptions().position(getPosition()).visible(true);
             marker = map.addMarker(mo);
@@ -61,7 +64,7 @@ class BuildingResourceSite extends MapManager.GameObject {
     }
 
     @Override
-    String getSpokenName() {
+    protected String getSpokenName() {
         if (!built) return super.getSpokenName();
         else
             return ctx.getString(R.string.buildingresourcesite_spokenNameWithResources, super.getSpokenName(), resource);
@@ -73,12 +76,12 @@ class BuildingResourceSite extends MapManager.GameObject {
     }
 
     @Override
-    boolean isUpgradable() {
+    protected boolean isUpgradable() {
         return !built;
     }
 
     @Override
-    void upgrade() {
+    protected void upgrade() {
         if (built) throw new UnsupportedOperationException("Cannot upgrade further.");
         if (player.getRunningResource() >= RUNNING_RESOURCE_UPGRADE_COST) {
             player.takeRunningResource(RUNNING_RESOURCE_UPGRADE_COST);
@@ -92,12 +95,12 @@ class BuildingResourceSite extends MapManager.GameObject {
     }
 
     @Override
-    boolean isInteractable() {
+    protected boolean isInteractable() {
         return true;
     }
 
     @Override
-    void interact() {
+    protected void interact() {
         if (!built) {
             story.interruptQueueWithSpeech(ctx.getString(R.string.upgrade_needed_to_interact));
             return;
@@ -114,7 +117,7 @@ class BuildingResourceSite extends MapManager.GameObject {
     }
 
     @Override
-    void tickTime(float timeDelta) {
+    protected void tickTime(float timeDelta) {
         super.tickTime(timeDelta);
         if (built) {
             timeSinceLastResource += timeDelta;

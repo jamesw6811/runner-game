@@ -30,7 +30,7 @@ public class Player extends MapManager.GameObject {
     }
 
     @Override
-    void drawMarker(GoogleMap gm) {
+    protected void drawMarker(GoogleMap gm) {
         if (circle == null) {
             circle = gm.addCircle(new CircleOptions().center(getPosition())
                     .radius(10f)
@@ -41,12 +41,12 @@ public class Player extends MapManager.GameObject {
     }
 
     @Override
-    void clearMarkerState() {
+    protected void clearMarkerState() {
         circle = null;
     }
 
     @Override
-    void removeMarker() {
+    protected void removeMarker() {
         if (circle != null) circle.remove();
     }
 
@@ -87,7 +87,7 @@ public class Player extends MapManager.GameObject {
         runningResource -= i;
     }
 
-    void giveBuildingResource(int i) {
+    public void giveBuildingResource(int i) {
         if (i < 1) throw new RuntimeException("Giving less than 1 resource");
         buildingResource += i;
     }
@@ -96,12 +96,12 @@ public class Player extends MapManager.GameObject {
         return buildingResource;
     }
 
-    void takeBuildingResource(int i) {
+    public void takeBuildingResource(int i) {
         if (i < 1) throw new RuntimeException("Taking less than 1 resource");
         buildingResource -= i;
     }
 
-    void giveBuildingSubResource(int i) {
+    public void giveBuildingSubResource(int i) {
         if (i < 1) throw new RuntimeException("Giving less than 1 resource");
         buildingSubResource += i;
     }
@@ -110,12 +110,12 @@ public class Player extends MapManager.GameObject {
         return buildingSubResource;
     }
 
-    void takeBuildingSubResource(int i) {
+    public void takeBuildingSubResource(int i) {
         if (i < 1) throw new RuntimeException("Taking less than 1 resource");
         buildingSubResource -= i;
     }
 
-    void injure() {
+    public void injure() {
         injured = true;
     }
 
@@ -123,7 +123,7 @@ public class Player extends MapManager.GameObject {
         return injured;
     }
 
-    void fixInjury() {
+    public void fixInjury() {
         injured = false;
     }
 }

@@ -1,4 +1,4 @@
-package jamesw6811.secrets.gameworld.map;
+package jamesw6811.secrets.gameworld.map.site;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -12,6 +12,7 @@ import com.google.maps.android.ui.IconGenerator;
 
 import jamesw6811.secrets.R;
 import jamesw6811.secrets.gameworld.chase.ChaseOriginator;
+import jamesw6811.secrets.gameworld.map.MapManager;
 
 /**
  * Created by james on 6/17/2017.
@@ -23,20 +24,20 @@ public class Headquarters extends MapManager.GameObject implements ChaseOriginat
     private static final double CHASE_DIFFICULTY = 1.1;
     private Marker marker;
 
-    Headquarters(MapManager mm, LatLng pos) {
+    public Headquarters(MapManager mm, LatLng pos) {
         super(mm, mm.getContext().getString(R.string.headquarters_spokenName), pos);
     }
 
-    synchronized void clearMarkerState() {
+    protected synchronized void clearMarkerState() {
         marker = null;
     }
 
     @Override
-    synchronized void removeMarker() {
+    protected synchronized void removeMarker() {
         if (marker != null) marker.remove();
     }
 
-    synchronized void drawMarker(GoogleMap map) {
+    protected synchronized void drawMarker(GoogleMap map) {
         if (marker == null) {
             MarkerOptions mo = new MarkerOptions().position(getPosition()).visible(true);
             marker = map.addMarker(mo);
@@ -53,12 +54,12 @@ public class Headquarters extends MapManager.GameObject implements ChaseOriginat
     }
 
     @Override
-    boolean hasApproachActivity() {
+    protected boolean hasApproachActivity() {
         return true;
     }
 
     @Override
-    void approach() {
+    protected void approach() {
         if (player.isInjured()) {
             player.fixInjury();
             story.addSpeechToQueue(ctx.getString(R.string.headquarters_fixInjuries));
@@ -66,12 +67,12 @@ public class Headquarters extends MapManager.GameObject implements ChaseOriginat
     }
 
     @Override
-    boolean isUpgradable() {
+    protected boolean isUpgradable() {
         return true;
     }
 
     @Override
-    void upgrade() {
+    protected void upgrade() {
         if (player.getBuildingSubResource() >= FIRST_UPGRADE_COST_SUB_RESOURCE) {
             player.takeBuildingSubResource(FIRST_UPGRADE_COST_SUB_RESOURCE);
             chase.startChase(false, CHASE_DIFFICULTY, this);

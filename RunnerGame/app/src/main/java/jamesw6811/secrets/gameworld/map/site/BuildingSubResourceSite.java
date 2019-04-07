@@ -1,4 +1,4 @@
-package jamesw6811.secrets.gameworld.map;
+package jamesw6811.secrets.gameworld.map.site;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -11,6 +11,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 
 import jamesw6811.secrets.R;
+import jamesw6811.secrets.gameworld.map.MapManager;
 
 /**
  * Created by james on 6/17/2017.
@@ -26,20 +27,20 @@ public class BuildingSubResourceSite extends MapManager.GameObject {
     private Marker marker;
     private boolean built = false;
 
-    BuildingSubResourceSite(MapManager mm, LatLng pos) {
+    public BuildingSubResourceSite(MapManager mm, LatLng pos) {
         super(mm, mm.getContext().getString(R.string.buildingsubresourcesite_spokenName), pos);
     }
 
-    synchronized void clearMarkerState() {
+    protected synchronized void clearMarkerState() {
         marker = null;
     }
 
     @Override
-    synchronized void removeMarker() {
+    protected synchronized void removeMarker() {
         if (marker != null) marker.remove();
     }
 
-    synchronized void drawMarker(GoogleMap map) {
+    protected synchronized void drawMarker(GoogleMap map) {
         if (marker == null) {
             MarkerOptions mo = new MarkerOptions().position(getPosition()).visible(true);
             marker = map.addMarker(mo);
@@ -60,7 +61,7 @@ public class BuildingSubResourceSite extends MapManager.GameObject {
     }
 
     @Override
-    String getSpokenName() {
+    protected String getSpokenName() {
         if (!built) return super.getSpokenName();
         else return ctx.getString(R.string.buildingsubresourcesite_spokenNameBuilt);
     }
@@ -71,12 +72,12 @@ public class BuildingSubResourceSite extends MapManager.GameObject {
     }
 
     @Override
-    boolean isUpgradable() {
+    protected boolean isUpgradable() {
         return !built;
     }
 
     @Override
-    void upgrade() {
+    protected void upgrade() {
         if (built) throw new UnsupportedOperationException("Cannot upgrade further.");
         if (player.getRunningResource() >= RUNNING_RESOURCE_UPGRADE_COST && player.getBuildingResource() >= BUILDING_RESOURCE_UPGRADE_COST) {
             player.takeRunningResource(RUNNING_RESOURCE_UPGRADE_COST);
@@ -89,12 +90,12 @@ public class BuildingSubResourceSite extends MapManager.GameObject {
     }
 
     @Override
-    boolean isInteractable() {
+    protected boolean isInteractable() {
         return true;
     }
 
     @Override
-    void interact() {
+    protected void interact() {
         if (!built) {
             story.interruptQueueWithSpeech(ctx.getString(R.string.upgrade_needed_to_interact));
             return;
@@ -111,7 +112,7 @@ public class BuildingSubResourceSite extends MapManager.GameObject {
     }
 
     @Override
-    void tickTime(float timeDelta) {
+    protected void tickTime(float timeDelta) {
         super.tickTime(timeDelta);
         if (built) {
             timeSinceBuilt += timeDelta;
