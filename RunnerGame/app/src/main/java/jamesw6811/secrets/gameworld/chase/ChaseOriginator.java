@@ -1,7 +1,9 @@
-package jamesw6811.secrets.gameworld;
+package jamesw6811.secrets.gameworld.chase;
 
-interface ChaseOriginator {
+public interface ChaseOriginator {
     void chaseSuccessful();
+
     void chaseFailed();
+
     CharSequence getChaseMessage();
 }

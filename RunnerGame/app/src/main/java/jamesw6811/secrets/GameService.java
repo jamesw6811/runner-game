@@ -21,17 +21,16 @@ import androidx.core.app.NotificationCompat;
 import androidx.media.session.MediaButtonReceiver;
 import jamesw6811.secrets.controls.RunningMediaController;
 import jamesw6811.secrets.gameworld.GameWorld;
+import jamesw6811.secrets.gameworld.map.GameUIUpdateProcessor;
 import jamesw6811.secrets.location.GameLocationPoller;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
 import jamesw6811.secrets.sound.ToneRunner;
 
-public class GameService extends Service {
-    public static GameService runningInstance = null;
-
+public class GameService extends Service implements GameUIUpdateProcessor {
     private static final String LOGTAG = GameService.class.getName();
     private static final String CHANNEL_ID = "gameservice_notifications";
     private static final int NOTIFICATION_ID = 1;
-
+    public static GameService runningInstance = null;
     private final IBinder mBinder = new LocalBinder();
     private Handler mServiceHandler;
     private RunMapActivity mActivity;
@@ -43,7 +42,7 @@ public class GameService extends Service {
     private boolean uiBound;
     private double pace = -1;
 
-    public static GameService getRunningInstance(){
+    public static GameService getRunningInstance() {
         return runningInstance;
     }
 
@@ -100,10 +99,10 @@ public class GameService extends Service {
         super.onRebind(intent);
     }
 
-    private void setPaceFromIntent(Intent intent){
+    private void setPaceFromIntent(Intent intent) {
         // Set pace setting from extra
         double paceIntent = intent.getDoubleExtra(RunMapActivity.EXTRA_PACE, -1);
-        if (paceIntent>0) pace = paceIntent;
+        if (paceIntent > 0) pace = paceIntent;
     }
 
     private void onAllBind() {
@@ -177,14 +176,6 @@ public class GameService extends Service {
         return builder.build();
     }
 
-    public boolean passMapUpdate(RunMapActivity.MapUpdate mu) {
-        if (mActivity != null && uiBound) {
-            mActivity.processMapUpdate(mu);
-            return true;
-        }
-        return false;
-    }
-
     public TextToSpeechRunner getTTSRunner() {
         return ttser;
     }
@@ -208,7 +199,7 @@ public class GameService extends Service {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         int num_medals = sharedPref.getInt(getString(R.string.magnolia_medals_key), 0);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt(getString(R.string.magnolia_medals_key), num_medals+1);
+        editor.putInt(getString(R.string.magnolia_medals_key), num_medals + 1);
         editor.apply();
 
         Intent intent = new Intent(this, DebriefingActivity.class);
@@ -218,14 +209,23 @@ public class GameService extends Service {
     }
 
     public void startGameOrUpdateLocation(Location location) {
-        if(ttser.isInitialized()) {
+        if (ttser.isInitialized()) {
             if (gw == null && uiBound) {
-                gw = new GameWorld(location, pace, this);
+                gw = new GameWorld(location, pace, this, this, ttser, toner, controller);
                 gw.initializeAndStartRunning();
             } else if (gw != null) {
                 gw.updateGPS(location);
             }
         }
+    }
+
+    @Override
+    public boolean processMapUpdate(RunMapActivity.MapUpdate mu) {
+        if (mActivity != null && uiBound) {
+            mActivity.processMapUpdate(mu);
+            return true;
+        }
+        return false;
     }
 
     /**

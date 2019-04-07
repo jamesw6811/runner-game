@@ -1,4 +1,4 @@
-package jamesw6811.secrets.gameworld;
+package jamesw6811.secrets.gameworld.map.site;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -10,14 +10,14 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 
-import jamesw6811.secrets.GameService;
 import jamesw6811.secrets.R;
+import jamesw6811.secrets.gameworld.map.MapManager;
 
 /**
  * Created by james on 6/17/2017.
  */
 
-class BuildingResourceSite extends GameObject {
+public class BuildingResourceSite extends MapManager.GameObject {
     public static final int RUNNING_RESOURCE_UPGRADE_COST = 10;
     public static final int MAX_RESOURCE = 10;
     public static final float RESOURCE_GENERATION_PERIOD = 30f;
@@ -28,20 +28,22 @@ class BuildingResourceSite extends GameObject {
     private int resource = 0;
     private float timeSinceLastResource = 0;
 
-    BuildingResourceSite(GameWorld gw, LatLng pos) {
-        super(gw, gw.getGameService().getString(R.string.buildingresourcesite_spokenName), pos);
+    public BuildingResourceSite(MapManager mm, LatLng pos) {
+        super(mm, mm.getContext().getString(R.string.buildingresourcesite_spokenName), pos);
+        if (!story.tutorialResourceBuildingDiscovered) story.refreshAnnouncement();
+        story.tutorialResourceBuildingDiscovered = true;
     }
 
-    synchronized void clearMarkerState() {
+    protected synchronized void clearMarkerState() {
         marker = null;
     }
 
     @Override
-    synchronized void removeMarker() {
+    protected synchronized void removeMarker() {
         if (marker != null) marker.remove();
     }
 
-    synchronized void drawMarker(GameService gs, GoogleMap map) {
+    protected synchronized void drawMarker(GoogleMap map) {
         if (marker == null) {
             MarkerOptions mo = new MarkerOptions().position(getPosition()).visible(true);
             marker = map.addMarker(mo);
@@ -50,73 +52,72 @@ class BuildingResourceSite extends GameObject {
         }
 
         if (marker != null) {
-            IconGenerator ig = new IconGenerator(gs);
-            if (built){
+            IconGenerator ig = new IconGenerator(ctx);
+            if (built) {
                 ig.setColor(Color.GREEN);
             } else {
                 ig.setColor(Color.BLACK);
             }
-            Bitmap icon = ig.makeIcon(gs.getString(R.string.buildingresourcesite_mapName));
+            Bitmap icon = ig.makeIcon(ctx.getString(R.string.buildingresourcesite_mapName));
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(icon));
         }
     }
 
     @Override
-    String getSpokenName(){
+    protected String getSpokenName() {
         if (!built) return super.getSpokenName();
-        else return getGameWorld().getGameService().getString(R.string.buildingresourcesite_spokenNameWithResources, super.getSpokenName(), resource);
+        else
+            return ctx.getString(R.string.buildingresourcesite_spokenNameWithResources, super.getSpokenName(), resource);
     }
 
-    private void setBuilt(boolean b){
+    private void setBuilt(boolean b) {
         built = b;
         updateMarker();
     }
 
     @Override
-    boolean isUpgradable() {
+    protected boolean isUpgradable() {
         return !built;
     }
 
     @Override
-    void upgrade() {
-        Player player = getGameWorld().getPlayer();
+    protected void upgrade() {
         if (built) throw new UnsupportedOperationException("Cannot upgrade further.");
         if (player.getRunningResource() >= RUNNING_RESOURCE_UPGRADE_COST) {
             player.takeRunningResource(RUNNING_RESOURCE_UPGRADE_COST);
             setBuilt(true);
             resource = RESOURCE_AMOUNT_ON_BUILD;
-            getGameWorld().tutorialResourceBuildingUpgraded = true;
-            getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.buildingresourcesite_upgradeSuccess, RUNNING_RESOURCE_UPGRADE_COST));
+            story.tutorialResourceBuildingUpgraded = true;
+            story.interruptQueueWithSpeech(ctx.getString(R.string.buildingresourcesite_upgradeSuccess, RUNNING_RESOURCE_UPGRADE_COST));
         } else {
-            getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.buildingresourcesite_upgradeNotEnoughResources, RUNNING_RESOURCE_UPGRADE_COST));
+            story.interruptQueueWithSpeech(ctx.getString(R.string.buildingresourcesite_upgradeNotEnoughResources, RUNNING_RESOURCE_UPGRADE_COST));
         }
     }
 
     @Override
-    boolean isInteractable() {
+    protected boolean isInteractable() {
         return true;
     }
 
     @Override
-    void interact() {
-        if (!built){
-            getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.upgrade_needed_to_interact));
+    protected void interact() {
+        if (!built) {
+            story.interruptQueueWithSpeech(ctx.getString(R.string.upgrade_needed_to_interact));
             return;
         }
 
-        Player player = getGameWorld().getPlayer();
         if (resource > 0) {
-            getGameWorld().tutorialResourceBuildingCollected = true;
-            getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.buildingresourcesite_collectSuccess, resource));
+            story.tutorialResourceBuildingCollected = true;
+            story.interruptQueueWithSpeech(ctx.getString(R.string.buildingresourcesite_collectSuccess, resource));
             player.giveBuildingResource(resource);
             resource = 0;
         } else {
-            getGameWorld().interruptQueueWithSpeech(getGameWorld().getGameService().getString(R.string.buildingresourcesite_collectOutOfResource));
+            story.interruptQueueWithSpeech(ctx.getString(R.string.buildingresourcesite_collectOutOfResource));
         }
     }
 
     @Override
-    void tickTime(float timeDelta) {
+    protected void tickTime(float timeDelta) {
         super.tickTime(timeDelta);
         if (built) {
             timeSinceLastResource += timeDelta;

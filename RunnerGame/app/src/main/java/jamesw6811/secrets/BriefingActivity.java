@@ -27,7 +27,7 @@ public class BriefingActivity extends Activity {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         int pacePref = sharedPref.getInt(getString(R.string.saved_pace_key), -1);
         Intent intent = new Intent(this, RunMapActivity.class);
-        intent.putExtra(RunMapActivity.EXTRA_PACE, (double)pacePref);
+        intent.putExtra(RunMapActivity.EXTRA_PACE, (double) pacePref);
         startActivity(intent);
         finish();
     }

@@ -39,7 +39,7 @@ public class TimeTickerThread extends Thread {
                     sleep(sleepTime);
                 else
                     sleep(10);
-            } catch (InterruptedException ie){
+            } catch (InterruptedException ie) {
                 Log.e(LOGTAG, "TimeTickerThread thread sleep interrupted, trying to recover.");
             }
             if (!running) break;

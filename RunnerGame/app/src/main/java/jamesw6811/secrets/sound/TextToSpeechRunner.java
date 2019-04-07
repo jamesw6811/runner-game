@@ -12,12 +12,12 @@ import android.util.Log;
 import jamesw6811.secrets.R;
 
 public class TextToSpeechRunner {
+    public static final String CRED_EARCON = "[cred]";
     private static final String LOGTAG = TextToSpeechRunner.class.getName();
     private boolean initialized = false;
     private TextToSpeech tts;
     private AudioManager mAudioManager;
     private TTSRunnerListener listener;
-    public static final String CRED_EARCON = "[cred]";
     private Runnable onDoneSpeaking;
 
     public TextToSpeechRunner(Context ctx) {
@@ -56,6 +56,10 @@ public class TextToSpeechRunner {
 
     public void setOnDoneSpeaking(Runnable runnable) {
         onDoneSpeaking = runnable;
+    }
+
+    public boolean isInitialized() {
+        return initialized;
     }
 
     private class TTSRunnerListener extends UtteranceProgressListener implements AudioManager.OnAudioFocusChangeListener, TextToSpeech.OnInitListener {
@@ -112,9 +116,5 @@ public class TextToSpeechRunner {
         public void onAudioFocusChange(int focusChange) {
         }
 
-    }
-
-    public boolean isInitialized(){
-        return initialized;
     }
 }
