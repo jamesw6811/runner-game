@@ -12,7 +12,7 @@ public abstract class DiscoveryScheme {
         random = r;
     }
 
-    public final Class discoverSite(){
+    public final Class discover(){
         double randD = random.nextDouble();
         double scaledRand = randD*totalOdds;
         List<ClassOdds> odds = getSiteOdds();

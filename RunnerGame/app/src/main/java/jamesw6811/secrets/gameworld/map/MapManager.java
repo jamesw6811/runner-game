@@ -157,7 +157,7 @@ public class MapManager {
             DiscoveryScheme scheme;
             if (headquarters == null) scheme = discovery.Empty;
             else scheme = discovery.Mission1;
-            GameObject discovered = SiteFactory.getSite(scheme.discoverSite(), this, player.getPosition());
+            GameObject discovered = SiteFactory.getSite(scheme.discover(), this, player.getPosition());
             if (discovered != null) {
                 story.addSpeechToQueue(ctx.getString(R.string.discoveredNotification, discovered.getSpokenName()));
                 if (discovered.hasApproachActivity()) discovered.approach();
