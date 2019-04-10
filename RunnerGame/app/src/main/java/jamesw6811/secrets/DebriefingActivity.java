@@ -9,7 +9,6 @@ import android.widget.Button;
 
 public class DebriefingActivity extends Activity {
     private static final String EMAILFEEDBACK_SUBJECT = "Super Helpful Sappy Secrets Feedbark";
-    private static final String EMAILFEEDBACK_TEMPLATE = "Sappy Secrets Developers,\n\nSappy Secrets has room to improve. I really liked:\n\n\nI didn't like:\n\n\nAnd you should also know:\n\n\n";
 
 
     @Override
@@ -27,7 +26,7 @@ public class DebriefingActivity extends Activity {
 
     private void finishDebrief() {
         final String[] EMAILSFEEDBACK = {getString(R.string.feedback_email)};
-        composeEmail(EMAILSFEEDBACK, EMAILFEEDBACK_SUBJECT, EMAILFEEDBACK_TEMPLATE);
+        composeEmail(EMAILSFEEDBACK, EMAILFEEDBACK_SUBJECT, getString(R.string.feedback_email_content));
         finish();
     }
 
