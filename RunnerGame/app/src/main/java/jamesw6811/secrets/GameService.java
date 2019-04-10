@@ -65,11 +65,14 @@ public class GameService extends Service implements GameUIUpdateProcessor {
         controller = new RunningMediaController(this);
         gameLocationPoller = new GameLocationPoller(this, GameService.this::startGameOrUpdateLocation);
         gameLocationPoller.startPolling();
+
+        // Persist service
+        startService(new Intent(getApplicationContext(), GameService.class));
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        MediaButtonReceiver.handleIntent(controller.getMediaSession(), intent);
+        if (controller != null) MediaButtonReceiver.handleIntent(controller.getMediaSession(), intent);
         startForeground(NOTIFICATION_ID, getNotification());
         return START_NOT_STICKY;
     }

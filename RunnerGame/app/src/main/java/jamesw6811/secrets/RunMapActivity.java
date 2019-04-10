@@ -61,7 +61,7 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_run_map);
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        // Obtain the SupportMapFragment
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         button_quit = findViewById(R.id.button_quit);
@@ -79,6 +79,7 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
     @Override
     protected void onStart() {
         super.onStart();
+        // Once map is ready to be used
         mapFragment.getMapAsync(this);
     }
 
