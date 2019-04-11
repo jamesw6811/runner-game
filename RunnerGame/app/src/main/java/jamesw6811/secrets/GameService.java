@@ -38,10 +38,11 @@ public class GameService extends Service implements GameUIUpdateProcessor {
     private TextToSpeechRunner ttser;
     private ToneRunner toner;
     private RunningMediaController controller;
+    private boolean servicesSet = false;
+    public boolean started = false;
     private GameWorld gw;
     private boolean uiBound;
     private double pace = -1;
-
     public static GameService getRunningInstance() {
         return runningInstance;
     }
@@ -58,22 +59,35 @@ public class GameService extends Service implements GameUIUpdateProcessor {
         mServiceHandler = new Handler(handlerThread.getLooper());
 
         setupNotificationsChannel();
+        setupServices();
+        if (gameLocationPoller != null) gameLocationPoller.startPolling();
 
-        // Setup services
+        // Persist service
+        startService(new Intent(getApplicationContext(), GameService.class));
+    }
+
+    public void setServices(TextToSpeechRunner ttser, ToneRunner toner, RunningMediaController controller, GameLocationPoller gameLocationPoller){
+        this.ttser = ttser;
+        this.toner = toner;
+        this.controller = controller;
+        this.gameLocationPoller = gameLocationPoller;
+        servicesSet = true;
+    }
+
+    private void setupServices() { // Separate method so easy to extend and test
+        if (servicesSet) return;
         ttser = new TextToSpeechRunner(this);
         toner = new ToneRunner();
         controller = new RunningMediaController(this);
         gameLocationPoller = new GameLocationPoller(this, GameService.this::startGameOrUpdateLocation);
-        gameLocationPoller.startPolling();
-
-        // Persist service
-        startService(new Intent(getApplicationContext(), GameService.class));
+        servicesSet = true;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (controller != null) MediaButtonReceiver.handleIntent(controller.getMediaSession(), intent);
         startForeground(NOTIFICATION_ID, getNotification());
+        started = true;
         return START_NOT_STICKY;
     }
 
