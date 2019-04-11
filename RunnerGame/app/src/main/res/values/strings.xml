@@ -74,7 +74,7 @@
     <string name="list_separator">, </string>
     <string name="list_final_and">and </string>
 
-    <string name="win_message">Nice work, Agent Almond! It\'s a Dogwood double agent. We need to find out what this means for the Oaken Empire. I\'ll send the debriefing to your mobile device.</string>
+    <string name="win_message">Nice work, Agent Almond! This looks like a Dogwood double agent. We need to find out what this means for the Oaken Empire. I\'ll send the debriefing to your mobile device.</string>
 
     <string name="text_medals">%dx Magnolia Medals</string>
 
