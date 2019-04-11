@@ -143,23 +143,23 @@ THIS NOTICE DOES NOT APPLY IF: (1) IF YOU ARE A RESIDENT OF ANY JURISDICTION WHI
 19.	Limitation of Time to File Claims. ANY CAUSE OF ACTION OR CLAIM YOU MAY HAVE ARISING OUT OF OR RELATING TO THIS AGREEMENT OR THE APPLICATION MUST BE COMMENCED WITHIN ONE (1) YEAR AFTER THE CAUSE OF ACTION ACCRUES OTHERWISE SUCH CAUSE OF ACTION OR CLAIM IS PERMANENTLY BARRED.
 20.	Entire Agreement. This Agreement and our Privacy Policy constitute the entire agreement between you and Company with respect to the Application and supersede all prior or contemporaneous understandings and agreements, whether written or oral, with respect to the Application.
 21.	Waiver. No failure to exercise, and no delay in exercising, on the part of either party, any right or any power hereunder shall operate as a waiver thereof, nor shall any single or partial exercise of any right or power hereunder preclude further exercise of that or any other right hereunder. In the event of a conflict between this Agreement and any applicable purchase or other terms, the terms of this Agreement shall govern.</string>
-    <string name="feedback_email_content">Dear Sappy Secrets Developers,
+    <string name="feedback_email_content">Dear Sappy Secrets Developers,\n\n
 
-    I play-tested your game and beat the first mission. You are so lucky to have me has a play-tester. Here is some of my feedback.
+    I play-tested your game and beat the first mission. You are so lucky to have me has a play-tester. Here is some of my feedback.\n\n
 
-    The most frustrating thing was:
+    The most frustrating thing was:\n\n
 
-    I had the most fun when:
+    I had the most fun when:\n\n
 
-    I don\'t understand what was going on when:
+    I don\'t understand what was going on when:\n\n
 
-    My strategy, if I did the mission again, would be to:
+    My strategy, if I did the mission again, would be to:\n\n
 
-    The style and script made me feel:
+    The style and script made me feel:\n\n
 
-    I was also thinking:
+    I was also thinking:\n\n
 
-    It\'s OK/not OK to follow up with me for more feedback:
+    It\'s OK/not OK to follow up with me for more feedback:\n\n
 
     </string>
 </resources>
