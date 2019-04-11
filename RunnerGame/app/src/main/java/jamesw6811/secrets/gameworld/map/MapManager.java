@@ -85,7 +85,7 @@ public class MapManager {
     public void handleInteractions(RunningMediaController.ClickState clickState) {
         // Don't allow interaction if injured
         if (player.isInjured()) {
-            if (clickState.singleClicked || clickState.doubleClicked)
+            if (clickState.playClicked)
                 story.addSpeechToQueue(ctx.getString(R.string.interaction_injured));
             return;
         }
@@ -94,8 +94,9 @@ public class MapManager {
         LinkedList<GameObject> objectsInInteractionRange = getObjectsInCircle(player.getPosition(), difficultySettings.getMetersInSight());
         objectsInInteractionRange.remove(player);
 
-        // Check building or building upgrade
-        if (clickState.doubleClicked) {
+        // Check interaction
+        if (clickState.playClicked) {
+            boolean interacted = false;
             if (headquarters == null) {
                 if (player.getRunningResource() >= Headquarters.RUNNING_RESOURCE_BUILD_COST) {
                     player.takeRunningResource(Headquarters.RUNNING_RESOURCE_BUILD_COST);
@@ -107,24 +108,8 @@ public class MapManager {
                     story.interruptQueueWithSpeech(ctx.getString(R.string.headquarters_build_not_enough_resources, Headquarters.RUNNING_RESOURCE_BUILD_COST));
                     story.addSpeechToQueue(TextToSpeechRunner.CRED_EARCON);
                 }
-            } else {
-                boolean upgraded = false;
-                for (GameObject tryUpgrade : objectsInInteractionRange) {
-                    if (tryUpgrade.isUpgradable()) {
-                        tryUpgrade.upgrade();
-                        story.refreshAnnouncement();
-                        upgraded = true;
-                        break;
-                    }
-                }
-                if (!upgraded)
-                    story.interruptQueueWithSpeech(ctx.getString(R.string.interaction_nothing_to_upgrade));
-            }
-        }
-        // Check interaction
-        if (clickState.singleClicked) {
-            boolean interacted = false;
-            for (GameObject tryInteract : objectsInInteractionRange) {
+                interacted = true;
+            } else for (GameObject tryInteract : objectsInInteractionRange) {
                 if (tryInteract.isInteractable()) {
                     tryInteract.interact();
                     story.refreshAnnouncement();
@@ -266,14 +251,6 @@ public class MapManager {
         protected void setPosition(LatLng position) {
             this.position = position;
             updateMarker();
-        }
-
-        protected boolean isUpgradable() {
-            return false;
-        }
-
-        protected void upgrade() {
-            throw new UnsupportedOperationException("This object is not upgradable.");
         }
 
         protected void tickTime(float timeDelta) {

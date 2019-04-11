@@ -72,24 +72,6 @@ public class BuildingSubResourceSite extends MapManager.GameObject {
     }
 
     @Override
-    protected boolean isUpgradable() {
-        return !built;
-    }
-
-    @Override
-    protected void upgrade() {
-        if (built) throw new UnsupportedOperationException("Cannot upgrade further.");
-        if (player.getRunningResource() >= RUNNING_RESOURCE_UPGRADE_COST && player.getBuildingResource() >= BUILDING_RESOURCE_UPGRADE_COST) {
-            player.takeRunningResource(RUNNING_RESOURCE_UPGRADE_COST);
-            player.takeBuildingResource(BUILDING_RESOURCE_UPGRADE_COST);
-            setBuilt(true);
-            story.interruptQueueWithSpeech(ctx.getString(R.string.buildingsubresourcesite_upgradeSuccess, RUNNING_RESOURCE_UPGRADE_COST, BUILDING_RESOURCE_UPGRADE_COST));
-        } else {
-            story.interruptQueueWithSpeech(ctx.getString(R.string.buildingsubresourcesite_upgradeNotEnoughResources, RUNNING_RESOURCE_UPGRADE_COST, BUILDING_RESOURCE_UPGRADE_COST));
-        }
-    }
-
-    @Override
     protected boolean isInteractable() {
         return true;
     }
@@ -97,7 +79,14 @@ public class BuildingSubResourceSite extends MapManager.GameObject {
     @Override
     protected void interact() {
         if (!built) {
-            story.interruptQueueWithSpeech(ctx.getString(R.string.upgrade_needed_to_interact));
+            if (player.getRunningResource() >= RUNNING_RESOURCE_UPGRADE_COST && player.getBuildingResource() >= BUILDING_RESOURCE_UPGRADE_COST) {
+                player.takeRunningResource(RUNNING_RESOURCE_UPGRADE_COST);
+                player.takeBuildingResource(BUILDING_RESOURCE_UPGRADE_COST);
+                setBuilt(true);
+                story.interruptQueueWithSpeech(ctx.getString(R.string.buildingsubresourcesite_upgradeSuccess, RUNNING_RESOURCE_UPGRADE_COST, BUILDING_RESOURCE_UPGRADE_COST));
+            } else {
+                story.interruptQueueWithSpeech(ctx.getString(R.string.buildingsubresourcesite_upgradeNotEnoughResources, RUNNING_RESOURCE_UPGRADE_COST, BUILDING_RESOURCE_UPGRADE_COST));
+            }
             return;
         }
 

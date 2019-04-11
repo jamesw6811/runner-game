@@ -67,12 +67,12 @@ public class Headquarters extends MapManager.GameObject implements ChaseOriginat
     }
 
     @Override
-    protected boolean isUpgradable() {
+    protected boolean isInteractable() {
         return true;
     }
 
     @Override
-    protected void upgrade() {
+    protected void interact() {
         if (player.getBuildingSubResource() >= FIRST_UPGRADE_COST_SUB_RESOURCE) {
             player.takeBuildingSubResource(FIRST_UPGRADE_COST_SUB_RESOURCE);
             chase.startChase(false, CHASE_DIFFICULTY, this);

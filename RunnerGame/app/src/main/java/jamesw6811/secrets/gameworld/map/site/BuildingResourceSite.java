@@ -76,25 +76,6 @@ public class BuildingResourceSite extends MapManager.GameObject {
     }
 
     @Override
-    protected boolean isUpgradable() {
-        return !built;
-    }
-
-    @Override
-    protected void upgrade() {
-        if (built) throw new UnsupportedOperationException("Cannot upgrade further.");
-        if (player.getRunningResource() >= RUNNING_RESOURCE_UPGRADE_COST) {
-            player.takeRunningResource(RUNNING_RESOURCE_UPGRADE_COST);
-            setBuilt(true);
-            resource = RESOURCE_AMOUNT_ON_BUILD;
-            story.tutorialResourceBuildingUpgraded = true;
-            story.interruptQueueWithSpeech(ctx.getString(R.string.buildingresourcesite_upgradeSuccess, RUNNING_RESOURCE_UPGRADE_COST));
-        } else {
-            story.interruptQueueWithSpeech(ctx.getString(R.string.buildingresourcesite_upgradeNotEnoughResources, RUNNING_RESOURCE_UPGRADE_COST));
-        }
-    }
-
-    @Override
     protected boolean isInteractable() {
         return true;
     }
@@ -102,7 +83,15 @@ public class BuildingResourceSite extends MapManager.GameObject {
     @Override
     protected void interact() {
         if (!built) {
-            story.interruptQueueWithSpeech(ctx.getString(R.string.upgrade_needed_to_interact));
+            if (player.getRunningResource() >= RUNNING_RESOURCE_UPGRADE_COST) {
+                player.takeRunningResource(RUNNING_RESOURCE_UPGRADE_COST);
+                setBuilt(true);
+                resource = RESOURCE_AMOUNT_ON_BUILD;
+                story.tutorialResourceBuildingUpgraded = true;
+                story.interruptQueueWithSpeech(ctx.getString(R.string.buildingresourcesite_upgradeSuccess, RUNNING_RESOURCE_UPGRADE_COST));
+            } else {
+                story.interruptQueueWithSpeech(ctx.getString(R.string.buildingresourcesite_upgradeNotEnoughResources, RUNNING_RESOURCE_UPGRADE_COST));
+            }
             return;
         }
 

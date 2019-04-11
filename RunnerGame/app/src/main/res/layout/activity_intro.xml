@@ -32,7 +32,7 @@
             android:layout_marginRight="8sp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Your earphone play/pause button is single-clicked and double-clicked to control the game."
+            android:text="Your location and earphone play/pause button is used to control the game."
             android:textAlignment="center"
             android:textSize="24sp" />
 
@@ -44,7 +44,7 @@
             android:layout_marginRight="8sp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Play your own music from any app, just make sure to relaunch Sappy Secrets to enable controls."
+            android:text="Play your own music from any app, just make sure to relaunch Sappy Secrets to re-enable controls."
             android:textAlignment="center"
             android:textSize="24sp" />
 

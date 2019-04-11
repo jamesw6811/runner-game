@@ -12,9 +12,7 @@
     <string name="player_spokenName">player</string>
 
     <string name="interaction_injured">You are poisoned by Hemlock, so you can\'t do that. Go back to HQ to get better.</string>
-    <string name="interaction_nothing_to_upgrade">Nothing here that can be built or upgraded.</string>
     <string name="interaction_nothing_to_interact">Nothing here that can be interacted with.</string>
-    <string name="upgrade_needed_to_interact">Before you are able to interact with this site, you must upgrade or build it using double-click.</string>
 
     <string name="headquarters_spokenName">your Shady Grove</string>
     <string name="headquarters_mapName">HQ</string>
@@ -61,10 +59,10 @@
     <string name="approachingAnnounce">You are approaching %s.</string>
 
     <string name="game_started">Hello Agent Almond. I\'m a complex artificially intelligent holographic lifeform. But you can call me Holly for short.</string>
-    <string name="tutorialFirstResource">To build the Shady Grove, our first headquarters, double-click somewhere.</string>
+    <string name="tutorialFirstResource">To build the Shady Grove, our first headquarters, press play somewhere.</string>
     <string name="tutorialHQbuilt_notEnoughResources">Keep collecting Vine Cred for the Shady Grove.</string>
-    <string name="tutorialHQbuilt_readyToBuild">You have enough Vine Cred for your first headquarters, the Shady Grove. Choose a central location to build your headquarters and double-click to build it.</string>
-    <string name="tutorialResourceBuildingDiscovered">Now that we\'ve grown our Shady Grove, let\'s go investigate the area. Try double-clicking to upgrade or build and clicking to interact with every site you discover.</string>
+    <string name="tutorialHQbuilt_readyToBuild">You have enough Vine Cred for your first headquarters, the Shady Grove. Choose a central location to build your headquarters and press play to build it.</string>
+    <string name="tutorialResourceBuildingDiscovered">Now that we\'ve grown our Shady Grove, let\'s go investigate the area. Try pressing play to interact with every site you discover.</string>
     <string name="tutorialResourceBuildingUpgraded">Nice work finding a Seedy Sapling. Can we turn it to our side?</string>
     <string name="tutorialResourceBuildingCollected">I\'m glad that Seedy Sapling is working for us now.</string>
     <string name="tutorialSubResourceBuildingCollected">Now we have Secrets, but we need to find a way to understand them.</string>

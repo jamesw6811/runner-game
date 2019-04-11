@@ -15,8 +15,8 @@ public class RunningMediaController {
     private MediaSessionCompat mediaSession;
     private MediaPlayer mSilencePlayer;
     private Context ctx;
-    private boolean singleClicked = false;
-    private boolean doubleClicked = false;
+    private boolean playClicked = false;
+    private boolean skipToNextClicked = false;
 
     public RunningMediaController(Context ctx) {
         this.ctx = ctx;
@@ -78,24 +78,24 @@ public class RunningMediaController {
     }
 
     private void onSingleClick() {
-        singleClicked = true;
+        playClicked = true;
     }
 
     private void onDoubleClick() {
-        doubleClicked = true;
+        skipToNextClicked = true;
     }
 
     public ClickState getClickState(boolean reset) {
         ClickState cs = new ClickState();
-        cs.singleClicked = singleClicked;
-        cs.doubleClicked = doubleClicked;
+        cs.playClicked = playClicked;
+        cs.skipToNextClicked = skipToNextClicked;
         if (reset) resetClickState();
         return cs;
     }
 
     public void resetClickState() {
-        singleClicked = false;
-        doubleClicked = false;
+        playClicked = false;
+        skipToNextClicked = false;
     }
 
     public MediaSessionCompat getMediaSession() {
@@ -111,7 +111,7 @@ public class RunningMediaController {
     }
 
     public class ClickState {
-        public boolean singleClicked = false;
-        public boolean doubleClicked = false;
+        public boolean playClicked = false;
+        public boolean skipToNextClicked = false;
     }
 }
