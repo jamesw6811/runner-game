@@ -100,8 +100,7 @@ public class StoryManager {
         if (winCondition) {
             addSpeechToQueue(ctx.getString(R.string.win_message));
             return true;
-        }
-        return false;
+        } else return false;
     }
 
     public void setOnDoneSpeaking(Runnable runnable) {

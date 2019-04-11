@@ -25,7 +25,7 @@
     <string name="headquarters_chase_message">Catch that agent!</string>
     <string name="headquarters_chaseStarted">You found the double agent! Chase it!</string>
     <string name="headquarters_chaseFailed">The double agent got away. Maybe we can find it again?</string>
-    <string name="headquarters_chaseSuccess">You caught the double agent!</string>
+    <string name="headquarters_chaseSuccess">You did it!</string>
 
     <string name="buildingresourcesite_spokenName">a Seedy Sapling</string>
     <string name="buildingresourcesite_mapName">Sapling</string>
