@@ -44,10 +44,10 @@
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
+            android:layout_width="50sp"
+            android:layout_height="50sp"
             android:layout_weight="1"
-            android:src="@android:drawable/checkbox_on_background" />
+            android:src="@mipmap/ic_launcher_foreground" />
 
         <TextView
             android:id="@+id/contents_objective_1"
@@ -70,10 +70,10 @@
 
         <ImageView
             android:id="@+id/imageView3"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
+            android:layout_width="50sp"
+            android:layout_height="50sp"
             android:layout_weight="1"
-            android:src="@android:drawable/checkbox_on_background" />
+            android:src="@mipmap/ic_launcher_foreground" />
 
         <TextView
             android:id="@+id/contents_objective_2"
@@ -96,10 +96,10 @@
 
         <ImageView
             android:id="@+id/imageView4"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
+            android:layout_width="50sp"
+            android:layout_height="50sp"
             android:layout_weight="1"
-            android:src="@android:drawable/checkbox_on_background" />
+            android:src="@mipmap/ic_launcher_foreground" />
 
         <TextView
             android:id="@+id/contents_objective_3"
