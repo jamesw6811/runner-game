@@ -14,7 +14,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="Mission Report"
-        android:textSize="36sp"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,7 +27,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="@string/mission_1_debriefing"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title_briefing" />
@@ -46,16 +46,14 @@
             android:id="@+id/imageView2"
             android:layout_width="50sp"
             android:layout_height="50sp"
-            android:layout_weight="1"
             android:src="@mipmap/ic_launcher_foreground" />
 
         <TextView
             android:id="@+id/contents_objective_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="Set up a headquarters in the Tangle Woods"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -72,16 +70,14 @@
             android:id="@+id/imageView3"
             android:layout_width="50sp"
             android:layout_height="50sp"
-            android:layout_weight="1"
             android:src="@mipmap/ic_launcher_foreground" />
 
         <TextView
             android:id="@+id/contents_objective_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="Search the area for Intel"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -98,16 +94,14 @@
             android:id="@+id/imageView4"
             android:layout_width="50sp"
             android:layout_height="50sp"
-            android:layout_weight="1"
             android:src="@mipmap/ic_launcher_foreground" />
 
         <TextView
             android:id="@+id/contents_objective_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="Find and catch the double agent"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
     </LinearLayout>
 
     <TextView
@@ -115,10 +109,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="Rewards Received"
-        android:textSize="30sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/briefing_list_layout_3" />
@@ -130,7 +124,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:text="1x Magnolia Medal"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title_rewards" />
 
@@ -141,9 +135,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="8dp"
         android:text="Send Alpha Feedback"
-        android:textSize="30sp"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
