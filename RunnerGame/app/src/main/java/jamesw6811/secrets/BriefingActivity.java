@@ -8,19 +8,28 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 
+import jamesw6811.secrets.controls.RunningMediaController;
+
 public class BriefingActivity extends Activity {
+    RunningMediaController runningMediaController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_briefing);
-        Button startButton = findViewById(R.id.brief_start_button);
-        startButton.setOnClickListener(new View.OnClickListener() {
+        runningMediaController = new RunningMediaController(this){
             @Override
-            public void onClick(View v) {
-                startGameActivity();
+            protected void onSingleClick() {
+                super.onSingleClick();
+                this.release();
+                BriefingActivity.this.startGameActivity();
             }
-        });
+
+            @Override
+            protected void onDoubleClick() {
+                super.onDoubleClick();
+            }
+        };
     }
 
     private void startGameActivity() {

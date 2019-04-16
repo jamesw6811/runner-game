@@ -77,11 +77,11 @@ public class RunningMediaController {
         }
     }
 
-    private void onSingleClick() {
+    protected void onSingleClick() {
         playClicked = true;
     }
 
-    private void onDoubleClick() {
+    protected void onDoubleClick() {
         skipToNextClicked = true;
     }
 
