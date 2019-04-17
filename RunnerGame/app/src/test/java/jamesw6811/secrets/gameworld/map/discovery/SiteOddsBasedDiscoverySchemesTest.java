@@ -1,23 +1,14 @@
 package jamesw6811.secrets.gameworld.map.discovery;
 
-import com.google.android.gms.common.internal.safeparcel.SafeParcelable;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
-
 import org.junit.Test;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import jamesw6811.secrets.gameworld.map.MapManager;
-import jamesw6811.secrets.gameworld.map.site.BuildingResourceSite;
-import jamesw6811.secrets.gameworld.map.site.BuildingSubResourceSite;
-import jamesw6811.secrets.gameworld.map.site.ChaseSite;
-
 import static org.junit.Assert.*;
 
-public class SiteDiscoverySchemesTest {
+public class SiteOddsBasedDiscoverySchemesTest {
     class RandomMock extends Random {
         private double next;
         public void setNext(double d){
@@ -31,8 +22,8 @@ public class SiteDiscoverySchemesTest {
     }
     RandomMock randMock = new RandomMock();
 
-    class TestOddsDiscoveryScheme extends DiscoveryScheme {
-        TestOddsDiscoveryScheme(Random r, List<ClassOdds> odds) {
+    class TestOddsOddsBasedDiscoveryScheme extends OddsBasedDiscoveryScheme {
+        TestOddsOddsBasedDiscoveryScheme(Random r, List<ClassOdds> odds) {
             super(r);
             updateOdds(odds);
         }
@@ -47,7 +38,7 @@ public class SiteDiscoverySchemesTest {
         odds.add(new ClassOdds(Class1.class, 1));
         odds.add(new ClassOdds(Class2.class, 0.5));
         odds.add(new ClassOdds(Class3.class, 0.5));
-        DiscoveryScheme scheme = new TestOddsDiscoveryScheme(randMock, odds);
+        OddsBasedDiscoveryScheme scheme = new TestOddsOddsBasedDiscoveryScheme(randMock, odds);
 
         randMock.setNext(0.0);
         assertEquals(scheme.discover(), Class1.class);
@@ -63,7 +54,7 @@ public class SiteDiscoverySchemesTest {
     public void discoveryScheme_discover_1_choice(){
         List<ClassOdds> odds = new LinkedList<>();
         odds.add(new ClassOdds(Class1.class, 1));
-        DiscoveryScheme scheme = new TestOddsDiscoveryScheme(randMock, odds);
+        OddsBasedDiscoveryScheme scheme = new TestOddsOddsBasedDiscoveryScheme(randMock, odds);
 
         randMock.setNext(0.9);
         assertEquals(scheme.discover(), Class1.class);
@@ -72,7 +63,7 @@ public class SiteDiscoverySchemesTest {
     @Test
     public void discoveryScheme_discover_0_choices(){
         List<ClassOdds> odds = new LinkedList<>();
-        DiscoveryScheme scheme = new TestOddsDiscoveryScheme(randMock, odds);
+        OddsBasedDiscoveryScheme scheme = new TestOddsOddsBasedDiscoveryScheme(randMock, odds);
 
         randMock.setNext(0.5);
         assertNull(scheme.discover());

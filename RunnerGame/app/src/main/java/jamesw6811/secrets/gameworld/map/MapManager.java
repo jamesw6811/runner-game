@@ -17,6 +17,7 @@ import jamesw6811.secrets.controls.RunningMediaController;
 import jamesw6811.secrets.gameworld.chase.ChaseManager;
 import jamesw6811.secrets.gameworld.difficulty.DifficultySettings;
 import jamesw6811.secrets.gameworld.map.discovery.DiscoveryScheme;
+import jamesw6811.secrets.gameworld.map.discovery.OddsBasedDiscoveryScheme;
 import jamesw6811.secrets.gameworld.map.discovery.SiteDiscoverySchemes;
 import jamesw6811.secrets.gameworld.map.site.Headquarters;
 import jamesw6811.secrets.gameworld.map.site.SiteFactory;

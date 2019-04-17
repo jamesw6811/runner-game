@@ -8,7 +8,7 @@ public class SiteDiscoverySchemes {
     public final DiscoveryScheme Empty;
     public SiteDiscoverySchemes(Random r){
         random = r;
-        Mission1 = new Mission1DiscoveryScheme(r);
-        Empty = new EmptyDiscoveryScheme(r);
+        Mission1 = new Mission1CardsBasedDiscoveryScheme(r);
+        Empty = new EmptyOddsBasedDiscoveryScheme(r);
     }
 }
