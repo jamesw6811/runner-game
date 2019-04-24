@@ -68,6 +68,7 @@ public class BuildingSubResourceSite extends MapManager.GameObject {
 
     private void setBuilt(boolean b) {
         built = b;
+        timeSinceBuilt = 0;
         updateMarker();
     }
 
