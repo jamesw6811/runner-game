@@ -14,6 +14,7 @@ import jamesw6811.secrets.gameworld.difficulty.DifficultySettings;
 import jamesw6811.secrets.gameworld.map.GameUIUpdateProcessor;
 import jamesw6811.secrets.gameworld.map.MapManager;
 import jamesw6811.secrets.gameworld.map.Player;
+import jamesw6811.secrets.gameworld.story.GameResult;
 import jamesw6811.secrets.gameworld.story.StoryManager;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
 import jamesw6811.secrets.sound.ToneRunner;
@@ -98,7 +99,8 @@ public class GameWorld implements TimeTicked {
         storyManager.doAnnouncements(player);
         if (storyManager.checkWinConditions()) {
             timeTickerThread.stopRunning();
-            storyManager.setOnDoneSpeaking(() -> ui.finishAndDebrief());
+            GameResult gameResult = new GameResult(timeTickerThread.getDuration(), mapManager.getMetersRunningTotal(), true);
+            storyManager.setOnDoneSpeaking(() -> ui.finishAndDebrief(gameResult));
         }
     }
 
@@ -137,5 +139,11 @@ public class GameWorld implements TimeTicked {
         if (player != null) focusCameraOnPosition(player.getPosition(), 17f);
     }
 
+    public void abort() {
+        timeTickerThread.stopRunning();
+        GameResult gameResult = new GameResult(timeTickerThread.getDuration(), mapManager.getMetersRunningTotal(), false);
+        storyManager.interruptQueueWithSpeech("Mission Aborted");
+        storyManager.setOnDoneSpeaking(() -> ui.finishAndDebrief(gameResult));
+    }
 }
 

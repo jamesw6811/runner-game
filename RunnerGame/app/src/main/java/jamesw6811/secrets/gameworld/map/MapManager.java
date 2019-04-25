@@ -28,6 +28,7 @@ public class MapManager {
     private ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
     private Headquarters headquarters = null;
     private double metersSinceRunningResource = 0;
+    private float metersRunningTotal = 0;
     private Player player;
     private DifficultySettings difficultySettings;
     private StoryManager story;
@@ -128,6 +129,8 @@ public class MapManager {
         LinkedList<GameObject> objectsInDiscoveryRange = getObjectsInCircle(player.getPosition(), difficultySettings.getMetersDiscoveryMinimum());
         objectsInDiscoveryRange.remove(player);
 
+        metersRunningTotal += player.getLastDistanceTravelled();
+
         // Resource discovery
         metersSinceRunningResource += player.getLastDistanceTravelled();
         if (metersSinceRunningResource > difficultySettings.getMetersPerRunningResource()) {
@@ -181,6 +184,10 @@ public class MapManager {
 
     public Context getContext() {
         return ctx;
+    }
+
+    public float getMetersRunningTotal() {
+        return metersRunningTotal;
     }
 
     public static abstract class GameObject {

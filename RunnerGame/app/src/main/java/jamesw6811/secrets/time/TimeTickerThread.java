@@ -11,6 +11,7 @@ public class TimeTickerThread extends Thread {
     private static final String LOGTAG = TimeTickerThread.class.getName();
     private boolean running = false;
     private TimeTicked tt;
+    private float duration = 0;
 
     public TimeTickerThread(TimeTicked tt) {
         this.tt = tt;
@@ -20,6 +21,10 @@ public class TimeTickerThread extends Thread {
     public void start() {
         running = true;
         super.start();
+    }
+
+    public float getDuration(){
+        return duration;
     }
 
     public void stopRunning() {
@@ -45,7 +50,9 @@ public class TimeTickerThread extends Thread {
             if (!running) break;
             lastTime = startTime;
             startTime = System.currentTimeMillis();
-            tt.tickTime(((float) (startTime - lastTime)) / 1000f);
+            float timePassed = ((float) (startTime - lastTime)) / 1000f;
+            tt.tickTime(timePassed);
+            duration += timePassed;
         }
     }
 }

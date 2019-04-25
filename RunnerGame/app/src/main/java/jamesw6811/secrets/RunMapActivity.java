@@ -65,13 +65,9 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         button_quit = findViewById(R.id.button_quit);
-        button_quit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (gameService != null) {
-                    gameService.finish();
-                }
-                finish();
+        button_quit.setOnClickListener(v -> {
+            if (gameService != null) {
+                gameService.abortClicked();
             }
         });
     }

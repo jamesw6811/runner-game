@@ -22,6 +22,7 @@ import androidx.media.session.MediaButtonReceiver;
 import jamesw6811.secrets.controls.RunningMediaController;
 import jamesw6811.secrets.gameworld.GameWorld;
 import jamesw6811.secrets.gameworld.map.GameUIUpdateProcessor;
+import jamesw6811.secrets.gameworld.story.GameResult;
 import jamesw6811.secrets.location.GameLocationPoller;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
 import jamesw6811.secrets.sound.ToneRunner;
@@ -212,19 +213,6 @@ public class GameService extends Service implements GameUIUpdateProcessor {
         this.stopSelf();
     }
 
-    public void finishAndDebrief() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        int num_medals = sharedPref.getInt(getString(R.string.magnolia_medals_key), 0);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt(getString(R.string.magnolia_medals_key), num_medals + 1);
-        editor.apply();
-
-        Intent intent = new Intent(this, DebriefingActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
-    }
-
     public void startGameOrUpdateLocation(Location location) {
         if (ttser.isInitialized()) {
             if (gw == null && uiBound) {
@@ -243,6 +231,21 @@ public class GameService extends Service implements GameUIUpdateProcessor {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void finishAndDebrief(GameResult gr) {
+        Intent intent = new Intent(this, DebriefingActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(RunStatsActivity.EXTRA_DURATION, gr.duration);
+        intent.putExtra(RunStatsActivity.EXTRA_DISTANCE, gr.distance);
+        intent.putExtra(DebriefingActivity.EXTRA_SUCCESS, gr.success);
+        startActivity(intent);
+        finish();
+    }
+
+    public void abortClicked() {
+        gw.abort();
     }
 
     /**
