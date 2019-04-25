@@ -9,7 +9,7 @@ import android.widget.TextView;
 public class RunStatsActivity extends Activity {
     public static final String EXTRA_DISTANCE = "jamesw6811.secrets.RunStatsActivity.EXTRA_DISTANCE";
     public static final String EXTRA_DURATION = "jamesw6811.secrets.RunStatsActivity.EXTRA_DURATION";
-    private static final float MILES_PER_METER = 0.000621371f;
+    public static final float MILES_PER_METER = 0.000621371f;
 
     private TextView statsContents;
 

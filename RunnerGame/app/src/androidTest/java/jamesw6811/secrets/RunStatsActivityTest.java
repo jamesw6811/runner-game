@@ -22,7 +22,7 @@ public class RunStatsActivityTest {
         @Override
         protected Intent getActivityIntent() {
             Intent intent = new Intent(getApplicationContext(),RunStatsActivity.class);
-            intent.putExtra(RunStatsActivity.EXTRA_DISTANCE, 2.43567f);
+            intent.putExtra(RunStatsActivity.EXTRA_DISTANCE, 2.43567f/RunStatsActivity.MILES_PER_METER);
             intent.putExtra(RunStatsActivity.EXTRA_DURATION, 60f*60f+60f*13f+52f+0.32f);
             return intent;
         }
