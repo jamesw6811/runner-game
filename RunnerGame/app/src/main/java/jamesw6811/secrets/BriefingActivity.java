@@ -30,9 +30,11 @@ public class BriefingActivity extends Activity {
                 super.onDoubleClick();
             }
         };
+        todo // pull content from mission in extra, probably via something like StoryMission.getMission(x).
     }
 
     private void startGameActivity() {
+        todo // send extra with mission
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         int pacePref = sharedPref.getInt(getString(R.string.saved_pace_key), -1);
         Intent intent = new Intent(this, RunMapActivity.class);

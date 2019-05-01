@@ -10,13 +10,13 @@ public class CardsBasedDiscoveryScheme extends DiscoveryScheme{
     private List<Class> cardsDiscard;
     private Random random;
 
-    CardsBasedDiscoveryScheme(Random random){
+    protected CardsBasedDiscoveryScheme(Random random){
         this.random = random;
         cardsDeck = new LinkedList<>();
         cardsDiscard = new LinkedList<>();
     }
 
-    final void setDeckAndShuffle(List<Class> cards){
+    protected final void setDeckAndShuffle(List<Class> cards){
         this.cardsDiscard = cards;
         this.cardsDeck = new LinkedList<>();
         shuffle();

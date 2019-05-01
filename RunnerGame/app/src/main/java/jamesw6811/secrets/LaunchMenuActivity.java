@@ -40,12 +40,7 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
         speedSettingBar.setOnSeekBarChangeListener(this);
 
         Button startButton = findViewById(R.id.start_game_button);
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startBriefingScreen();
-            }
-        });
+        startButton.setOnClickListener(v -> startBriefingScreen());
 
         int defaultValue = getResources().getInteger(R.integer.default_pace_key);
         int pacePref = sharedPref.getInt(getString(R.string.saved_pace_key), defaultValue);
@@ -80,6 +75,7 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
     }
 
     private void startBriefingScreen() {
+        todo // add a specific mission callout here that references the mission under gameworld.story
         Intent intent = new Intent(this, BriefingActivity.class);
         startActivity(intent);
         finish();

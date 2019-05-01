@@ -61,7 +61,6 @@ public class GameService extends Service implements GameUIUpdateProcessor {
 
         setupNotificationsChannel();
         setupServices();
-        if (gameLocationPoller != null) gameLocationPoller.startPolling();
 
         // Persist service
         startService(new Intent(getApplicationContext(), GameService.class));
@@ -100,7 +99,9 @@ public class GameService extends Service implements GameUIUpdateProcessor {
     @Override
     public IBinder onBind(Intent intent) {
         setPaceFromIntent(intent);
+        todo // also set mission from intent
         onAllBind();
+        if (gameLocationPoller != null) gameLocationPoller.startPolling();
         return mBinder;
     }
 
@@ -235,6 +236,8 @@ public class GameService extends Service implements GameUIUpdateProcessor {
 
     @Override
     public void finishAndDebrief(GameResult gr) {
+        todo // also set mission for debrief
+        todo // give awards using StoryMission.doRewardsAndUnlocks
         Intent intent = new Intent(this, DebriefingActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(RunStatsActivity.EXTRA_DURATION, gr.duration);

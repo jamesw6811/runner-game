@@ -96,7 +96,7 @@ public class GameWorld implements TimeTicked {
         mapManager.handleInteractions(lastClickState);
 
         // Handle story & announcements
-        storyManager.doAnnouncements(player);
+        storyManager.doAnnouncementsIfTime(player);
         if (storyManager.checkWinConditions()) {
             timeTickerThread.stopRunning();
             GameResult gameResult = new GameResult(timeTickerThread.getDuration(), mapManager.getMetersRunningTotal(), true);
@@ -142,7 +142,7 @@ public class GameWorld implements TimeTicked {
     public void abort() {
         timeTickerThread.stopRunning();
         GameResult gameResult = new GameResult(timeTickerThread.getDuration(), mapManager.getMetersRunningTotal(), false);
-        storyManager.interruptQueueWithSpeech("Mission Aborted");
+        storyManager.interruptQueueWithSpeech("StoryMission Aborted");
         storyManager.setOnDoneSpeaking(() -> ui.finishAndDebrief(gameResult));
     }
 }

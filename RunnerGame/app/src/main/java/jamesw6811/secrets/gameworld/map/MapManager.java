@@ -9,7 +9,6 @@ import com.google.maps.android.SphericalUtil;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Random;
 
 import jamesw6811.secrets.R;
 import jamesw6811.secrets.RunMapActivity;
@@ -17,8 +16,6 @@ import jamesw6811.secrets.controls.RunningMediaController;
 import jamesw6811.secrets.gameworld.chase.ChaseManager;
 import jamesw6811.secrets.gameworld.difficulty.DifficultySettings;
 import jamesw6811.secrets.gameworld.map.discovery.DiscoveryScheme;
-import jamesw6811.secrets.gameworld.map.discovery.OddsBasedDiscoveryScheme;
-import jamesw6811.secrets.gameworld.map.discovery.SiteDiscoverySchemes;
 import jamesw6811.secrets.gameworld.map.site.Headquarters;
 import jamesw6811.secrets.gameworld.map.site.SiteFactory;
 import jamesw6811.secrets.gameworld.story.StoryManager;
@@ -35,7 +32,6 @@ public class MapManager {
     private ChaseManager chase;
     private Context ctx;
     private GameUIUpdateProcessor ui;
-    private SiteDiscoverySchemes discovery;
 
     public MapManager(DifficultySettings dm, StoryManager st, ChaseManager cm, GameUIUpdateProcessor ui, Context ctx, LatLng playerStart) {
         this.ctx = ctx;
@@ -43,7 +39,6 @@ public class MapManager {
         story = st;
         chase = cm;
         this.ui = ui;
-        discovery = new SiteDiscoverySchemes(new Random());
         player = new Player(this, playerStart);
     }
 
@@ -144,6 +139,7 @@ public class MapManager {
         // Site discovery
         if (objectsInDiscoveryRange.size() == 0) {
             DiscoveryScheme scheme;
+            todo //replace old discovery below with discovery from StoryManager
             if (headquarters == null) scheme = discovery.Empty;
             else scheme = discovery.Mission1;
             GameObject discovered = SiteFactory.getSite(scheme.discover(), this, player.getPosition());

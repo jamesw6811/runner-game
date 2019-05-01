@@ -121,6 +121,8 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         Intent serviceIntent = new Intent(this, GameService.class);
         serviceIntent.putExtra(EXTRA_PACE, pace);
 
+        todo // add extra to select mission
+
         bindService(serviceIntent, mServiceConnection,
                 Context.BIND_AUTO_CREATE);
     }

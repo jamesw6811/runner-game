@@ -24,17 +24,7 @@ public class DebriefingActivity extends Activity {
         Button startButton = findViewById(R.id.debrief_button_done);
         startButton.setOnClickListener(v -> finishDebrief());
         findViewById(R.id.debrief_button_stats).setOnClickListener(v -> startStatsActivity());
-        boolean success = getIntent().getBooleanExtra(EXTRA_SUCCESS, false);
-        if (success){
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-            int num_medals = sharedPref.getInt(getString(R.string.magnolia_medals_key), 0);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putInt(getString(R.string.magnolia_medals_key), num_medals + 1);
-            editor.apply();
-        } else {
-            ((TextView)findViewById(R.id.contents_story_briefing)).setText(getString(R.string.mission_aborted_story));
-            ((TextView)findViewById(R.id.contents_rewards)).setText(getString(R.string.rewards_contents_none));
-        }
+        todo // take an EXTRA for the debriefing info which will come from the StoryMission
     }
 
     private void startStatsActivity(){
