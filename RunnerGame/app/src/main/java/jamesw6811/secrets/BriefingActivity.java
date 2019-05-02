@@ -38,6 +38,7 @@ public class BriefingActivity extends Activity {
         if (mission == 0) throw new InvalidParameterException("No mission specified.");
         StoryMission storyMission = StoryMission.getMission(mission);
         ((TextView)findViewById(R.id.contents_story_briefing)).setText(storyMission.getBriefing());
+        ((TextView)findViewById(R.id.title_briefing)).setText(storyMission.getName());
     }
 
     private void startGameActivity() {

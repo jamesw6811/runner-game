@@ -10,6 +10,7 @@ import jamesw6811.secrets.sound.TextToSpeechRunner;
 public abstract class StoryMission {
     public static String EXTRA_MISSION = StoryMission.class.getCanonicalName() + ".EXTRA_MISSION";
     abstract public StoryManager buildStoryManager(Context c, TextToSpeechRunner tts, Random random);
+    abstract public String getName();
     abstract public String getBriefing();
     abstract public String getSuccessDebriefing();
     abstract public String getFailureDebriefing();

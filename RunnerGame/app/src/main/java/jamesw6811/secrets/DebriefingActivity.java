@@ -31,6 +31,7 @@ public class DebriefingActivity extends Activity {
         int mission = getIntent().getIntExtra(StoryMission.EXTRA_MISSION, 0);
         if (mission == 0) throw new InvalidParameterException("No mission specified.");
         StoryMission storyMission = StoryMission.getMission(mission);
+        ((TextView)findViewById(R.id.title_briefing)).setText(storyMission.getName());
 
         boolean success = getIntent().getBooleanExtra(EXTRA_SUCCESS, false);
         if (success){

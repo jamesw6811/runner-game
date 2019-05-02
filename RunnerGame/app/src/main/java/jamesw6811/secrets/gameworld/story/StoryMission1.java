@@ -26,6 +26,11 @@ public class StoryMission1 extends StoryMission {
     }
 
     @Override
+    public String getName() {
+        return "The Redwood Rogue";
+    }
+
+    @Override
     public String getBriefing() {
         return "New recruit Agent Almond,\n" +
                 "\n" +
