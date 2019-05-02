@@ -17,12 +17,15 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import java.security.InvalidParameterException;
+
 import androidx.core.app.NotificationCompat;
 import androidx.media.session.MediaButtonReceiver;
 import jamesw6811.secrets.controls.RunningMediaController;
 import jamesw6811.secrets.gameworld.GameWorld;
 import jamesw6811.secrets.gameworld.map.GameUIUpdateProcessor;
 import jamesw6811.secrets.gameworld.story.GameResult;
+import jamesw6811.secrets.gameworld.story.StoryMission;
 import jamesw6811.secrets.location.GameLocationPoller;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
 import jamesw6811.secrets.sound.ToneRunner;
@@ -44,6 +47,7 @@ public class GameService extends Service implements GameUIUpdateProcessor {
     private GameWorld gw;
     private boolean uiBound;
     private double pace = -1;
+    private int missionNumber = 0;
     public static GameService getRunningInstance() {
         return runningInstance;
     }
@@ -99,7 +103,8 @@ public class GameService extends Service implements GameUIUpdateProcessor {
     @Override
     public IBinder onBind(Intent intent) {
         setPaceFromIntent(intent);
-        todo // also set mission from intent
+        int mission = intent.getIntExtra(StoryMission.EXTRA_MISSION, 0);
+        if (mission == 0) throw new InvalidParameterException("No mission specified in extra.");
         onAllBind();
         if (gameLocationPoller != null) gameLocationPoller.startPolling();
         return mBinder;
@@ -217,7 +222,7 @@ public class GameService extends Service implements GameUIUpdateProcessor {
     public void startGameOrUpdateLocation(Location location) {
         if (ttser.isInitialized()) {
             if (gw == null && uiBound) {
-                gw = new GameWorld(location, pace, this, this, ttser, toner, controller);
+                gw = new GameWorld(location, pace, missionNumber, this, this, ttser, toner, controller);
                 gw.initializeAndStartRunning();
             } else if (gw != null) {
                 gw.updateGPS(location);
@@ -236,10 +241,11 @@ public class GameService extends Service implements GameUIUpdateProcessor {
 
     @Override
     public void finishAndDebrief(GameResult gr) {
-        todo // also set mission for debrief
-        todo // give awards using StoryMission.doRewardsAndUnlocks
+        if (gr.success) StoryMission.getMission(missionNumber).doRewardsAndUnlocks(this);
+
         Intent intent = new Intent(this, DebriefingActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(StoryMission.EXTRA_MISSION, missionNumber);
         intent.putExtra(RunStatsActivity.EXTRA_DURATION, gr.duration);
         intent.putExtra(RunStatsActivity.EXTRA_DISTANCE, gr.distance);
         intent.putExtra(DebriefingActivity.EXTRA_SUCCESS, gr.success);

@@ -10,7 +10,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.security.InvalidParameterException;
 import java.util.Objects;
+
+import jamesw6811.secrets.gameworld.story.StoryMission;
 
 public class DebriefingActivity extends Activity {
     public static final String EXTRA_SUCCESS = "jamesw6811.secrets.DebriefingActivity.EXTRA_SUCCESS";
@@ -24,7 +27,17 @@ public class DebriefingActivity extends Activity {
         Button startButton = findViewById(R.id.debrief_button_done);
         startButton.setOnClickListener(v -> finishDebrief());
         findViewById(R.id.debrief_button_stats).setOnClickListener(v -> startStatsActivity());
-        todo // take an EXTRA for the debriefing info which will come from the StoryMission
+
+        int mission = getIntent().getIntExtra(StoryMission.EXTRA_MISSION, 0);
+        if (mission == 0) throw new InvalidParameterException("No mission specified.");
+        StoryMission storyMission = StoryMission.getMission(mission);
+
+        boolean success = getIntent().getBooleanExtra(EXTRA_SUCCESS, false);
+        if (success){
+            ((TextView)findViewById(R.id.contents_story_briefing)).setText(storyMission.getSuccessDebriefing());
+        } else {
+            ((TextView)findViewById(R.id.contents_story_briefing)).setText(storyMission.getFailureDebriefing());
+        }
     }
 
     private void startStatsActivity(){

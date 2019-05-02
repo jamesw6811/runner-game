@@ -85,7 +85,6 @@ public class Headquarters extends MapManager.GameObject implements ChaseOriginat
     @Override
     public void chaseSuccessful() {
         story.interruptQueueWithSpeech(ctx.getString(R.string.headquarters_chaseSuccess));
-        story.winCondition = true;
     }
 
     @Override

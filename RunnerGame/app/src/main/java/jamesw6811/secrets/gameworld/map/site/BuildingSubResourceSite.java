@@ -92,7 +92,6 @@ public class BuildingSubResourceSite extends MapManager.GameObject {
         }
 
         if (player.getBuildingResource() >= BUILDING_RESOURCE_TRADE_COST) {
-            story.tutorialSubResourceBuildingCollected = true;
             player.takeBuildingResource(BUILDING_RESOURCE_TRADE_COST);
             story.interruptQueueWithSpeech(ctx.getString(R.string.buildingsubresourcesite_collectSuccess, BUILDING_RESOURCE_TRADE_COST, BUILDING_SUBRESOURCE_AMOUNT_PER_TRADE));
             player.giveBuildingSubResource(BUILDING_SUBRESOURCE_AMOUNT_PER_TRADE);

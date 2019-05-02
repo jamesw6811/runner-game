@@ -30,8 +30,6 @@ public class BuildingResourceSite extends MapManager.GameObject {
 
     public BuildingResourceSite(MapManager mm, LatLng pos) {
         super(mm, mm.getContext().getString(R.string.buildingresourcesite_spokenName), pos);
-        if (!story.tutorialResourceBuildingDiscovered) story.refreshAnnouncement();
-        story.tutorialResourceBuildingDiscovered = true;
     }
 
     protected synchronized void clearMarkerState() {
@@ -87,7 +85,6 @@ public class BuildingResourceSite extends MapManager.GameObject {
                 player.takeRunningResource(RUNNING_RESOURCE_UPGRADE_COST);
                 setBuilt(true);
                 resource = RESOURCE_AMOUNT_ON_BUILD;
-                story.tutorialResourceBuildingUpgraded = true;
                 story.interruptQueueWithSpeech(ctx.getString(R.string.buildingresourcesite_upgradeSuccess, RUNNING_RESOURCE_UPGRADE_COST));
             } else {
                 story.interruptQueueWithSpeech(ctx.getString(R.string.buildingresourcesite_upgradeNotEnoughResources, RUNNING_RESOURCE_UPGRADE_COST));
@@ -96,7 +93,6 @@ public class BuildingResourceSite extends MapManager.GameObject {
         }
 
         if (resource > 0) {
-            story.tutorialResourceBuildingCollected = true;
             story.interruptQueueWithSpeech(ctx.getString(R.string.buildingresourcesite_collectSuccess, resource));
             player.giveBuildingResource(resource);
             resource = 0;

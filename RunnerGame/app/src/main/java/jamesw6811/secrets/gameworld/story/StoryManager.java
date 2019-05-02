@@ -12,7 +12,7 @@ import jamesw6811.secrets.gameworld.map.site.Headquarters;
 import jamesw6811.secrets.gameworld.map.Player;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
 
-abstract class StoryManager {
+public abstract class StoryManager {
     public static final int ANNOUNCEMENT_PERIOD = 120 * 1000;
     private static final long CHASE_ANNOUNCEMENT_PERIOD = 30 * 1000;
     private long lastAnnouncementTime = -ANNOUNCEMENT_PERIOD;

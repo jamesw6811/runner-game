@@ -94,19 +94,7 @@ public class MapManager {
         // Check interaction
         if (clickState.playClicked) {
             boolean interacted = false;
-            if (headquarters == null) {
-                if (player.getRunningResource() >= Headquarters.RUNNING_RESOURCE_BUILD_COST) {
-                    player.takeRunningResource(Headquarters.RUNNING_RESOURCE_BUILD_COST);
-                    headquarters = new Headquarters(this, player.getPosition());
-                    story.interruptQueueWithSpeech(ctx.getString(R.string.headquarters_build));
-                    story.refreshAnnouncement();
-                    story.tutorialHQbuilt = true;
-                } else {
-                    story.interruptQueueWithSpeech(ctx.getString(R.string.headquarters_build_not_enough_resources, Headquarters.RUNNING_RESOURCE_BUILD_COST));
-                    story.addSpeechToQueue(TextToSpeechRunner.CRED_EARCON);
-                }
-                interacted = true;
-            } else for (GameObject tryInteract : objectsInInteractionRange) {
+            for (GameObject tryInteract : objectsInInteractionRange) {
                 if (tryInteract.isInteractable()) {
                     tryInteract.interact();
                     story.refreshAnnouncement();
@@ -132,17 +120,11 @@ public class MapManager {
             metersSinceRunningResource -= difficultySettings.getMetersPerRunningResource();
             player.giveRunningResource(1);
             story.addSpeechToQueue(TextToSpeechRunner.CRED_EARCON);
-            if (!story.tutorialFirstResource) story.refreshAnnouncement();
-            story.tutorialFirstResource = true;
         }
 
         // Site discovery
         if (objectsInDiscoveryRange.size() == 0) {
-            DiscoveryScheme scheme;
-            todo //replace old discovery below with discovery from StoryManager
-            if (headquarters == null) scheme = discovery.Empty;
-            else scheme = discovery.Mission1;
-            GameObject discovered = SiteFactory.getSite(scheme.discover(), this, player.getPosition());
+            GameObject discovered = SiteFactory.getSite(story.discoverSite(), this, player.getPosition());
             if (discovered != null) {
                 story.addSpeechToQueue(ctx.getString(R.string.discoveredNotification, discovered.getSpokenName()));
                 if (discovered.hasApproachActivity()) discovered.approach();

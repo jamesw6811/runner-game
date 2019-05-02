@@ -18,6 +18,8 @@ import jamesw6811.secrets.gameworld.map.site.ChaseSite;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
 
 public class StoryMission1 extends StoryMission {
+    public static final int NEXT_MISSION_NUMBER = 2;
+
     @Override
     public StoryManager buildStoryManager(Context c, TextToSpeechRunner tts, Random random) {
         return new MissionStoryManager(c, tts, random);
@@ -56,6 +58,7 @@ public class StoryMission1 extends StoryMission {
         int num_medals = sharedPref.getInt(c.getString(R.string.magnolia_medals_key), 0);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt(c.getString(R.string.magnolia_medals_key), num_medals + 1);
+        editor.putInt(c.getString(R.string.latest_mission_unlock_key), NEXT_MISSION_NUMBER);
         editor.apply();
     }
 
@@ -99,10 +102,11 @@ public class StoryMission1 extends StoryMission {
         }
 
         public boolean checkWinConditions() {
-            if (winCondition) {
+            throw new RuntimeException("Not yet implemented"); // Need to add win conditions here and winning speech
+/*            if (true) {
                 addSpeechToQueue(getContext().getString(R.string.win_message));
                 return true;
-            } else return false;
+            } else return false;*/
         }
     }
 }

@@ -7,6 +7,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.Random;
+
 import jamesw6811.secrets.RunMapActivity;
 import jamesw6811.secrets.controls.RunningMediaController;
 import jamesw6811.secrets.gameworld.chase.ChaseManager;
@@ -16,6 +18,7 @@ import jamesw6811.secrets.gameworld.map.MapManager;
 import jamesw6811.secrets.gameworld.map.Player;
 import jamesw6811.secrets.gameworld.story.GameResult;
 import jamesw6811.secrets.gameworld.story.StoryManager;
+import jamesw6811.secrets.gameworld.story.StoryMission;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
 import jamesw6811.secrets.sound.ToneRunner;
 import jamesw6811.secrets.time.TimeTicked;
@@ -45,7 +48,7 @@ public class GameWorld implements TimeTicked {
     private GameUIUpdateProcessor ui;
     private LatLng lastGPS;
 
-    public GameWorld(Location firstGPS, double pace, Context ctx, GameUIUpdateProcessor ui, TextToSpeechRunner tts, ToneRunner tone, RunningMediaController controller) {
+    public GameWorld(Location firstGPS, double pace, int mission, Context ctx, GameUIUpdateProcessor ui, TextToSpeechRunner tts, ToneRunner tone, RunningMediaController controller) {
         this.controller = controller;
         lastClickState = controller.getClickState(true);
         this.ui = ui;
@@ -54,7 +57,7 @@ public class GameWorld implements TimeTicked {
         difficultySettings = new DifficultySettings();
         difficultySettings.setPaceSettings(pace);
 
-        storyManager = new StoryManager(ctx, tts);
+        storyManager = StoryMission.getMission(mission).buildStoryManager(ctx, tts, new Random());
 
         chaseManager = new ChaseManager(difficultySettings, storyManager, tone);
 
