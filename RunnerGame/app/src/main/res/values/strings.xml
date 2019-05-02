@@ -165,4 +165,7 @@ THIS NOTICE DOES NOT APPLY IF: (1) IF YOU ARE A RESIDENT OF ANY JURISDICTION WHI
     <string name="mission_aborted_story">You aborted the mission. Try again later!</string>
     <string name="rewards_contents_none">None</string>
     <string name="latest_mission_unlock_key">latest_mission_unlock</string>
+    <string name="dropsite_spokenName">Dead Drop Date</string>
+    <string name="dropsite_mapName">DDD</string>
+    <string name="dropsite_fixInjuries">You fixed up your injuries at the Dead Drop Date. You are spry as a sapling now!</string>
 </resources>
