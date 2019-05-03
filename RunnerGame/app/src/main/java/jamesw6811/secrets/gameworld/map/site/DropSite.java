@@ -66,7 +66,7 @@ public class DropSite extends MapManager.GameObject {
 
     @Override
     protected boolean isInteractable() {
-        return false;
+        return true;
     }
 
     @Override
