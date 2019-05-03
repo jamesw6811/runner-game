@@ -118,7 +118,13 @@ public class MapManager {
         metersSinceRunningResource += player.getLastDistanceTravelled();
         if (metersSinceRunningResource > difficultySettings.getMetersPerRunningResource()) {
             metersSinceRunningResource -= difficultySettings.getMetersPerRunningResource();
-            player.giveRunningResource(1);
+            int runningResource = 1;
+            if (player.getDistanceFromCollectedRunningResources() <= difficultySettings.getMetersPerRunningResource()){
+                runningResource += 2*player.getUpgradeLevelLapSupporter();
+            } else {
+                runningResource += 2*player.getUpgradeLevelDiscoverySupporter();
+            }
+            player.giveRunningResource(runningResource);
             story.addSpeechToQueue(TextToSpeechRunner.CRED_EARCON);
         }
 
