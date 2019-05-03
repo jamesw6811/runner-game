@@ -10,11 +10,13 @@ import java.util.Random;
 
 import jamesw6811.secrets.R;
 import jamesw6811.secrets.gameworld.map.Player;
-import jamesw6811.secrets.gameworld.map.discovery.CardsBasedDiscoveryScheme;
 import jamesw6811.secrets.gameworld.map.discovery.DiscoveryScheme;
-import jamesw6811.secrets.gameworld.map.site.BuildingResourceSite;
-import jamesw6811.secrets.gameworld.map.site.BuildingSubResourceSite;
-import jamesw6811.secrets.gameworld.map.site.ChaseSite;
+import jamesw6811.secrets.gameworld.map.discovery.MultiStageCardsBasedDiscoveryScheme;
+import jamesw6811.secrets.gameworld.map.site.DropSite;
+import jamesw6811.secrets.gameworld.map.site.EmptySite;
+import jamesw6811.secrets.gameworld.map.site.Mission1AlarmCaptureSite;
+import jamesw6811.secrets.gameworld.map.site.RunningDiscoveryUpgradeSite;
+import jamesw6811.secrets.gameworld.map.site.RunningLapUpgradeSite;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
 
 public class StoryMission1 extends StoryMission {
@@ -67,17 +69,20 @@ public class StoryMission1 extends StoryMission {
         editor.apply();
     }
 
-    class MissionDiscoveryScheme extends CardsBasedDiscoveryScheme {
-        MissionDiscoveryScheme(Random random) {
-            super(random);
-            List<Class> cards = new LinkedList<>();
-            cards.add(BuildingResourceSite.class);
-            cards.add(BuildingSubResourceSite.class);
-            cards.add(ChaseSite.class);
-            cards.add(BuildingResourceSite.class);
-            cards.add(BuildingSubResourceSite.class);
-            cards.add(ChaseSite.class);
-            setDeckAndShuffle(cards);
+    static class MissionDiscoverySchemeOrdered extends MultiStageCardsBasedDiscoveryScheme {
+        MissionDiscoverySchemeOrdered(Random random) {
+            super(null); // null skips shuffling
+            List<Class> stage1 = new LinkedList<>();
+            List<Class> stage2 = new LinkedList<>();
+            List<List<Class>> decks = new LinkedList<>();
+            stage1.add(DropSite.class);
+            stage1.add(Mission1AlarmCaptureSite.class);
+            stage1.add(RunningDiscoveryUpgradeSite.class);
+            stage1.add(RunningLapUpgradeSite.class);
+            stage2.add(EmptySite.class);
+            decks.add(stage1);
+            decks.add(stage2);
+            setDecksAndShuffle(decks);
         }
     }
 
@@ -85,7 +90,7 @@ public class StoryMission1 extends StoryMission {
         private DiscoveryScheme discoveryScheme;
         MissionStoryManager(Context c, TextToSpeechRunner tts, Random random) {
             super(c, tts);
-            discoveryScheme = new MissionDiscoveryScheme(random);
+            discoveryScheme = new MissionDiscoverySchemeOrdered(random);
         }
 
         @Override
@@ -103,7 +108,7 @@ public class StoryMission1 extends StoryMission {
 
         @Override
         void eventReceived(String event) {
-
+            
         }
 
         public boolean checkWinConditions() {
