@@ -10,7 +10,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.security.InvalidParameterException;
 import java.util.Objects;
+
+import jamesw6811.secrets.gameworld.story.StoryMission;
 
 public class DebriefingActivity extends Activity {
     public static final String EXTRA_SUCCESS = "jamesw6811.secrets.DebriefingActivity.EXTRA_SUCCESS";
@@ -24,16 +27,17 @@ public class DebriefingActivity extends Activity {
         Button startButton = findViewById(R.id.debrief_button_done);
         startButton.setOnClickListener(v -> finishDebrief());
         findViewById(R.id.debrief_button_stats).setOnClickListener(v -> startStatsActivity());
+
+        int mission = getIntent().getIntExtra(StoryMission.EXTRA_MISSION, 0);
+        if (mission == 0) throw new InvalidParameterException("No mission specified.");
+        StoryMission storyMission = StoryMission.getMission(mission);
+        ((TextView)findViewById(R.id.title_briefing)).setText(storyMission.getName());
+
         boolean success = getIntent().getBooleanExtra(EXTRA_SUCCESS, false);
         if (success){
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-            int num_medals = sharedPref.getInt(getString(R.string.magnolia_medals_key), 0);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putInt(getString(R.string.magnolia_medals_key), num_medals + 1);
-            editor.apply();
+            ((TextView)findViewById(R.id.contents_story_briefing)).setText(storyMission.getSuccessDebriefing());
         } else {
-            ((TextView)findViewById(R.id.contents_story_briefing)).setText(getString(R.string.mission_aborted_story));
-            ((TextView)findViewById(R.id.contents_rewards)).setText(getString(R.string.rewards_contents_none));
+            ((TextView)findViewById(R.id.contents_story_briefing)).setText(storyMission.getFailureDebriefing());
         }
     }
 

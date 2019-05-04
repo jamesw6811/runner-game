@@ -8,7 +8,11 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.SphericalUtil;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import jamesw6811.secrets.R;
+import jamesw6811.secrets.location.MapUtilities;
 
 /**
  * Created by james on 6/17/2017.
@@ -22,11 +26,15 @@ public class Player extends MapManager.GameObject {
     private int runningResource;
     private int buildingResource;
     private int buildingSubResource;
+    private int upgradeLevelLapSupporter;
+    private int upgradeLevelDiscoverySupporter;
     private boolean injured = false;
+    private List<LatLng> positionsGivenRunningResources;
 
     Player(MapManager mm, LatLng gp) {
         super(mm, mm.getContext().getString(R.string.player_spokenName), gp);
         runningResource = 0;
+        positionsGivenRunningResources = new LinkedList<>();
     }
 
     @Override
@@ -74,8 +82,8 @@ public class Player extends MapManager.GameObject {
     }
 
     void giveRunningResource(int i) {
-        if (i < 1) throw new RuntimeException("Giving less than 1 resource");
         runningResource += i;
+        positionsGivenRunningResources.add(getPosition()); // Add position last, so that we have not "visited" the position we are currently on.
     }
 
     public int getRunningResource() {
@@ -125,5 +133,33 @@ public class Player extends MapManager.GameObject {
 
     public void fixInjury() {
         injured = false;
+    }
+
+    public int getUpgradeLevelLapSupporter() {
+        return upgradeLevelLapSupporter;
+    }
+
+    public void setUpgradeLevelLapSupporter(int upgradeLevelLapSupporter) {
+        this.upgradeLevelLapSupporter = upgradeLevelLapSupporter;
+    }
+
+    public int getUpgradeLevelDiscoverySupporter() {
+        return upgradeLevelDiscoverySupporter;
+    }
+
+    public void setUpgradeLevelDiscoverySupporter(int upgradeLevelDiscoverySupporter) {
+        this.upgradeLevelDiscoverySupporter = upgradeLevelDiscoverySupporter;
+    }
+
+    public List<LatLng> getPositionsGivenRunningResources() {
+        return positionsGivenRunningResources;
+    }
+
+    public void setPositionsGivenRunningResources(List<LatLng> positionsGivenRunningResources) {
+        this.positionsGivenRunningResources = positionsGivenRunningResources;
+    }
+
+    public double getDistanceFromCollectedRunningResources(){
+        return MapUtilities.distanceToClosestLatLng(getPosition(), positionsGivenRunningResources);
     }
 }

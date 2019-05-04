@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import jamesw6811.secrets.gameworld.story.StoryMission;
+
 public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarChangeListener {
     public static final String EXTRA_SEEN_INTRO_ALREADY = "LaunchMenuActivity.EXTRA_SEEN_INTRO_ALREADY";
     private static final int SPEED_OFFSET = 4; // minutes per mile
@@ -40,12 +42,8 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
         speedSettingBar.setOnSeekBarChangeListener(this);
 
         Button startButton = findViewById(R.id.start_game_button);
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startBriefingScreen();
-            }
-        });
+        int latest_mission_unlocked = sharedPref.getInt(getString(R.string.latest_mission_unlock_key), 1);
+        startButton.setOnClickListener(v -> startBriefingScreen(latest_mission_unlocked));
 
         int defaultValue = getResources().getInteger(R.integer.default_pace_key);
         int pacePref = sharedPref.getInt(getString(R.string.saved_pace_key), defaultValue);
@@ -79,8 +77,9 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
         finish();
     }
 
-    private void startBriefingScreen() {
+    private void startBriefingScreen(int missionNumber) {
         Intent intent = new Intent(this, BriefingActivity.class);
+        intent.putExtra(StoryMission.EXTRA_MISSION, missionNumber);
         startActivity(intent);
         finish();
     }

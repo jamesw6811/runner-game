@@ -5,19 +5,25 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class CardsBasedDiscoveryScheme extends DiscoveryScheme{
+public class MultiStageCardsBasedDiscoveryScheme extends DiscoveryScheme{
     private List<Class> cardsDeck;
     private List<Class> cardsDiscard;
+    private List<List<Class>> remainingDecks;
     private Random random;
 
-    protected CardsBasedDiscoveryScheme(Random random){
+    protected MultiStageCardsBasedDiscoveryScheme(Random random){
         this.random = random;
         cardsDeck = new LinkedList<>();
         cardsDiscard = new LinkedList<>();
     }
 
-    protected final void setDeckAndShuffle(List<Class> cards){
-        this.cardsDiscard = cards;
+    protected final void setDecksAndShuffle(List<List<Class>> decks){
+        remainingDecks = decks;
+        nextDeck();
+    }
+
+    private void nextDeck(){
+        this.cardsDiscard = remainingDecks.remove(0);
         this.cardsDeck = new LinkedList<>();
         shuffle();
     }
@@ -25,8 +31,8 @@ public class CardsBasedDiscoveryScheme extends DiscoveryScheme{
     @Override
     public Class discover() {
         if (cardsDeck.size()==0){
-            if (cardsDiscard.size()==0) return null;
-            else shuffle();
+            if (remainingDecks.size()==0) shuffle();
+            else nextDeck();
         }
         Class card = cardsDeck.remove(0);
         cardsDiscard.add(card);
@@ -34,7 +40,7 @@ public class CardsBasedDiscoveryScheme extends DiscoveryScheme{
     }
 
     private void shuffle(){
-        Collections.shuffle(cardsDiscard, random);
+        if (random != null) Collections.shuffle(cardsDiscard, random);
         cardsDeck.addAll(cardsDiscard);
     }
 }

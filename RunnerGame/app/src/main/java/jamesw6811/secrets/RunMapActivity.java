@@ -16,17 +16,19 @@ import android.widget.Toast;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
+import jamesw6811.secrets.location.ManualGameLocationPoller;
 
 public class RunMapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     public static final String EXTRA_PACE = "jamesw6811.secrets.RunMapActivity.EXTRA_PACE";
+    public static final boolean MANUAL_MODE_ENABLED = BuildConfig.DEBUG;
     private static final String LOGTAG = RunMapActivity.class.getName();
     SupportMapFragment mapFragment;
-    private Button button_quit;
     private GoogleMap mMap;
     private Marker lastOpened;
     // A reference to the service used to get location updates.
@@ -64,10 +66,11 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         // Obtain the SupportMapFragment
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        button_quit = findViewById(R.id.button_quit);
+        Button button_quit = findViewById(R.id.button_quit);
         button_quit.setOnClickListener(v -> {
             if (gameService != null) {
                 gameService.abortClicked();
+                button_quit.setEnabled(false);
             }
         });
     }
@@ -117,9 +120,8 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
 
         // Handle starting settings
         Intent intent = getIntent();
-        double pace = intent.getDoubleExtra(EXTRA_PACE, -1);
         Intent serviceIntent = new Intent(this, GameService.class);
-        serviceIntent.putExtra(EXTRA_PACE, pace);
+        serviceIntent.putExtras(getIntent());
 
         bindService(serviceIntent, mServiceConnection,
                 Context.BIND_AUTO_CREATE);
@@ -139,6 +141,18 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
             return;
         }
         bindGameService();
+    }
+
+    private void initializeManualMode() {
+        ManualGameLocationPoller gameLocationPoller = new ManualGameLocationPoller(this, gameService::startGameOrUpdateLocation);
+        gameService.setGameLocationPoller(gameLocationPoller);
+        mMap.setOnMapClickListener(latLng -> {
+            gameLocationPoller.manualSetLocation(latLng);
+        });
+        mMap.setOnMarkerClickListener(marker -> {
+            gameLocationPoller.manualSetLocation(marker.getPosition());
+            return true;
+        });
     }
 
     private void disableMarkerScrolling() {
@@ -183,6 +197,12 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         if (mMapReady) {
             runOnUiThread(mu.getRunnable(mMap));
         }
+    }
+
+    public void gameStarted() {
+        runOnUiThread(() -> {
+            if (MANUAL_MODE_ENABLED) initializeManualMode();
+        });
     }
 
     public abstract static class MapUpdate {

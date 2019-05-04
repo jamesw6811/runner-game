@@ -18,14 +18,12 @@ import jamesw6811.secrets.gameworld.map.MapManager;
  * Created by james on 6/17/2017.
  */
 
-public class Headquarters extends MapManager.GameObject implements ChaseOriginator {
-    public static final int RUNNING_RESOURCE_BUILD_COST = 5;
-    private static final int FIRST_UPGRADE_COST_SUB_RESOURCE = 1;
-    private static final double CHASE_DIFFICULTY = 1.1;
+public class DropSite extends MapManager.GameObject {
+    public static final String EVENT_DROP_SITE_ACTIVATED = "EVENT_DROP_SITE_ACTIVATED";
     private Marker marker;
 
-    public Headquarters(MapManager mm, LatLng pos) {
-        super(mm, mm.getContext().getString(R.string.headquarters_spokenName), pos);
+    public DropSite(MapManager mm, LatLng pos) {
+        super(mm, mm.getContext().getString(R.string.dropsite_spokenName), pos);
     }
 
     protected synchronized void clearMarkerState() {
@@ -48,7 +46,7 @@ public class Headquarters extends MapManager.GameObject implements ChaseOriginat
         if (marker != null) {
             IconGenerator ig = new IconGenerator(ctx);
             ig.setColor(Color.GREEN);
-            Bitmap icon = ig.makeIcon(ctx.getString(R.string.headquarters_mapName));
+            Bitmap icon = ig.makeIcon(ctx.getString(R.string.dropsite_mapName));
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(icon));
         }
     }
@@ -62,7 +60,7 @@ public class Headquarters extends MapManager.GameObject implements ChaseOriginat
     protected void approach() {
         if (player.isInjured()) {
             player.fixInjury();
-            story.addSpeechToQueue(ctx.getString(R.string.headquarters_fixInjuries));
+            story.addSpeechToQueue(ctx.getString(R.string.dropsite_fixInjuries));
         }
     }
 
@@ -73,27 +71,6 @@ public class Headquarters extends MapManager.GameObject implements ChaseOriginat
 
     @Override
     protected void interact() {
-        if (player.getBuildingSubResource() >= FIRST_UPGRADE_COST_SUB_RESOURCE) {
-            player.takeBuildingSubResource(FIRST_UPGRADE_COST_SUB_RESOURCE);
-            chase.startChase(false, CHASE_DIFFICULTY, this);
-            story.interruptQueueWithSpeech(ctx.getString(R.string.headquarters_chaseStarted));
-        } else {
-            story.interruptQueueWithSpeech(ctx.getString(R.string.headquarters_upgradeNotEnoughResources, FIRST_UPGRADE_COST_SUB_RESOURCE));
-        }
-    }
-
-    @Override
-    public void chaseSuccessful() {
-        story.interruptQueueWithSpeech(ctx.getString(R.string.headquarters_chaseSuccess));
-    }
-
-    @Override
-    public void chaseFailed() {
-        story.interruptQueueWithSpeech(ctx.getString(R.string.headquarters_chaseFailed));
-    }
-
-    @Override
-    public CharSequence getChaseMessage() {
-        return ctx.getString(R.string.headquarters_chase_message);
+        story.processEvent(EVENT_DROP_SITE_ACTIVATED);
     }
 }

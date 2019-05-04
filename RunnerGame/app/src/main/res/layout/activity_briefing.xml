@@ -1,132 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:requiresFadingEdge="vertical"
+    android:fadingEdgeLength="50dp"
+    android:background="@color/black"
     tools:context=".BriefingActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white">
 
     <TextView
         android:id="@+id/title_briefing"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:text="Mission Briefing"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="Barking Up the Wrong Tree"
+        android:textSize="30sp" />
 
     <TextView
         android:id="@+id/contents_story_briefing"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:text="@string/mission_1_briefing"
+        android:text="New recruit Agent Almond,
+
+I’m your handler. You can call me Director Stem. You and I are low on the food chain, but we can make a big difference.
+
+As you know, we’ve been in a prolonged conflict with the Redwood Republic, which is hell-bent on making sawdust out of every Oak. We’ve received some intel that there is a defecting Redwood agent, tired of the sap-shed and ready to talk to us.
+
+The task is simple: collect some Vine Cred, convert the Redwood rogue agent to our side, then get yourself to the Dead Drop Date Palm. This is your first mission with the Oaken Empire - don’t let us down.
+
+S
+"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_briefing" />
-
-    <LinearLayout
-        android:id="@+id/briefing_list_layout_1"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contents_story_briefing">
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="50sp"
-            android:layout_height="50sp"
-            android:src="@mipmap/ic_launcher_foreground" />
-
-        <TextView
-            android:id="@+id/contents_objective_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Set up a headquarters in the Tangle Woods"
-            android:textSize="16sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/briefing_list_layout_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/briefing_list_layout_1">
-
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="50sp"
-            android:layout_height="50sp"
-            android:src="@mipmap/ic_launcher_foreground" />
-
-        <TextView
-            android:id="@+id/contents_objective_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Search the area for Intel"
-            android:textSize="16sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/briefing_list_layout_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/briefing_list_layout_2">
-
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="50sp"
-            android:layout_height="50sp"
-            android:src="@mipmap/ic_launcher_foreground" />
-
-        <TextView
-            android:id="@+id/contents_objective_3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Find and catch the double agent"
-            android:textSize="16sp" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/title_rewards"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="Rewards"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/briefing_list_layout_3" />
-
-    <TextView
-        android:id="@+id/contents_rewards"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:text="1x Magnolia Medal"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_rewards" />
+        android:layout_width="match_parent"/>
 
     <TextView
         android:id="@+id/brief_start_button"
@@ -135,10 +50,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:layout_gravity="center"
         android:text="To start the mission,\npress play on your headphones...."
         android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:textSize="20sp" />
+
+    </LinearLayout>
+</ScrollView>

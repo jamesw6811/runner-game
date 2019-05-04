@@ -9,7 +9,6 @@ import com.google.maps.android.SphericalUtil;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Random;
 
 import jamesw6811.secrets.R;
 import jamesw6811.secrets.RunMapActivity;
@@ -17,8 +16,6 @@ import jamesw6811.secrets.controls.RunningMediaController;
 import jamesw6811.secrets.gameworld.chase.ChaseManager;
 import jamesw6811.secrets.gameworld.difficulty.DifficultySettings;
 import jamesw6811.secrets.gameworld.map.discovery.DiscoveryScheme;
-import jamesw6811.secrets.gameworld.map.discovery.OddsBasedDiscoveryScheme;
-import jamesw6811.secrets.gameworld.map.discovery.SiteDiscoverySchemes;
 import jamesw6811.secrets.gameworld.map.site.Headquarters;
 import jamesw6811.secrets.gameworld.map.site.SiteFactory;
 import jamesw6811.secrets.gameworld.story.StoryManager;
@@ -35,7 +32,6 @@ public class MapManager {
     private ChaseManager chase;
     private Context ctx;
     private GameUIUpdateProcessor ui;
-    private SiteDiscoverySchemes discovery;
 
     public MapManager(DifficultySettings dm, StoryManager st, ChaseManager cm, GameUIUpdateProcessor ui, Context ctx, LatLng playerStart) {
         this.ctx = ctx;
@@ -43,7 +39,6 @@ public class MapManager {
         story = st;
         chase = cm;
         this.ui = ui;
-        discovery = new SiteDiscoverySchemes(new Random());
         player = new Player(this, playerStart);
     }
 
@@ -99,19 +94,7 @@ public class MapManager {
         // Check interaction
         if (clickState.playClicked) {
             boolean interacted = false;
-            if (headquarters == null) {
-                if (player.getRunningResource() >= Headquarters.RUNNING_RESOURCE_BUILD_COST) {
-                    player.takeRunningResource(Headquarters.RUNNING_RESOURCE_BUILD_COST);
-                    headquarters = new Headquarters(this, player.getPosition());
-                    story.interruptQueueWithSpeech(ctx.getString(R.string.headquarters_build));
-                    story.refreshAnnouncement();
-                    story.tutorialHQbuilt = true;
-                } else {
-                    story.interruptQueueWithSpeech(ctx.getString(R.string.headquarters_build_not_enough_resources, Headquarters.RUNNING_RESOURCE_BUILD_COST));
-                    story.addSpeechToQueue(TextToSpeechRunner.CRED_EARCON);
-                }
-                interacted = true;
-            } else for (GameObject tryInteract : objectsInInteractionRange) {
+            for (GameObject tryInteract : objectsInInteractionRange) {
                 if (tryInteract.isInteractable()) {
                     tryInteract.interact();
                     story.refreshAnnouncement();
@@ -135,18 +118,19 @@ public class MapManager {
         metersSinceRunningResource += player.getLastDistanceTravelled();
         if (metersSinceRunningResource > difficultySettings.getMetersPerRunningResource()) {
             metersSinceRunningResource -= difficultySettings.getMetersPerRunningResource();
-            player.giveRunningResource(1);
+            int runningResource = 1;
+            if (player.getDistanceFromCollectedRunningResources() <= difficultySettings.getMetersPerRunningResource()){
+                runningResource += 2*player.getUpgradeLevelLapSupporter();
+            } else {
+                runningResource += 2*player.getUpgradeLevelDiscoverySupporter();
+            }
+            player.giveRunningResource(runningResource);
             story.addSpeechToQueue(TextToSpeechRunner.CRED_EARCON);
-            if (!story.tutorialFirstResource) story.refreshAnnouncement();
-            story.tutorialFirstResource = true;
         }
 
         // Site discovery
         if (objectsInDiscoveryRange.size() == 0) {
-            DiscoveryScheme scheme;
-            if (headquarters == null) scheme = discovery.Empty;
-            else scheme = discovery.Mission1;
-            GameObject discovered = SiteFactory.getSite(scheme.discover(), this, player.getPosition());
+            GameObject discovered = SiteFactory.getSite(story.discoverSite(), this, player.getPosition());
             if (discovered != null) {
                 story.addSpeechToQueue(ctx.getString(R.string.discoveredNotification, discovered.getSpokenName()));
                 if (discovered.hasApproachActivity()) discovered.approach();
