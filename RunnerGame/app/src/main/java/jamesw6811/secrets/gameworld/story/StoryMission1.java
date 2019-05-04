@@ -12,6 +12,8 @@ import jamesw6811.secrets.R;
 import jamesw6811.secrets.gameworld.map.Player;
 import jamesw6811.secrets.gameworld.map.discovery.DiscoveryScheme;
 import jamesw6811.secrets.gameworld.map.discovery.MultiStageCardsBasedDiscoveryScheme;
+import jamesw6811.secrets.gameworld.map.site.AlarmCaptureSite;
+import jamesw6811.secrets.gameworld.map.site.CaptureSite;
 import jamesw6811.secrets.gameworld.map.site.DropSite;
 import jamesw6811.secrets.gameworld.map.site.EmptySite;
 import jamesw6811.secrets.gameworld.map.site.Mission1AlarmCaptureSite;
@@ -21,6 +23,7 @@ import jamesw6811.secrets.sound.TextToSpeechRunner;
 
 public class StoryMission1 extends StoryMission {
     public static final int NEXT_MISSION_NUMBER = 2;
+    public static final int NUMBER_OF_CAPTURES_WIN = 1;
 
     @Override
     public StoryManager buildStoryManager(Context c, TextToSpeechRunner tts, Random random) {
@@ -34,20 +37,20 @@ public class StoryMission1 extends StoryMission {
 
     @Override
     public String getBriefing() {
-        return "New recruit Agent Almond,\n" +
+        return "“New recruit Agent Almond,\n" +
                 "\n" +
                 "I’m your handler. You can call me Director Stem. You and I are low on the food chain, but we can make a big difference.\n" +
                 "\n" +
-                "As you know, we’ve been in a prolonged conflict with the Redwood Republic, which is hell-bent on making sawdust out of every Oak. We’ve received some intel that there is a defecting Redwood agent, tired of the sap-shed and ready to talk to us. \n" +
+                "Almond - as you know, the Oaken Empire is threatening to make sawdust out of every Redwood. We must know what they are planning and stop them before anyone gets hurt. We’ve received intelligence suggesting there is a defecting Oaken agent who is tired of the sap-shed and ready to turn over valuable files to us. \n" +
                 "\n" +
-                "The task is simple: collect some Vine Cred, convert the Redwood rogue agent to our side, then get yourself to the Dead Drop Date Palm. This is your first mission with the Oaken Empire - don’t let us down.\n" +
+                "Your mission is simple: collect some Vine Cred. Then find the source and collect the files. Finally, deliver the files to the Dead Drop Date Palm. This is your first mission for the Republic - don’t let us down.”\n" +
                 "\n" +
                 "S\n";
     }
 
     @Override
     public String getSuccessDebriefing() {
-        return "Nice work, Agent Almond. You converted the Redwood Rogue to the Oaken Empire. We’ll need some time to talk to this traitor and learn about the Redwoods’ plans. Check for another mission soon.\n" +
+        return "Nice work, Agent Almond. You found the source and got us valuable information. We’ll need some time to analyze the files. Check for another mission soon.\n" +
                 "\n" +
                 "S\n";
     }
@@ -76,7 +79,7 @@ public class StoryMission1 extends StoryMission {
             List<Class> stage2 = new LinkedList<>();
             List<List<Class>> decks = new LinkedList<>();
             stage1.add(DropSite.class);
-            stage1.add(Mission1AlarmCaptureSite.class);
+            stage1.add(Mission1AlarmCaptureSite.class); // Must normally match number of captures for win condition
             stage1.add(RunningDiscoveryUpgradeSite.class);
             stage1.add(RunningLapUpgradeSite.class);
             stage2.add(EmptySite.class);
@@ -87,7 +90,11 @@ public class StoryMission1 extends StoryMission {
     }
 
     class MissionStoryManager extends StoryManager{
+        private int numberCaptures = 0;
+        private boolean winConditionMet = false;
+        private boolean loseConditionMet = false;
         private DiscoveryScheme discoveryScheme;
+
         MissionStoryManager(Context c, TextToSpeechRunner tts, Random random) {
             super(c, tts);
             discoveryScheme = new MissionDiscoverySchemeOrdered(random);
@@ -108,15 +115,25 @@ public class StoryMission1 extends StoryMission {
 
         @Override
         void eventReceived(String event) {
-            
+            switch (event) {
+                case CaptureSite.EVENT_CAPTURE_SITE_CAPTURED:
+                    numberCaptures++;
+                    break;
+                case AlarmCaptureSite
+                            .EVENT_ALARM_OUT:
+                    loseConditionMet = true;
+                    break;
+                case DropSite.EVENT_DROP_SITE_ACTIVATED:
+                    if (numberCaptures == NUMBER_OF_CAPTURES_WIN) winConditionMet = true;
+                    break;
+            }
         }
 
         public boolean checkWinConditions() {
-            throw new RuntimeException("Not yet implemented"); // Need to add win conditions here and winning speech
-/*            if (true) {
-                addSpeechToQueue(getContext().getString(R.string.win_message));
+            if (winConditionMet) {
+                addSpeechToQueue("Nice work Agent Almond. We have the files. I'm sending the debriefing to your mobile device.");
                 return true;
-            } else return false;*/
+            } else return false;
         }
     }
 }

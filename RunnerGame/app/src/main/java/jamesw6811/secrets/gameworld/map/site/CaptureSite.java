@@ -20,6 +20,7 @@ import jamesw6811.secrets.gameworld.map.MapManager;
 public abstract class CaptureSite extends MapManager.GameObject {
     private Marker marker;
     private boolean captured = false;
+    public static final String EVENT_CAPTURE_SITE_CAPTURED = "CaptureSite.EVENT_CAPTURE_SITE_CAPTURED";
 
     public CaptureSite(MapManager mm, String spokenName, LatLng latLng) {
         super(mm, spokenName, latLng);
@@ -72,6 +73,7 @@ public abstract class CaptureSite extends MapManager.GameObject {
 
     protected void setCaptured(boolean b) {
         captured = b;
+        story.processEvent(EVENT_CAPTURE_SITE_CAPTURED);
         updateMarker();
     }
 
