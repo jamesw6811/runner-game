@@ -97,6 +97,7 @@ public abstract class StoryManager {
 
     // Check if the win/lose conditions for the game have been met and take action accordingly
     public abstract boolean checkWinConditions();
+    public abstract boolean checkLoseConditions();
 
     void doAnnouncementsNow(Player player){
         // Resources announcement

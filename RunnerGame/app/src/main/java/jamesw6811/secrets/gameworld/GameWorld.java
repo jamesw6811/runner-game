@@ -104,6 +104,10 @@ public class GameWorld implements TimeTicked {
             timeTickerThread.stopRunning();
             GameResult gameResult = new GameResult(timeTickerThread.getDuration(), mapManager.getMetersRunningTotal(), true);
             storyManager.setOnDoneSpeaking(() -> ui.finishAndDebrief(gameResult));
+        } else if (storyManager.checkLoseConditions()) {
+            timeTickerThread.stopRunning();
+            GameResult gameResult = new GameResult(timeTickerThread.getDuration(), mapManager.getMetersRunningTotal(), false);
+            storyManager.setOnDoneSpeaking(() -> ui.finishAndDebrief(gameResult));
         }
     }
 

@@ -12,7 +12,8 @@ public abstract class AlarmCaptureSite extends CaptureSite {
         super(mm, spokenName, latLng);
     }
 
-    abstract float getAlarmCaptureSiteTime();
+    protected abstract float getAlarmCaptureSiteTime();
+    protected abstract void doAlarmAnnouncement(int minutesRemaining);
 
     @Override
     protected void setCaptured(boolean b) {
@@ -23,9 +24,15 @@ public abstract class AlarmCaptureSite extends CaptureSite {
     @Override
     protected void tickTime(float timeDelta) {
         super.tickTime(timeDelta);
-        timeAlarmOut -= timeDelta;
-        if (timeAlarmOut <= 0){
-            triggerAlarmOut();
+        if (timeAlarmOut > 0) {
+            int minutesBefore = (int) Math.floor(timeAlarmOut / 60.0);
+            timeAlarmOut -= timeDelta;
+            int minutesAfter = (int) Math.floor(timeAlarmOut / 60.0);
+            if (timeAlarmOut <= 0) {
+                triggerAlarmOut();
+            } else if (minutesAfter != minutesBefore){
+                doAlarmAnnouncement(minutesBefore);
+            }
         }
     }
 

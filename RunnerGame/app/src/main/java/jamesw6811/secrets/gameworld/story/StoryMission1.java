@@ -4,11 +4,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
 import jamesw6811.secrets.R;
+import jamesw6811.secrets.gameworld.map.MapManager;
 import jamesw6811.secrets.gameworld.map.Player;
 import jamesw6811.secrets.gameworld.map.discovery.DiscoveryScheme;
 import jamesw6811.secrets.gameworld.map.discovery.MultiStageCardsBasedDiscoveryScheme;
@@ -16,7 +19,6 @@ import jamesw6811.secrets.gameworld.map.site.AlarmCaptureSite;
 import jamesw6811.secrets.gameworld.map.site.CaptureSite;
 import jamesw6811.secrets.gameworld.map.site.DropSite;
 import jamesw6811.secrets.gameworld.map.site.EmptySite;
-import jamesw6811.secrets.gameworld.map.site.Mission1AlarmCaptureSite;
 import jamesw6811.secrets.gameworld.map.site.RunningDiscoveryUpgradeSite;
 import jamesw6811.secrets.gameworld.map.site.RunningLapUpgradeSite;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
@@ -89,6 +91,54 @@ public class StoryMission1 extends StoryMission {
         }
     }
 
+    public static class Mission1AlarmCaptureSite extends AlarmCaptureSite {
+        private static final int CAPTURE_CRED = 10;
+
+        public Mission1AlarmCaptureSite(MapManager mm, LatLng latLng) {
+            super(mm, "a Redwood Rogue", latLng);
+        }
+
+        @Override
+        protected float getAlarmCaptureSiteTime() {
+            return 60*60*5;
+        }
+
+        @Override
+        protected void doAlarmAnnouncement(int minutesRemaining) {
+            story.addSpeechToQueue("You have " + minutesRemaining + " minutes until the Oaken alarms go off! Get to the drop site.");
+        }
+
+        @Override
+        protected CharSequence getCaptureSiteMapName() {
+            return "RR";
+        }
+
+        @Override
+        protected CharSequence getCaptureSiteSpokenNameBeforeCapture() {
+            return "a Redwood Rogue";
+        }
+
+        @Override
+        protected CharSequence getCaptureSiteSpokenNameAfterCapture() {
+            return "the Redwood Rogue";
+        }
+
+        @Override
+        protected CharSequence getCaptureSiteCaptureSpeech() {
+            return "You turned the Redwood Rogue to your side.";
+        }
+
+        @Override
+        protected CharSequence getCaptureSiteNotEnoughResourcesSpeech() {
+            return "You need " + CAPTURE_CRED + " Vine Cred to turn the Redwood Rogue to your side.";
+        }
+
+        @Override
+        protected int getCaptureSiteCaptureCost() {
+            return CAPTURE_CRED;
+        }
+    }
+
     class MissionStoryManager extends StoryManager{
         private int numberCaptures = 0;
         private boolean winConditionMet = false;
@@ -122,9 +172,13 @@ public class StoryMission1 extends StoryMission {
                 case AlarmCaptureSite
                             .EVENT_ALARM_OUT:
                     loseConditionMet = true;
+                    addSpeechToQueue("The alarm is going off - we need to abort. I'm sending the debriefing to your mobile device.");
                     break;
                 case DropSite.EVENT_DROP_SITE_ACTIVATED:
-                    if (numberCaptures == NUMBER_OF_CAPTURES_WIN) winConditionMet = true;
+                    if (numberCaptures == NUMBER_OF_CAPTURES_WIN){
+                        winConditionMet = true;
+                        addSpeechToQueue("Nice work Agent Almond. We have the files. I'm sending the debriefing to your mobile device.");
+                    }
                     else addSpeechToQueue("We can't end the mission yet, Almond. We still have work to do!");
                     break;
             }
@@ -132,7 +186,13 @@ public class StoryMission1 extends StoryMission {
 
         public boolean checkWinConditions() {
             if (winConditionMet) {
-                addSpeechToQueue("Nice work Agent Almond. We have the files. I'm sending the debriefing to your mobile device.");
+                return true;
+            } else return false;
+        }
+
+        @Override
+        public boolean checkLoseConditions() {
+            if (loseConditionMet) {
                 return true;
             } else return false;
         }
