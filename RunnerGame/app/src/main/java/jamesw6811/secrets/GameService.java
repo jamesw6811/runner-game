@@ -103,8 +103,8 @@ public class GameService extends Service implements GameUIUpdateProcessor {
     @Override
     public IBinder onBind(Intent intent) {
         setPaceFromIntent(intent);
-        int mission = intent.getIntExtra(StoryMission.EXTRA_MISSION, 0);
-        if (mission == 0) throw new InvalidParameterException("No mission specified in extra.");
+        missionNumber = intent.getIntExtra(StoryMission.EXTRA_MISSION, 0);
+        if (missionNumber == 0) throw new InvalidParameterException("No mission specified in extra.");
         onAllBind();
         if (gameLocationPoller != null) gameLocationPoller.startPolling();
         return mBinder;
