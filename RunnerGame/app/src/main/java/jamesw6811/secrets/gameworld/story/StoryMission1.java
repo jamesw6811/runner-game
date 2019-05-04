@@ -125,6 +125,7 @@ public class StoryMission1 extends StoryMission {
                     break;
                 case DropSite.EVENT_DROP_SITE_ACTIVATED:
                     if (numberCaptures == NUMBER_OF_CAPTURES_WIN) winConditionMet = true;
+                    else addSpeechToQueue("We can't end the mission yet, Almond. We still have work to do!");
                     break;
             }
         }
