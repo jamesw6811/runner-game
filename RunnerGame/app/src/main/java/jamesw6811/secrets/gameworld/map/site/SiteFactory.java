@@ -27,7 +27,7 @@ public class SiteFactory {
         } else if (cls == RunningDiscoveryUpgradeSite.class){
             return new RunningDiscoveryUpgradeSite(mapManager, position);
         } else if (cls == StoryMission1.Mission1AlarmCaptureSite.class){
-            return new RunningDiscoveryUpgradeSite(mapManager, position);
+            return new StoryMission1.Mission1AlarmCaptureSite(mapManager, position);
         } else throw new UnsupportedOperationException("That site is not registered with SiteFactory.");
     }
 }
