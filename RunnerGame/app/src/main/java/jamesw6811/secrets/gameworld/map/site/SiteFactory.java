@@ -6,6 +6,7 @@ import jamesw6811.secrets.gameworld.map.MapManager;
 import jamesw6811.secrets.gameworld.story.StoryMission1;
 
 public class SiteFactory {
+    // TODO: Consider instead using self-registering Supplier subclasses in each Site.
     public static MapManager.GameObject getSite(Class cls, MapManager mapManager, LatLng position){
         if (cls == null) return null;
 
