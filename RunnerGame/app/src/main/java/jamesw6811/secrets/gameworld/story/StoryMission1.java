@@ -93,6 +93,7 @@ public class StoryMission1 extends StoryMission {
 
     public static class Mission1AlarmCaptureSite extends AlarmCaptureSite {
         private static final int CAPTURE_CRED = 10;
+        private static final int ALARM_TIMEOUT = 60*5;
 
         public Mission1AlarmCaptureSite(MapManager mm, LatLng latLng) {
             super(mm, "a Redwood Rogue", latLng);
@@ -100,7 +101,7 @@ public class StoryMission1 extends StoryMission {
 
         @Override
         protected float getAlarmCaptureSiteTime() {
-            return 60*60*5;
+            return ALARM_TIMEOUT;
         }
 
         @Override
@@ -185,16 +186,12 @@ public class StoryMission1 extends StoryMission {
         }
 
         public boolean checkWinConditions() {
-            if (winConditionMet) {
-                return true;
-            } else return false;
+            return winConditionMet;
         }
 
         @Override
         public boolean checkLoseConditions() {
-            if (loseConditionMet) {
-                return true;
-            } else return false;
+            return loseConditionMet;
         }
     }
 }
