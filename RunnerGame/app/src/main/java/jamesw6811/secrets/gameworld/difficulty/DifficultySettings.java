@@ -6,7 +6,7 @@ public class DifficultySettings {
     private static final String LOGTAG = DifficultySettings.class.getName();
     private static final double PACE_BASELINE = 9; //minutes per mile baseline for setting speeds based on pace, all settings scale off of this number.
     private static final double PACE_MINIMUM = 1;
-    private double metersPerRunningResource = 50;
+    private double metersPerRunningResource = 130;
     private double metersInSight = 50;
     private double metersDiscoveryMinimum = 130;
     private double chaseDefaultDistanceMeters = 35; //meters to outrun other runner

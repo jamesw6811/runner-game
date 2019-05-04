@@ -24,7 +24,7 @@ import jamesw6811.secrets.gameworld.map.site.RunningLapUpgradeSite;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
 
 public class StoryMission1 extends StoryMission {
-    public static final int NEXT_MISSION_NUMBER = 2;
+    public static final int NEXT_MISSION_NUMBER = 1; // Setting to 2 before having a mission 2 will crash
     public static final int NUMBER_OF_CAPTURES_WIN = 1;
 
     @Override
