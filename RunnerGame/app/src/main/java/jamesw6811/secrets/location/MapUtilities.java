@@ -20,6 +20,13 @@ public class MapUtilities {
         return ll;
     }
 
+    public static Location LatLngToLocation(LatLng ll) {
+        Location l = new Location(MapUtilities.class.getName());
+        l.setLatitude(ll.latitude);
+        l.setLongitude(ll.longitude);
+        return l;
+    }
+
     public static double distanceToClosestLatLng(LatLng point, List<LatLng> list) {
         if (list.size() == 0) return Float.POSITIVE_INFINITY;
         double closestDistance = Float.MAX_VALUE;
