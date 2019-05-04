@@ -80,6 +80,7 @@ public class StoryMission1 extends StoryMission {
             List<Class> stage1 = new LinkedList<>();
             List<Class> stage2 = new LinkedList<>();
             List<List<Class>> decks = new LinkedList<>();
+            stage1.add(EmptySite.class);
             stage1.add(DropSite.class);
             stage1.add(Mission1AlarmCaptureSite.class); // Must normally match number of captures for win condition
             stage1.add(RunningDiscoveryUpgradeSite.class);
@@ -161,7 +162,7 @@ public class StoryMission1 extends StoryMission {
         }
 
         public void gameStarted() {
-            addSpeechToQueue(getContext().getString(R.string.game_started));
+            addSpeechToQueue("Agent Almond this is S. Come in. Let's get to work. Find the source and and collect the files. You'll need 10 Vine Cred for the source, which you can get by running around.");
         }
 
         @Override
@@ -169,6 +170,7 @@ public class StoryMission1 extends StoryMission {
             switch (event) {
                 case CaptureSite.EVENT_CAPTURE_SITE_CAPTURED:
                     numberCaptures++;
+                    addSpeechToQueue("S here. You got the files, but you are being trailed and need to get to the Dead Drop. Fast. A silent alarm will trip in 5 minutes.");
                     break;
                 case AlarmCaptureSite
                             .EVENT_ALARM_OUT:
