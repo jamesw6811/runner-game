@@ -23,6 +23,7 @@ public class GameLocationPoller {
     private LocationRequest mLocationRequest;
     private NewLocationListener newLocationListener;
 
+
     public GameLocationPoller(Context ctx, NewLocationListener newLocationListener) {
         this.newLocationListener = newLocationListener;
         // Start location listening
@@ -35,10 +36,10 @@ public class GameLocationPoller {
             }
         };
         createLocationRequest();
-        getLastLocation();
     }
 
     public void startPolling() {
+        getLastLocation();
         requestLocationUpdates();
     }
 
