@@ -119,6 +119,11 @@ public class StoryMission2 extends StoryMission {
         }
 
         @Override
+        protected CharSequence getChaseSiteMapName() {
+            return "Guard";
+        }
+
+        @Override
         protected double getChaseDifficulty() {
             return 0.70;
         }

@@ -33,10 +33,12 @@ public abstract class ChaseSite extends MapManager.GameObject implements ChaseOr
         if (marker != null) {
             IconGenerator ig = new IconGenerator(ctx);
             ig.setColor(Color.RED);
-            Bitmap icon = ig.makeIcon(ctx.getString(R.string.chasesite_mapName));
+            Bitmap icon = ig.makeIcon(getChaseSiteMapName());
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(icon));
         }
     }
+
+    protected abstract CharSequence getChaseSiteMapName();
 
     @Override
     protected void clearMarkerState() {
