@@ -30,6 +30,7 @@ public class Player extends MapManager.GameObject {
     private int buildingSubResource;
     private int upgradeLevelLapSupporter;
     private int upgradeLevelDiscoverySupporter;
+    private int upgradeLevelTrapSupporter;
     private boolean injured = false;
     private List<LatLng> positionsGivenRunningResources;
 
@@ -174,5 +175,13 @@ public class Player extends MapManager.GameObject {
 
     public double getDistanceFromCollectedRunningResources(){
         return MapUtilities.distanceToClosestLatLng(getPosition(), positionsGivenRunningResources);
+    }
+
+    public int getUpgradeLevelTrapSupporter() {
+        return upgradeLevelTrapSupporter;
+    }
+
+    public void setUpgradeLevelTrapSupporter(int upgradeLevelTrapSupporter) {
+        this.upgradeLevelTrapSupporter = upgradeLevelTrapSupporter;
     }
 }
