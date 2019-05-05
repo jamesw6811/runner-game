@@ -7,8 +7,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.SphericalUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
 import jamesw6811.secrets.R;
 import jamesw6811.secrets.RunMapActivity;
@@ -23,6 +25,7 @@ import jamesw6811.secrets.sound.TextToSpeechRunner;
 
 public class MapManager {
     private ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
+    private Map<String, GameObject> gameObjectRegistry = new HashMap<>();
     private Headquarters headquarters = null;
     private double metersSinceRunningResource = 0;
     private float metersRunningTotal = 0;
@@ -196,8 +199,16 @@ public class MapManager {
             updateMarker();
         }
 
-        public MapManager getMap() {
+        public final MapManager getMap() {
             return mm;
+        }
+
+        protected final GameObject getRegisteredObject(String id){
+            return mm.gameObjectRegistry.get(id);
+        }
+
+        protected final void registerThis(String id){
+            mm.gameObjectRegistry.put(id, this);
         }
 
         public void destroy() {

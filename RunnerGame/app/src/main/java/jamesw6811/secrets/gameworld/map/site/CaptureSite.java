@@ -10,6 +10,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+
 import jamesw6811.secrets.R;
 import jamesw6811.secrets.gameworld.map.MapManager;
 
@@ -32,6 +36,13 @@ public abstract class CaptureSite extends MapManager.GameObject {
     protected abstract CharSequence getCaptureSiteCaptureSpeech();
     protected abstract CharSequence getCaptureSiteNotEnoughResourcesSpeech();
     protected abstract int getCaptureSiteCaptureCost();
+
+    protected String getCaptureSiteDependency() {
+        return null;
+    }
+    protected String getCaptureSiteDependencyNotMetSpeech() {
+        return "";
+    }
 
     protected synchronized void clearMarkerState() {
         marker = null;
@@ -85,7 +96,9 @@ public abstract class CaptureSite extends MapManager.GameObject {
     @Override
     protected void interact() {
         if (!captured) {
-            if (player.getRunningResource() >= getCaptureSiteCaptureCost()) {
+            if (getCaptureSiteDependency() != null && !((CaptureSite)getRegisteredObject(getCaptureSiteDependency())).captured) {
+                story.interruptQueueWithSpeech(getCaptureSiteDependencyNotMetSpeech());
+            } else if (player.getRunningResource() >= getCaptureSiteCaptureCost()) {
                 player.takeRunningResource(getCaptureSiteCaptureCost());
                 setCaptured(true);
                 story.interruptQueueWithSpeech(getCaptureSiteCaptureSpeech());
