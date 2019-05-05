@@ -12,7 +12,7 @@ import com.google.maps.android.ui.IconGenerator;
 
 import jamesw6811.secrets.gameworld.map.MapManager;
 
-public abstract class TrapSite extends MapManager.GameObject {
+public class TrapSite extends MapManager.GameObject {
     private Marker marker;
 
     public TrapSite(MapManager mm, LatLng position) {
