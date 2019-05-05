@@ -10,11 +10,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-
-import jamesw6811.secrets.R;
 import jamesw6811.secrets.gameworld.map.MapManager;
 
 /**
@@ -96,7 +91,7 @@ public abstract class CaptureSite extends MapManager.GameObject {
     @Override
     protected void interact() {
         if (!captured) {
-            if (getCaptureSiteDependency() != null && !((CaptureSite)getRegisteredObject(getCaptureSiteDependency())).captured) {
+            if (dependencyCaptureIsNotMet()) {
                 story.interruptQueueWithSpeech(getCaptureSiteDependencyNotMetSpeech());
             } else if (player.getRunningResource() >= getCaptureSiteCaptureCost()) {
                 player.takeRunningResource(getCaptureSiteCaptureCost());
@@ -106,5 +101,11 @@ public abstract class CaptureSite extends MapManager.GameObject {
                 story.interruptQueueWithSpeech(getCaptureSiteNotEnoughResourcesSpeech());
             }
         }
+    }
+
+    private boolean dependencyCaptureIsNotMet(){
+        return getCaptureSiteDependency() != null &&
+                (getRegisteredObject(getCaptureSiteDependency()) == null ||
+                !((CaptureSite)getRegisteredObject(getCaptureSiteDependency())).captured);
     }
 }

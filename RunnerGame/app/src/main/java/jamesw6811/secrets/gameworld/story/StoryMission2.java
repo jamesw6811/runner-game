@@ -17,6 +17,7 @@ import jamesw6811.secrets.gameworld.map.discovery.DiscoveryScheme;
 import jamesw6811.secrets.gameworld.map.discovery.MultiStageCardsBasedDiscoveryScheme;
 import jamesw6811.secrets.gameworld.map.site.AlarmCaptureSite;
 import jamesw6811.secrets.gameworld.map.site.CaptureSite;
+import jamesw6811.secrets.gameworld.map.site.ChaseSite;
 import jamesw6811.secrets.gameworld.map.site.ChaserCaptureSite;
 import jamesw6811.secrets.gameworld.map.site.DropSite;
 import jamesw6811.secrets.gameworld.map.site.EmptySite;
@@ -95,6 +96,7 @@ public class StoryMission2 extends StoryMission {
             stage3.add(DropSite.class);
             stage3.add(RunningDiscoveryUpgradeSite.class);
             stage3.add(RunningLapUpgradeSite.class);
+            stage3.add(Mission2GuardSite.class);
 
             stage4.add(Mission2AlarmCaptureSite.class); // Must normally match number of captures for win condition
 
@@ -107,6 +109,39 @@ public class StoryMission2 extends StoryMission {
             decks.add(stage4);
             decks.add(stage5);
             setDecksAndShuffle(decks);
+        }
+    }
+
+    public static class Mission2GuardSite extends ChaseSite {
+
+        public Mission2GuardSite(MapManager mm, LatLng position) {
+            super(mm, "a Nightshade Guard Tower", position);
+        }
+
+        @Override
+        protected double getChaseDifficulty() {
+            return 0.70;
+        }
+
+        @Override
+        protected String getChaseStartMessage() {
+            return "A Nightshade Guard begins chasing you! Run!";
+        }
+
+        @Override
+        public void chaseSuccessful() {
+            story.addSpeechToQueue("You lost the Nightshade guard. Nice work.");
+        }
+
+        @Override
+        public void chaseFailed() {
+            story.addSpeechToQueue("The Nightshade guard caught you. You got away but you were injured. Get to a Dead Drop to patch yourself up.");
+            player.injure();
+        }
+
+        @Override
+        public CharSequence getChaseMessage() {
+            return "You are being chased by a Nightshade guard. Run away!";
         }
     }
 
@@ -165,7 +200,7 @@ public class StoryMission2 extends StoryMission {
 
         private static final int CAPTURE_CRED = 10;
 
-        public Mission2FinalCaptureSite(MapManager mm, String spokenName, LatLng latLng) {
+        public Mission2FinalCaptureSite(MapManager mm, LatLng latLng) {
             super(mm, "the Nightshade Database", latLng);
         }
 
@@ -221,7 +256,7 @@ public class StoryMission2 extends StoryMission {
 
         @Override
         public void chaseFailed() {
-            story.interruptQueueWithSpeech("The Nightshade guard caught you. You get away but you were injured. Next time you may not be so lucky. Get to a Dead Drop to patch yourself up.");
+            story.interruptQueueWithSpeech("The Nightshade guard caught you. You got away but you were injured. Get to a Dead Drop to patch yourself up.");
             player.injure();
         }
 
@@ -264,14 +299,14 @@ public class StoryMission2 extends StoryMission {
                 case AlarmCaptureSite
                             .EVENT_ALARM_OUT:
                     loseConditionMet = true;
-                    addSpeechToQueue("Nightshade is catching up with you - we need to abort. I'm sending the debriefing to your mobile device.");
+                    interruptQueueWithSpeech("Nightshade is catching up with you - we need to abort. I'm sending the debriefing to your mobile device.");
                     break;
                 case DropSite.EVENT_DROP_SITE_ACTIVATED:
                     if (numberCaptures == NUMBER_OF_CAPTURES_WIN){
                         winConditionMet = true;
-                        addSpeechToQueue("Nice work Agent Almond. Database connection established. I'm sending the debriefing to your mobile device.");
+                        interruptQueueWithSpeech("Nice work Agent Almond. Database connection established. I'm sending the debriefing to your mobile device.");
                     }
-                    else addSpeechToQueue("We can't end the mission yet, Almond. We still have work to do!");
+                    else interruptQueueWithSpeech("We can't end the mission yet, Almond. We still have work to do!");
                     break;
             }
         }

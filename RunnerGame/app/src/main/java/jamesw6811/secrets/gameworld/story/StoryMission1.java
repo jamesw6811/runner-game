@@ -45,7 +45,7 @@ public class StoryMission1 extends StoryMission {
                 "\n" +
                 "Almond - as you know, the Oaken Empire is threatening to make sawdust out of every Redwood. We must know what they are planning and stop them before anyone gets hurt. We’ve received intelligence suggesting there is a defecting Oaken agent who is tired of the sap-shed and ready to turn over valuable files to us. \n" +
                 "\n" +
-                "Your mission is simple: collect some Vine Cred. Then find the source and collect the files. Finally, deliver the files to the Dead Drop Date Palm. This is your first mission for the Republic - don’t let us down.\n" +
+                "Your mission is simple: collect some Vine Cred. Then find the source and collect the files. Finally, deliver the files to one of our Dogwood Dead Drops. This is your first mission for the Republic - don’t let us down.\n" +
                 "\n" +
                 "S\n";
     }
@@ -170,19 +170,19 @@ public class StoryMission1 extends StoryMission {
             switch (event) {
                 case CaptureSite.EVENT_CAPTURE_SITE_CAPTURED:
                     numberCaptures++;
-                    addSpeechToQueue("You got the files, but I detect that you are being trailed and need to get to the Dead Drop. Fast. I estimate you have 5 minutes.");
+                    interruptQueueWithSpeech("You got the files, but I detect that you are being trailed and need to get to the Dead Drop. Fast. I estimate you have 5 minutes.");
                     break;
                 case AlarmCaptureSite
                             .EVENT_ALARM_OUT:
                     loseConditionMet = true;
-                    addSpeechToQueue("The enemy agents are catching us up. We need to abort for now. I'm sending the debriefing to your mobile device.");
+                    interruptQueueWithSpeech("The enemy agents are catching us up. We need to abort for now. I'm sending the debriefing to your mobile device.");
                     break;
                 case DropSite.EVENT_DROP_SITE_ACTIVATED:
                     if (numberCaptures == NUMBER_OF_CAPTURES_WIN){
                         winConditionMet = true;
-                        addSpeechToQueue("Nice work Agent Almond. We have the files. I'm sending the debriefing to your mobile device.");
+                        interruptQueueWithSpeech("Nice work Agent Almond. We have the files. I'm sending the debriefing to your mobile device.");
                     }
-                    else addSpeechToQueue("We can't end the mission yet, Almond. We still have work to do!");
+                    else interruptQueueWithSpeech("We can't end the mission yet, Almond. We still have work to do!");
                     break;
             }
         }

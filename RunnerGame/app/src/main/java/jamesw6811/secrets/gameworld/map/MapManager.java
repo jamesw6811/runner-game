@@ -56,13 +56,6 @@ public class MapManager {
         newsights.removeAll(oldsights);
         newsights.remove(player);
 
-        // Handle approach activities
-        for (GameObject tryApproach : newsights) {
-            if (tryApproach.hasApproachActivity()) {
-                tryApproach.approach();
-            }
-        }
-
         // Speak location names
         if (newsights.size() > 0) {
             Iterator<GameObject> nextSight = newsights.iterator();
@@ -79,6 +72,13 @@ public class MapManager {
             }
             story.addSpeechToQueue(ctx.getString(R.string.approachingAnnounce, sightsText));
         }
+
+        // Handle approach activities
+        for (GameObject tryApproach : newsights) {
+            if (tryApproach.hasApproachActivity()) {
+                tryApproach.approach();
+            }
+        }
     }
 
     // Handle interaction with nearby sites based on user input
@@ -86,7 +86,7 @@ public class MapManager {
         // Don't allow interaction if injured
         if (player.isInjured()) {
             if (clickState.playClicked)
-                story.addSpeechToQueue(ctx.getString(R.string.interaction_injured));
+                story.addSpeechToQueue("You are too injured to do that. Get to a Dead Drop to patch yourself up.");
             return;
         }
 

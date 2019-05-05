@@ -14,12 +14,11 @@ import jamesw6811.secrets.R;
 import jamesw6811.secrets.gameworld.chase.ChaseOriginator;
 import jamesw6811.secrets.gameworld.map.MapManager;
 
-public class ChaseSite extends MapManager.GameObject implements ChaseOriginator {
-    private static final double CHASE_DIFFICULTY = 0.66; // 2/3rd the player pace
+public abstract class ChaseSite extends MapManager.GameObject implements ChaseOriginator {
     private Marker marker;
 
-    public ChaseSite(MapManager mm, LatLng position) {
-        super(mm, mm.getContext().getString(R.string.chasesite_spokenName), position);
+    public ChaseSite(MapManager mm, String spokenName, LatLng position) {
+        super(mm, spokenName, position);
     }
 
     @Override
@@ -56,23 +55,10 @@ public class ChaseSite extends MapManager.GameObject implements ChaseOriginator 
 
     @Override
     protected void approach() {
-        chase.startChase(true, CHASE_DIFFICULTY, this);
-        story.interruptQueueWithSpeech(ctx.getString(R.string.chasesite_chaseStarted));
+        chase.startChase(true, getChaseDifficulty(), this);
+        story.interruptQueueWithSpeech(getChaseStartMessage());
     }
 
-    @Override
-    public void chaseSuccessful() {
-        story.addSpeechToQueue(ctx.getString(R.string.chasesite_chaseSuccess));
-    }
-
-    @Override
-    public void chaseFailed() {
-        story.interruptQueueWithSpeech(ctx.getString(R.string.chasesite_chaseFailed));
-        player.injure();
-    }
-
-    @Override
-    public CharSequence getChaseMessage() {
-        return ctx.getString(R.string.chasesite_chaseMessage);
-    }
+    protected abstract double getChaseDifficulty();
+    protected abstract String getChaseStartMessage();
 }

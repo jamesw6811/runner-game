@@ -167,5 +167,5 @@ THIS NOTICE DOES NOT APPLY IF: (1) IF YOU ARE A RESIDENT OF ANY JURISDICTION WHI
     <string name="latest_mission_unlock_key">latest_mission_unlock</string>
     <string name="dropsite_spokenName">a Dogwood Dead Drop</string>
     <string name="dropsite_mapName">DDD</string>
-    <string name="dropsite_fixInjuries">You fixed up your injuries at the Dead Drop Date. You are spry as a sapling now!</string>
+    <string name="dropsite_fixInjuries">You fixed up your injuries at the Dogwood Dead Drop. You are spry as a sapling now!</string>
 </resources>
