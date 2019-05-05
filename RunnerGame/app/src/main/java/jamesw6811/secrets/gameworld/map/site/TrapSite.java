@@ -10,15 +10,13 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 
-import jamesw6811.secrets.gameworld.chase.ChaseOriginator;
 import jamesw6811.secrets.gameworld.map.MapManager;
 
-public abstract class ChaseSite extends MapManager.GameObject implements ChaseOriginator {
+public abstract class TrapSite extends MapManager.GameObject {
     private Marker marker;
-    private boolean disabled = false;
 
-    public ChaseSite(MapManager mm, String spokenName, LatLng position) {
-        super(mm, spokenName, position);
+    public TrapSite(MapManager mm, LatLng position) {
+        super(mm, "a Venus Trap", position);
     }
 
     @Override
@@ -33,12 +31,10 @@ public abstract class ChaseSite extends MapManager.GameObject implements ChaseOr
         if (marker != null) {
             IconGenerator ig = new IconGenerator(ctx);
             ig.setColor(Color.RED);
-            Bitmap icon = ig.makeIcon(getChaseSiteMapName());
+            Bitmap icon = ig.makeIcon("Trap");
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(icon));
         }
     }
-
-    protected abstract CharSequence getChaseSiteMapName();
 
     @Override
     protected void clearMarkerState() {
@@ -57,16 +53,10 @@ public abstract class ChaseSite extends MapManager.GameObject implements ChaseOr
 
     @Override
     protected void approach() {
-        if (!disabled) {
-            chase.startChase(true, getChaseDifficulty(), this);
-            story.interruptQueueWithSpeech(getChaseStartMessage());
+        if (chase.isChaseHappening()){
+            story.interruptQueueWithSpeech("The Venus Trap caught the " + chase.getChaserName() + " and you get some Vine Cred!");
+            chase.endChaseTrap();
+            player.giveRunningResource(3 + player.getUpgradeLevelTrapSupporter()*3);
         }
     }
-
-    public void chaserTrapped(){
-        disabled = true;
-    }
-
-    protected abstract double getChaseDifficulty();
-    protected abstract String getChaseStartMessage();
 }

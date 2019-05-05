@@ -18,15 +18,13 @@ import jamesw6811.secrets.controls.RunningMediaController;
 import jamesw6811.secrets.gameworld.chase.ChaseManager;
 import jamesw6811.secrets.gameworld.difficulty.DifficultySettings;
 import jamesw6811.secrets.gameworld.map.discovery.DiscoveryScheme;
-import jamesw6811.secrets.gameworld.map.site.Headquarters;
 import jamesw6811.secrets.gameworld.map.site.SiteFactory;
 import jamesw6811.secrets.gameworld.story.StoryManager;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
 
 public class MapManager {
-    private ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
+    private ArrayList<GameObject> gameObjects = new ArrayList<>();
     private Map<String, GameObject> gameObjectRegistry = new HashMap<>();
-    private Headquarters headquarters = null;
     private double metersSinceRunningResource = 0;
     private float metersRunningTotal = 0;
     private Player player;

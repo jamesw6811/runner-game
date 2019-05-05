@@ -148,6 +148,11 @@ public class StoryMission2 extends StoryMission {
         public CharSequence getChaseMessage() {
             return "You are being chased by a Nightshade guard. Run away!";
         }
+
+        @Override
+        public CharSequence getChaserName() {
+            return "a Nightshade guard";
+        }
     }
 
     public static class Mission2AlarmCaptureSite extends AlarmCaptureSite {
@@ -266,8 +271,18 @@ public class StoryMission2 extends StoryMission {
         }
 
         @Override
+        public void chaserTrapped() {
+
+        }
+
+        @Override
         public CharSequence getChaseMessage() {
             return "A Nightshade guard is chasing you. Lose him.";
+        }
+
+        @Override
+        public CharSequence getChaserName() {
+            return "a Nightshade Guard";
         }
     }
 

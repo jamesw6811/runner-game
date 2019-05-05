@@ -76,8 +76,17 @@ public class ChaseManager {
         return (int) Math.round(distance * difficulty.getNavBeepPeriodMultiplier());
     }
 
-    private boolean isChaseHappening() {
+    public boolean isChaseHappening() {
         return chaseHappening;
+    }
+
+    public void endChaseTrap() {
+        chaseHappening = false;
+        chaseSite.chaserTrapped();
+    }
+
+    public CharSequence getChaserName() {
+        return chaseSite.getChaserName();
     }
 
     private CharSequence getChaseMessage() {

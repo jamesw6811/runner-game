@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Random;
 
 import jamesw6811.secrets.R;
-import jamesw6811.secrets.gameworld.map.site.Headquarters;
 import jamesw6811.secrets.gameworld.map.Player;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
 

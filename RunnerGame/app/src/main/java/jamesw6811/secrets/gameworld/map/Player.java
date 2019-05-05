@@ -85,7 +85,7 @@ public class Player extends MapManager.GameObject {
         return lastHeadingTravelled;
     }
 
-    void giveRunningResource(int i) {
+    public void giveRunningResource(int i) {
         if (runningResource != runningResourceMax){
             int oldRunningResource = runningResource;
             runningResource += i;
