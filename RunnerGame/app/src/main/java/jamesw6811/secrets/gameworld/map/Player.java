@@ -90,9 +90,10 @@ public class Player extends MapManager.GameObject {
             int oldRunningResource = runningResource;
             runningResource += i;
             runningResource = Math.min(runningResource, runningResourceMax);
-            for (int x = 0; x < runningResource - oldRunningResource; x++) {
-                story.addSpeechToQueue(TextToSpeechRunner.CRED_EARCON);
+            for (int x = 0; x < runningResource - oldRunningResource - 1; x++) {
+                story.addSpeechToQueue(TextToSpeechRunner.EARCON_CRED_SHORT);
             }
+            story.addSpeechToQueue(TextToSpeechRunner.EARCON_CRED);
         }
         if (runningResource == runningResourceMax){
             story.addSpeechToQueue("You have " + runningResource + " Vine Cred, which is the most you can hold right now.");
