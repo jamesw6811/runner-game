@@ -27,6 +27,7 @@ public class DebriefingActivity extends Activity {
         Button startButton = findViewById(R.id.debrief_button_done);
         startButton.setOnClickListener(v -> finishDebrief());
         findViewById(R.id.debrief_button_stats).setOnClickListener(v -> startStatsActivity());
+        findViewById(R.id.debrief_button_back).setOnClickListener(v -> startMenuActivity());
 
         int mission = getIntent().getIntExtra(StoryMission.EXTRA_MISSION, 0);
         if (mission == 0) throw new InvalidParameterException("No mission specified.");
@@ -39,6 +40,13 @@ public class DebriefingActivity extends Activity {
         } else {
             ((TextView)findViewById(R.id.contents_story_briefing)).setText(storyMission.getFailureDebriefing());
         }
+    }
+
+    private void startMenuActivity() {
+        Intent intent = new Intent(this, LaunchMenuActivity.class);
+        intent.putExtra(LaunchMenuActivity.EXTRA_SEEN_INTRO_ALREADY, true);
+        startActivity(intent);
+        finish();
     }
 
     private void startStatsActivity(){
