@@ -125,7 +125,6 @@ public class MapManager {
                 runningResource += 2*player.getUpgradeLevelDiscoverySupporter();
             }
             player.giveRunningResource(runningResource);
-            story.addSpeechToQueue(TextToSpeechRunner.CRED_EARCON);
         }
 
         // Site discovery
