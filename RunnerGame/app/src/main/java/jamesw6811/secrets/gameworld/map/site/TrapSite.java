@@ -54,7 +54,7 @@ public class TrapSite extends MapManager.GameObject {
     @Override
     protected void approach() {
         if (chase.isChaseHappening()){
-            story.interruptQueueWithSpeech("The Venus Trap caught the " + chase.getChaserName() + " and you get some Vine Cred!");
+            story.addSpeechToQueue("The Venus Trap caught the " + chase.getChaserName() + " and you get some Vine Cred!");
             chase.endChaseTrap();
             player.giveRunningResource(3 + player.getUpgradeLevelTrapSupporter()*3, false);
         }
