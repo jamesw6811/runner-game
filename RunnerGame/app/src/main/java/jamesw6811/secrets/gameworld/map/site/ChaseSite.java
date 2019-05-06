@@ -59,9 +59,11 @@ public abstract class ChaseSite extends MapManager.GameObject implements ChaseOr
     @Override
     protected void approach() {
         if (!disabled) {
-            chase.startChase(true, getChaseDifficulty(), this);
-            story.interruptQueueWithSpeech(getChaseStartMessage());
-            story.processEvent(EVENT_CHASE_SITE_CHASE_STARTED);
+            boolean chaseStarted = chase.startChase(true, getChaseDifficulty(), this);
+            if (chaseStarted) {
+                story.interruptQueueWithSpeech(getChaseStartMessage());
+                story.processEvent(EVENT_CHASE_SITE_CHASE_STARTED);
+            }
         }
     }
 
