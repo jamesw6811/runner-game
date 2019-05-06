@@ -30,8 +30,12 @@ public abstract class UpgradeSite extends MapManager.GameObject {
     protected abstract CharSequence getUpgradeSiteUpgradeSpeech();
     protected abstract int getUpgradeSiteUpgradeCost();
 
-    protected CharSequence getUpgradeSiteResourcesNeededSpeech() {
+    protected CharSequence getUpgradeSiteResourcesAnnouncement() {
         return "You need " + getUpgradeSiteUpgradeCost() + " Vine Cred to upgrade. You have " + player.getRunningResource();
+    }
+
+    protected CharSequence getUpgradeSiteNotEnoughResourcesSpeech() {
+        return "You need " + getUpgradeSiteUpgradeCost() + " Vine Cred to upgrade.";
     }
 
     protected synchronized void clearMarkerState() {
@@ -84,7 +88,7 @@ public abstract class UpgradeSite extends MapManager.GameObject {
 
     @Override
     protected void approach() {
-        story.addSpeechToQueue(getUpgradeSiteResourcesNeededSpeech());
+        story.addSpeechToQueue(getUpgradeSiteResourcesAnnouncement());
     }
 
     @Override
@@ -101,7 +105,7 @@ public abstract class UpgradeSite extends MapManager.GameObject {
                 doUpgrade();
                 story.interruptQueueWithSpeech(getUpgradeSiteUpgradeSpeech());
             } else {
-                story.interruptQueueWithSpeech(getUpgradeSiteResourcesNeededSpeech());
+                story.interruptQueueWithSpeech(getUpgradeSiteNotEnoughResourcesSpeech());
             }
         }
     }

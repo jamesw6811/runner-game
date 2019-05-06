@@ -98,13 +98,13 @@ public class MapManager {
             for (GameObject tryInteract : objectsInInteractionRange) {
                 if (tryInteract.isInteractable()) {
                     tryInteract.interact();
-                    story.refreshAnnouncement();
                     interacted = true;
                     break;
                 }
             }
             if (!interacted)
                 story.interruptQueueWithSpeech(ctx.getString(R.string.interaction_nothing_to_interact));
+            story.refreshAnnouncement();
         }
     }
 
