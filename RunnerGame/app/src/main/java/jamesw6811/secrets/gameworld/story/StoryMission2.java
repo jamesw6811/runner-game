@@ -216,7 +216,7 @@ public class StoryMission2 extends StoryMission {
 
         @Override
         protected double getChaseDifficulty() {
-            return 0.70;
+            return 0.75;
         }
 
         @Override

@@ -13,10 +13,9 @@ import com.google.android.gms.location.LocationServices;
 
 public class GPSGameLocationPoller extends GameLocationPoller{
     public static final float MINIMUM_ACCURACY_REQUIRED = 25f;
-    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 500;
+    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 3;
     private static final String LOGTAG = GPSGameLocationPoller.class.getName();
-    private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
-            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
+    private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = 2;
 
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationCallback mLocationCallback;

@@ -9,8 +9,8 @@ public class DifficultySettings {
     private double metersPerRunningResource = 130;
     private double metersInSight = 50;
     private double metersDiscoveryMinimum = 130;
-    private double chaseDefaultDistanceMeters = 35; //meters to outrun other runner
-    private double chaseDefaultDistanceFailMeters = 35; //meters for other runner to outrun you
+    private double chaseDefaultDistanceMeters = 65; //meters to outrun other runner
+    private double chaseDefaultDistanceFailMeters = 65; //meters for other runner to outrun you
     private double chaseDefaultSpeedMetersPerSecond = 3; //meters per second of racer at baseline, 9 mine mile, average jog speed
     private double navBeepPeriodMultiplier = 2500.0 / 300.0; // millis period per meter
 
