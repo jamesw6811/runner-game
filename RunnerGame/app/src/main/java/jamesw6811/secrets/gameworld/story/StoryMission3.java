@@ -201,7 +201,7 @@ public class StoryMission3 extends StoryMission {
         private int numberCaptures = 0;
         private boolean winConditionMet = false;
         private boolean loseConditionMet = false;
-        private float timeAlarmOut = 60.0f*25.0f;
+        private float timeAlarmOut = 60.0f*25.0f - 1;
         private boolean firstChaseDone = false;
         private DiscoveryScheme discoveryScheme;
 

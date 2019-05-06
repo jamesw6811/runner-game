@@ -157,7 +157,7 @@ public class StoryMission2 extends StoryMission {
 
     public static class Mission2AlarmCaptureSite extends AlarmCaptureSite {
         private static final int CAPTURE_CRED = 10;
-        private static final int ALARM_TIMEOUT = 60*5;
+        private static final int ALARM_TIMEOUT = 60*5 - 1;
         static final String ID = "FIRST_CAPTURE_SITE";
 
         public Mission2AlarmCaptureSite(MapManager mm, LatLng latLng) {

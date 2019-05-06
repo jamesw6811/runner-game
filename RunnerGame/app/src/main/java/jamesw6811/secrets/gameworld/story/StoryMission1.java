@@ -94,7 +94,7 @@ public class StoryMission1 extends StoryMission {
 
     public static class Mission1AlarmCaptureSite extends AlarmCaptureSite {
         private static final int CAPTURE_CRED = 10;
-        private static final int ALARM_TIMEOUT = 60*5;
+        private static final int ALARM_TIMEOUT = 60*5-1;
 
         public Mission1AlarmCaptureSite(MapManager mm, LatLng latLng) {
             super(mm, "the Oaken Agent", latLng);
@@ -117,7 +117,7 @@ public class StoryMission1 extends StoryMission {
 
         @Override
         protected CharSequence getCaptureSiteSpokenNameBeforeCapture() {
-            return "the Oaken Agent with a file for you";
+            return "the friendly Oaken Agent with a file for you";
         }
 
         @Override
@@ -127,7 +127,7 @@ public class StoryMission1 extends StoryMission {
 
         @Override
         protected CharSequence getCaptureSiteCaptureSpeech() {
-            return "You got the files from the Oaken Agent.";
+            return "You got the files from the Oaken Agent. Alert. I detect that you are being trailed by hostile Oaken Agents and need to get to the Dead Drop. Don't delay. I estimate you have 5 minutes.";
         }
 
         @Override
@@ -172,7 +172,6 @@ public class StoryMission1 extends StoryMission {
             switch (event) {
                 case CaptureSite.EVENT_CAPTURE_SITE_CAPTURED:
                     numberCaptures++;
-                    interruptQueueWithSpeech("You got the files, but I detect that you are being trailed and need to get to the Dead Drop. Don't delay. I estimate you have 5 minutes.");
                     break;
                 case AlarmCaptureSite
                             .EVENT_ALARM_OUT:
