@@ -59,4 +59,14 @@ public class TrapSite extends MapManager.GameObject {
             player.giveRunningResource(3 + player.getUpgradeLevelTrapSupporter()*3);
         }
     }
+
+    @Override
+    protected boolean isInteractable() {
+        return true;
+    }
+
+    @Override
+    protected void interact() {
+        story.interruptQueueWithSpeech("You cannot interact directly with a Venus Trap. Try leading your pursuers to the trap, instead.");
+    }
 }
