@@ -234,7 +234,7 @@ public class StoryMission3 extends StoryMission {
                 if (timeAlarmOut <= 0) {
                     loseConditionMet = true;
                 } else if (minutesAfter != minutesBefore){
-                    addSpeechToQueue("It's heating up out there. " + minutesBefore + " minutes until mission abort.");
+                    addSpeechToQueue("It's heating up out there. " + (int)(minutesBefore*timeAnnounceResolution/60.0f) + " minutes until mission abort.");
                 }
             }
         }
