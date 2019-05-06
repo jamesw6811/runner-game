@@ -84,6 +84,7 @@ public class StoryMission3 extends StoryMission {
             List<Class> stage2 = new LinkedList<>();
             List<Class> stage3 = new LinkedList<>();
             List<Class> stage4 = new LinkedList<>();
+            List<Class> stage5 = new LinkedList<>();
             List<List<Class>> decks = new LinkedList<>();
 
             stage0.add(Mission3GuardSite.class);
@@ -93,24 +94,24 @@ public class StoryMission3 extends StoryMission {
             stage2.add(DropSite.class);
             stage2.add(Mission3CaptureSite.class);
             stage2.add(TrapUpgradeSite.class);
-            stage2.add(TrapSite.class);
 
-            stage3.add(DropSite.class);
-            stage3.add(Mission3CaptureSite.class);
             stage3.add(Mission3CaptureSite.class);
             stage3.add(Mission3GuardSite.class);
-            stage3.add(Mission3GuardSite.class);
-            stage3.add(TrapSite.class);
 
-            stage4.add(EmptySite.class);
-            stage4.add(EmptySite.class);
+            stage4.add(Mission3CaptureSite.class);
             stage4.add(Mission3GuardSite.class);
+            stage4.add(TrapSite.class);
+            stage4.add(DropSite.class);
+
+            stage5.add(EmptySite.class);
+            stage5.add(Mission3GuardSite.class);
 
             decks.add(stage0);
             decks.add(stage1);
             decks.add(stage2);
             decks.add(stage3);
             decks.add(stage4);
+            decks.add(stage5);
             setDecksAndShuffle(decks);
         }
     }
