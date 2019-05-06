@@ -93,13 +93,13 @@ public class StoryMission3 extends StoryMission {
             stage2.add(DropSite.class);
             stage2.add(Mission3CaptureSite.class);
             stage2.add(TrapUpgradeSite.class);
+            stage2.add(TrapSite.class);
 
             stage3.add(DropSite.class);
             stage3.add(Mission3CaptureSite.class);
             stage3.add(Mission3CaptureSite.class);
             stage3.add(Mission3GuardSite.class);
             stage3.add(Mission3GuardSite.class);
-            stage3.add(TrapSite.class);
             stage3.add(TrapSite.class);
 
             stage4.add(EmptySite.class);
