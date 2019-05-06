@@ -14,6 +14,7 @@ import jamesw6811.secrets.gameworld.chase.ChaseOriginator;
 import jamesw6811.secrets.gameworld.map.MapManager;
 
 public abstract class ChaseSite extends MapManager.GameObject implements ChaseOriginator {
+    public static final String EVENT_CHASE_SITE_CHASE_STARTED = "EVENT_CHASE_SITE_CHASE_STARTED";
     private Marker marker;
     private boolean disabled = false;
 
@@ -60,6 +61,7 @@ public abstract class ChaseSite extends MapManager.GameObject implements ChaseOr
         if (!disabled) {
             chase.startChase(true, getChaseDifficulty(), this);
             story.interruptQueueWithSpeech(getChaseStartMessage());
+            story.processEvent(EVENT_CHASE_SITE_CHASE_STARTED);
         }
     }
 

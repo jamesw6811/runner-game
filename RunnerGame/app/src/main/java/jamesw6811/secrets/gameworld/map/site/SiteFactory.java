@@ -5,6 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 import jamesw6811.secrets.gameworld.map.MapManager;
 import jamesw6811.secrets.gameworld.story.StoryMission1;
 import jamesw6811.secrets.gameworld.story.StoryMission2;
+import jamesw6811.secrets.gameworld.story.StoryMission3;
 
 public class SiteFactory {
     // TODO: Consider instead using self-registering Supplier subclasses in each Site.
@@ -46,6 +47,12 @@ public class SiteFactory {
         } else if (cls == StoryMission2.Mission2GuardSite.class){
             return new StoryMission2.Mission2GuardSite(mapManager, position);
 
-        } else throw new UnsupportedOperationException("That site is not registered with SiteFactory.");
+        } else if (cls == StoryMission3.Mission3CaptureSite.class){
+            return new StoryMission3.Mission3CaptureSite(mapManager, position);
+
+        } else if (cls == StoryMission3.Mission3GuardSite.class){
+            return new StoryMission3.Mission3GuardSite(mapManager, position);
+
+        } else throw new UnsupportedOperationException("That site is not registered with SiteFactory. Class:" + cls.getName());
     }
 }

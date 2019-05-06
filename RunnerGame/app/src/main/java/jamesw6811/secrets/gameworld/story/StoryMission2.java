@@ -26,7 +26,7 @@ import jamesw6811.secrets.gameworld.map.site.RunningLapUpgradeSite;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
 
 public class StoryMission2 extends StoryMission {
-    public static final int NEXT_MISSION_NUMBER = 1; // Setting to 2 before having a mission 2 will crash
+    public static final int NEXT_MISSION_NUMBER = 3; // Setting to 2 before having a mission 2 will crash
     public static final int NUMBER_OF_CAPTURES_WIN = 2;
 
     @Override
@@ -246,7 +246,7 @@ public class StoryMission2 extends StoryMission {
 
         @Override
         protected CharSequence getCaptureSiteCaptureSpeech() {
-            return "HacheT spyware initialized. Making connection. Database successfully hacked.";
+            return "Hacking initialized. A Nightshade guard found you. Run away!";
         }
 
         @Override
@@ -261,7 +261,7 @@ public class StoryMission2 extends StoryMission {
 
         @Override
         public void chaseSuccessful() {
-            story.addSpeechToQueue("You lost the Nightshade guard. Nice work. Now get to the Dead Drop before the rest of the organization catches up.");
+            story.addSpeechToQueue("You lost the Nightshade guard. Your hacking software is online. HacheT spyware initialized. Making connection. Database successfully hacked. Now get to the Dead Drop before the rest of the organization catches up.");
         }
 
         @Override

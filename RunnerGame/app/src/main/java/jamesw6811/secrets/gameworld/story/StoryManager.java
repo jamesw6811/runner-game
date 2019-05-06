@@ -114,4 +114,7 @@ public abstract class StoryManager {
         if (player.isInjured()) addSpeechToQueue(ctx.getString(R.string.tutorialplayerinjured));
     }
 
+    public void tick(float timeDelta){
+
+    }
 }
