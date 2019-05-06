@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.security.InvalidParameterException;
 import java.util.Objects;
 
@@ -18,6 +20,7 @@ import jamesw6811.secrets.gameworld.story.StoryMission;
 public class DebriefingActivity extends Activity {
     public static final String EXTRA_SUCCESS = "jamesw6811.secrets.DebriefingActivity.EXTRA_SUCCESS";
     private static final String EMAILFEEDBACK_SUBJECT = "Super Helpful Sappy Secrets Feedbark";
+    private FirebaseAnalytics mFirebaseAnalytics;
 
 
     @Override
@@ -40,6 +43,17 @@ public class DebriefingActivity extends Activity {
         } else {
             ((TextView)findViewById(R.id.contents_story_briefing)).setText(storyMission.getFailureDebriefing());
         }
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, Integer.toString(mission));
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, StoryMission.getMission(mission).getName());
+        if (success) {
+            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "mission_completed_success");
+        } else {
+            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "mission_completed_fail_or_abort");
+        }
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 
     private void startMenuActivity() {

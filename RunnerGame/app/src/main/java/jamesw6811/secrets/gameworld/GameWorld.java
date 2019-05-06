@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Random;
 
+import jamesw6811.secrets.ContentAnalyticsLogger;
 import jamesw6811.secrets.RunMapActivity;
 import jamesw6811.secrets.controls.RunningMediaController;
 import jamesw6811.secrets.gameworld.chase.ChaseManager;
@@ -46,10 +47,12 @@ public class GameWorld implements TimeTicked {
     private StoryManager storyManager;
     private MapManager mapManager;
     private GameUIUpdateProcessor ui;
+    private ContentAnalyticsLogger analytics;
     private LatLng lastGPS;
 
-    public GameWorld(Location firstGPS, double pace, int mission, Context ctx, GameUIUpdateProcessor ui, TextToSpeechRunner tts, ToneRunner tone, RunningMediaController controller) {
+    public GameWorld(Location firstGPS, double pace, int mission, Context ctx, GameUIUpdateProcessor ui, ContentAnalyticsLogger cal, TextToSpeechRunner tts, ToneRunner tone, RunningMediaController controller) {
         this.controller = controller;
+        analytics = cal;
         lastClickState = controller.getClickState(true);
         this.ui = ui;
         updateGPS(firstGPS);
@@ -132,6 +135,9 @@ public class GameWorld implements TimeTicked {
         lastClickState = controller.getClickState(true);
         player.updatePosition(lastGPS);
         focusCameraOnPlayer();
+        if (lastClickState.playClicked) {
+            analytics.logAnalyticsEvent("game_click", Float.toString(mapManager.getMetersRunningTotal()));
+        }
     }
 
     private void focusCameraOnPosition(final LatLng ll, final float zoom) {

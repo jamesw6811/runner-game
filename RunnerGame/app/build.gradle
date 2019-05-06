@@ -27,6 +27,10 @@ android {
             signingConfig signingConfigs.release
             debuggable false
         }
+
+        debug {
+            debuggable true
+        }
     }
     compileOptions {
         sourceCompatibility = '1.8'
@@ -67,4 +71,7 @@ dependencies {
 
     testImplementation 'androidx.test.espresso:espresso-intents:3.1.1'
     implementation 'org.jetbrains:annotations:15.0'
+    implementation 'com.google.firebase:firebase-core:16.0.8'
 }
+
+apply plugin: 'com.google.gms.google-services'

@@ -10,6 +10,7 @@ import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -19,6 +20,9 @@ import java.security.InvalidParameterException;
 
 import androidx.core.app.NotificationCompat;
 import androidx.media.session.MediaButtonReceiver;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import jamesw6811.secrets.controls.RunningMediaController;
 import jamesw6811.secrets.gameworld.GameWorld;
 import jamesw6811.secrets.gameworld.map.GameUIUpdateProcessor;
@@ -29,12 +33,13 @@ import jamesw6811.secrets.location.GameLocationPoller;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
 import jamesw6811.secrets.sound.ToneRunner;
 
-public class GameService extends Service implements GameUIUpdateProcessor {
+public class GameService extends Service implements GameUIUpdateProcessor, ContentAnalyticsLogger {
     private static final String LOGTAG = GameService.class.getName();
     private static final String CHANNEL_ID = "gameservice_notifications";
     private static final int NOTIFICATION_ID = 1;
     public static GameService runningInstance = null;
     private final IBinder mBinder = new LocalBinder();
+    private FirebaseAnalytics mFirebaseAnalytics;
     private Handler mServiceHandler;
     private RunMapActivity mActivity;
     private GameLocationPoller GPSGameLocationPoller;
@@ -56,6 +61,7 @@ public class GameService extends Service implements GameUIUpdateProcessor {
         // Set running state
         runningInstance = this;
         uiBound = false;
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         // Initialize handler
         HandlerThread handlerThread = new HandlerThread(LOGTAG);
@@ -221,7 +227,7 @@ public class GameService extends Service implements GameUIUpdateProcessor {
     public void startGameOrUpdateLocation(Location location) {
         if (ttser.isInitialized()) {
             if (gw == null && uiBound) {
-                gw = new GameWorld(location, pace, missionNumber, this, this, ttser, toner, controller);
+                gw = new GameWorld(location, pace, missionNumber, this, this, this, ttser, toner, controller);
                 gw.initializeAndStartRunning();
                 mActivity.gameStarted();
             } else if (gw != null) {
@@ -268,6 +274,14 @@ public class GameService extends Service implements GameUIUpdateProcessor {
     public void abortClicked() {
         if (gw != null) gw.abort();
         else finishAndDebrief(new GameResult(0,0,false));
+    }
+
+    @Override
+    public void logAnalyticsEvent(String type, String id) {
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, id);
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, type);
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 
     /**
