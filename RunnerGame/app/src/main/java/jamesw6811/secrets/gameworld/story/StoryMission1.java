@@ -162,7 +162,9 @@ public class StoryMission1 extends StoryMission {
         }
 
         public void gameStarted() {
-            addSpeechToQueue("Hello Agent Almond. I'm an artificially intelligent holographic life-form. But you can call me Holly for short. I'll provide you support on your missions. Your objective is to find the Oaken agent and and collect the files. You'll need 10 Vine Cred to pay the source. One way to get Vine Cred is by exploring.");
+            addSpeechToQueue("Hello Agent Almond. I'm an artificially intelligent holographic life-form. But you can call me Holly for short. I'll provide you support on your missions. Your objective is to find the Oaken agent and and collect the files. You'll need to completely fill your Vine Cred to pay the source. That's 10 Vine Cred. One way to get Vine Cred is by exploring. When you get a Vine Cred, you will hear the following sound.");
+            addSpeechToQueue(TextToSpeechRunner.EARCON_CRED);
+            addSpeechToQueue("Good luck, Agent Almond.");
         }
 
         @Override
@@ -170,7 +172,7 @@ public class StoryMission1 extends StoryMission {
             switch (event) {
                 case CaptureSite.EVENT_CAPTURE_SITE_CAPTURED:
                     numberCaptures++;
-                    interruptQueueWithSpeech("You got the files, but I detect that you are being trailed and need to get to the Dead Drop. Fast. I estimate you have 5 minutes.");
+                    interruptQueueWithSpeech("You got the files, but I detect that you are being trailed and need to get to the Dead Drop. Don't delay. I estimate you have 5 minutes.");
                     break;
                 case AlarmCaptureSite
                             .EVENT_ALARM_OUT:

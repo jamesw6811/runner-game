@@ -19,7 +19,7 @@ import jamesw6811.secrets.gameworld.map.MapManager;
 
 public class EmptySite extends MapManager.GameObject {
     private Marker marker;
-    private static final String NAME = "a Grassy Field";
+    private static final String NAME = "an Empty Grassy Field";
     private static final String MAP_NAME = "Grass";
 
     public EmptySite(MapManager mm, LatLng pos) {

@@ -51,7 +51,7 @@ S
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:layout_gravity="center"
-        android:text="To start the mission,\npress play on your headphones...."
+        android:text="To start the mission, press play on your headphones. Use this button to interact with sites in the mission."
         android:textAlignment="center"
         android:textSize="20sp" />
 
