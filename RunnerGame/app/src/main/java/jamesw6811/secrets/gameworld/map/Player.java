@@ -13,6 +13,7 @@ import java.util.List;
 
 import jamesw6811.secrets.R;
 import jamesw6811.secrets.location.MapUtilities;
+import jamesw6811.secrets.sound.TextToSpeechRunner;
 
 /**
  * Created by james on 6/17/2017.
@@ -23,17 +24,20 @@ public class Player extends MapManager.GameObject {
     private LatLng lastPosition;
     private double lastDistanceTravelled;
     private double lastHeadingTravelled;
+    private int runningResourceMax;
     private int runningResource;
     private int buildingResource;
     private int buildingSubResource;
     private int upgradeLevelLapSupporter;
     private int upgradeLevelDiscoverySupporter;
+    private int upgradeLevelTrapSupporter;
     private boolean injured = false;
     private List<LatLng> positionsGivenRunningResources;
 
     Player(MapManager mm, LatLng gp) {
         super(mm, mm.getContext().getString(R.string.player_spokenName), gp);
         runningResource = 0;
+        runningResourceMax = 10;
         positionsGivenRunningResources = new LinkedList<>();
     }
 
@@ -81,8 +85,19 @@ public class Player extends MapManager.GameObject {
         return lastHeadingTravelled;
     }
 
-    void giveRunningResource(int i) {
-        runningResource += i;
+    public void giveRunningResource(int i) {
+        if (runningResource != runningResourceMax){
+            int oldRunningResource = runningResource;
+            runningResource += i;
+            runningResource = Math.min(runningResource, runningResourceMax);
+            for (int x = 0; x < runningResource - oldRunningResource - 1; x++) {
+                story.addSpeechToQueue(TextToSpeechRunner.EARCON_CRED_SHORT);
+            }
+            story.addSpeechToQueue(TextToSpeechRunner.EARCON_CRED);
+        }
+        if (runningResource == runningResourceMax){
+            story.addSpeechToQueue("You have " + runningResource + " Vine Cred, which is the most you can hold right now.");
+        }
         positionsGivenRunningResources.add(getPosition()); // Add position last, so that we have not "visited" the position we are currently on.
     }
 
@@ -161,5 +176,13 @@ public class Player extends MapManager.GameObject {
 
     public double getDistanceFromCollectedRunningResources(){
         return MapUtilities.distanceToClosestLatLng(getPosition(), positionsGivenRunningResources);
+    }
+
+    public int getUpgradeLevelTrapSupporter() {
+        return upgradeLevelTrapSupporter;
+    }
+
+    public void setUpgradeLevelTrapSupporter(int upgradeLevelTrapSupporter) {
+        this.upgradeLevelTrapSupporter = upgradeLevelTrapSupporter;
     }
 }

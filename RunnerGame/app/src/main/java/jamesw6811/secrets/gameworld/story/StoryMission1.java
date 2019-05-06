@@ -24,7 +24,7 @@ import jamesw6811.secrets.gameworld.map.site.RunningLapUpgradeSite;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
 
 public class StoryMission1 extends StoryMission {
-    public static final int NEXT_MISSION_NUMBER = 1; // Setting to 2 before having a mission 2 will crash
+    public static final int NEXT_MISSION_NUMBER = 2; // Setting to 2 before having a mission 2 will crash
     public static final int NUMBER_OF_CAPTURES_WIN = 1;
 
     @Override
@@ -39,13 +39,13 @@ public class StoryMission1 extends StoryMission {
 
     @Override
     public String getBriefing() {
-        return "“New recruit Agent Almond,\n" +
+        return "New recruit Agent Almond,\n" +
                 "\n" +
                 "I’m your handler. You can call me Director Stem. You and I are low on the food chain, but we can make a big difference.\n" +
                 "\n" +
                 "Almond - as you know, the Oaken Empire is threatening to make sawdust out of every Redwood. We must know what they are planning and stop them before anyone gets hurt. We’ve received intelligence suggesting there is a defecting Oaken agent who is tired of the sap-shed and ready to turn over valuable files to us. \n" +
                 "\n" +
-                "Your mission is simple: collect some Vine Cred. Then find the source and collect the files. Finally, deliver the files to the Dead Drop Date Palm. This is your first mission for the Republic - don’t let us down.”\n" +
+                "Your mission is simple: collect some Vine Cred. Then find the source and collect the files. Finally, deliver the files to one of our Dogwood Dead Drops. This is your first mission for the Republic - don’t let us down.\n" +
                 "\n" +
                 "S\n";
     }
@@ -59,7 +59,7 @@ public class StoryMission1 extends StoryMission {
 
     @Override
     public String getFailureDebriefing() {
-        return "We had to abort the mission. Let’s lay low for a while and then try to contact the Redwood Rogue again.\n" +
+        return "We had to abort the mission. Let’s lay low for a while and then try to contact the Oaken Agent again.\n" +
                 "\n" +
                 "S\n";
     }
@@ -97,7 +97,7 @@ public class StoryMission1 extends StoryMission {
         private static final int ALARM_TIMEOUT = 60*5;
 
         public Mission1AlarmCaptureSite(MapManager mm, LatLng latLng) {
-            super(mm, "a Redwood Rogue", latLng);
+            super(mm, "the Oaken Agent", latLng);
         }
 
         @Override
@@ -107,32 +107,32 @@ public class StoryMission1 extends StoryMission {
 
         @Override
         protected void doAlarmAnnouncement(int minutesRemaining) {
-            story.addSpeechToQueue("You have " + minutesRemaining + " minutes until the Oaken alarms go off! Get to the drop site.");
+            story.addSpeechToQueue("You have " + minutesRemaining + " minutes until the Oaken agents catch you up! Get to the drop site.");
         }
 
         @Override
         protected CharSequence getCaptureSiteMapName() {
-            return "RR";
+            return "Oaken Agent";
         }
 
         @Override
         protected CharSequence getCaptureSiteSpokenNameBeforeCapture() {
-            return "a Redwood Rogue";
+            return "the Oaken Agent with a file for you";
         }
 
         @Override
         protected CharSequence getCaptureSiteSpokenNameAfterCapture() {
-            return "the Redwood Rogue";
+            return "the empty-handed Oaken Agent";
         }
 
         @Override
         protected CharSequence getCaptureSiteCaptureSpeech() {
-            return "You turned the Redwood Rogue to your side.";
+            return "You got the files from the Oaken Agent.";
         }
 
         @Override
         protected CharSequence getCaptureSiteNotEnoughResourcesSpeech() {
-            return "You need " + CAPTURE_CRED + " Vine Cred to turn the Redwood Rogue to your side.";
+            return "You need " + CAPTURE_CRED + " Vine Cred to get the files from the Oaken Agent.";
         }
 
         @Override
@@ -162,7 +162,9 @@ public class StoryMission1 extends StoryMission {
         }
 
         public void gameStarted() {
-            addSpeechToQueue("Agent Almond this is S. Come in. Let's get to work. Find the source and and collect the files. You'll need 10 Vine Cred for the source, which you can get by running around.");
+            addSpeechToQueue("Hello Agent Almond. I'm an artificially intelligent holographic life-form. But you can call me Holly for short. I'll provide you support on your missions. Your objective is to find the Oaken agent and and collect the files. You'll need to completely fill your Vine Cred to pay the source. That's 10 Vine Cred. One way to get Vine Cred is by exploring. When you get a Vine Cred, you will hear the following sound.");
+            addSpeechToQueue(TextToSpeechRunner.EARCON_CRED);
+            addSpeechToQueue("Good luck, Agent Almond.");
         }
 
         @Override
@@ -170,19 +172,19 @@ public class StoryMission1 extends StoryMission {
             switch (event) {
                 case CaptureSite.EVENT_CAPTURE_SITE_CAPTURED:
                     numberCaptures++;
-                    addSpeechToQueue("S here. You got the files, but you are being trailed and need to get to the Dead Drop. Fast. A silent alarm will trip in 5 minutes.");
+                    interruptQueueWithSpeech("You got the files, but I detect that you are being trailed and need to get to the Dead Drop. Don't delay. I estimate you have 5 minutes.");
                     break;
                 case AlarmCaptureSite
                             .EVENT_ALARM_OUT:
                     loseConditionMet = true;
-                    addSpeechToQueue("The alarm is going off - we need to abort. I'm sending the debriefing to your mobile device.");
+                    interruptQueueWithSpeech("The enemy agents are catching us up. We need to abort for now. I'm sending the debriefing to your mobile device.");
                     break;
                 case DropSite.EVENT_DROP_SITE_ACTIVATED:
                     if (numberCaptures == NUMBER_OF_CAPTURES_WIN){
                         winConditionMet = true;
-                        addSpeechToQueue("Nice work Agent Almond. We have the files. I'm sending the debriefing to your mobile device.");
+                        interruptQueueWithSpeech("Nice work Agent Almond. We have the files. I'm sending the debriefing to your mobile device.");
                     }
-                    else addSpeechToQueue("We can't end the mission yet, Almond. We still have work to do!");
+                    else interruptQueueWithSpeech("We can't end the mission yet, Almond. We still have work to do!");
                     break;
             }
         }

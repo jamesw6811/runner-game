@@ -4,40 +4,40 @@ import com.google.android.gms.maps.model.LatLng;
 
 import jamesw6811.secrets.gameworld.map.MapManager;
 
-public class RunningDiscoveryUpgradeSite extends UpgradeSite {
+public class TrapUpgradeSite extends UpgradeSite {
     public static final int UPGRADE_CRED = 3;
 
-    public RunningDiscoveryUpgradeSite(MapManager mm, LatLng latLng) {
-        super(mm, "a Mappy Maple upgrade", latLng);
+    public TrapUpgradeSite(MapManager mm, LatLng latLng) {
+        super(mm, "a Venus Trap Booster", latLng);
     }
 
     @Override
     protected CharSequence getUpgradeSiteMapName() {
-        return "Mappy";
+        return "V-Boost";
     }
 
     @Override
     protected CharSequence getUpgradeSiteSpokenNameBeforeUpgrade() {
-        return "a Mappy Maple upgrade";
+        return "a Venus Trap booster upgrade";
     }
 
     @Override
     protected CharSequence getUpgradeSiteSpokenNameAfterUpgrade() {
-        return "a used Mappy Maple";
+        return "used Venus booster";
     }
 
     @Override
     protected CharSequence getUpgradeSiteUpgradeSpeech() {
-        return "You upgraded your map with the Mappy Maple. You now get additional Vine Cred for running to new places.";
+        return "You upgraded your Venus Traps. You now get additional Vine Cred for trapping your pursuers.";
     }
 
     @Override
     protected int getUpgradeSiteUpgradeCost() {
-        return UPGRADE_CRED + player.getUpgradeLevelDiscoverySupporter()*3;
+        return UPGRADE_CRED + player.getUpgradeLevelTrapSupporter()*3;
     }
 
     @Override
     protected void doUpgrade() {
-        player.setUpgradeLevelDiscoverySupporter(player.getUpgradeLevelDiscoverySupporter() + 1);
+        player.setUpgradeLevelTrapSupporter(player.getUpgradeLevelTrapSupporter() + 1);
     }
 }

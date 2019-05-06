@@ -12,7 +12,8 @@ import android.util.Log;
 import jamesw6811.secrets.R;
 
 public class TextToSpeechRunner {
-    public static final String CRED_EARCON = "[cred]";
+    public static final String EARCON_CRED = "[cred]";
+    public static final String EARCON_CRED_SHORT = "[credshort]";
     private static final String LOGTAG = TextToSpeechRunner.class.getName();
     private boolean initialized = false;
     private TextToSpeech tts;
@@ -108,8 +109,13 @@ public class TextToSpeechRunner {
             if (status != TextToSpeech.ERROR) {
                 Log.d(LOGTAG, "TextToSpeech no error");
             }
-            tts.addSpeech(CRED_EARCON, "jamesw6811.secrets", R.raw.cred);
+            loadEarcons();
             initialized = true;
+        }
+
+        private void loadEarcons(){
+            tts.addSpeech(EARCON_CRED, "jamesw6811.secrets", R.raw.cred);
+            tts.addSpeech(EARCON_CRED_SHORT, "jamesw6811.secrets", R.raw.credshort);
         }
 
         @Override

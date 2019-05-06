@@ -10,16 +10,16 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 
-import jamesw6811.secrets.R;
 import jamesw6811.secrets.gameworld.chase.ChaseOriginator;
 import jamesw6811.secrets.gameworld.map.MapManager;
 
-public class ChaseSite extends MapManager.GameObject implements ChaseOriginator {
-    private static final double CHASE_DIFFICULTY = 0.66; // 2/3rd the player pace
+public abstract class ChaseSite extends MapManager.GameObject implements ChaseOriginator {
+    public static final String EVENT_CHASE_SITE_CHASE_STARTED = "EVENT_CHASE_SITE_CHASE_STARTED";
     private Marker marker;
+    private boolean disabled = false;
 
-    public ChaseSite(MapManager mm, LatLng position) {
-        super(mm, mm.getContext().getString(R.string.chasesite_spokenName), position);
+    public ChaseSite(MapManager mm, String spokenName, LatLng position) {
+        super(mm, spokenName, position);
     }
 
     @Override
@@ -34,10 +34,12 @@ public class ChaseSite extends MapManager.GameObject implements ChaseOriginator 
         if (marker != null) {
             IconGenerator ig = new IconGenerator(ctx);
             ig.setColor(Color.RED);
-            Bitmap icon = ig.makeIcon(ctx.getString(R.string.chasesite_mapName));
+            Bitmap icon = ig.makeIcon(getChaseSiteMapName());
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(icon));
         }
     }
+
+    protected abstract CharSequence getChaseSiteMapName();
 
     @Override
     protected void clearMarkerState() {
@@ -56,23 +58,17 @@ public class ChaseSite extends MapManager.GameObject implements ChaseOriginator 
 
     @Override
     protected void approach() {
-        chase.startChase(true, CHASE_DIFFICULTY, this);
-        story.interruptQueueWithSpeech(ctx.getString(R.string.chasesite_chaseStarted));
+        if (!disabled) {
+            chase.startChase(true, getChaseDifficulty(), this);
+            story.interruptQueueWithSpeech(getChaseStartMessage());
+            story.processEvent(EVENT_CHASE_SITE_CHASE_STARTED);
+        }
     }
 
-    @Override
-    public void chaseSuccessful() {
-        story.addSpeechToQueue(ctx.getString(R.string.chasesite_chaseSuccess));
+    public void chaserTrapped(){
+        disabled = true;
     }
 
-    @Override
-    public void chaseFailed() {
-        story.interruptQueueWithSpeech(ctx.getString(R.string.chasesite_chaseFailed));
-        player.injure();
-    }
-
-    @Override
-    public CharSequence getChaseMessage() {
-        return ctx.getString(R.string.chasesite_chaseMessage);
-    }
+    protected abstract double getChaseDifficulty();
+    protected abstract String getChaseStartMessage();
 }

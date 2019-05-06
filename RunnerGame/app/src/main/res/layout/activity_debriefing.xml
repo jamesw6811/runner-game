@@ -35,26 +35,26 @@
         android:text="@string/mission_1_debriefing"
         android:textSize="16sp" />
 
-        <LinearLayout
+        <Button
+            android:layout_marginTop="10dp"
+            android:id="@+id/debrief_button_done"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="Please Leave Feedbark"
+            android:textSize="24sp"/>
+        <Button
             android:layout_marginTop="10dp"
-            android:gravity="fill">
-            <Button
-                android:id="@+id/debrief_button_stats"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Stats"
-                android:layout_weight="1"
-                android:textSize="24sp" />
-
-            <Button
-                android:id="@+id/debrief_button_done"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Feedback"
-                android:textSize="24sp"/>
-        </LinearLayout>
+            android:id="@+id/debrief_button_stats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mission Stats"
+            android:textSize="24sp" />
+        <Button
+            android:layout_marginTop="10dp"
+            android:id="@+id/debrief_button_back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Back to menu"
+            android:textSize="24sp"/>
     </LinearLayout>
 </ScrollView>

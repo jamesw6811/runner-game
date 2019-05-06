@@ -32,13 +32,8 @@ public class RunningLapUpgradeSite extends UpgradeSite {
     }
 
     @Override
-    protected CharSequence getUpgradeSiteNotEnoughResourcesSpeech() {
-        return "You need " + UPGRADE_CRED + " Vine Cred to upgrade.";
-    }
-
-    @Override
     protected int getUpgradeSiteUpgradeCost() {
-        return UPGRADE_CRED;
+        return UPGRADE_CRED + player.getUpgradeLevelLapSupporter()*3;
     }
 
     @Override

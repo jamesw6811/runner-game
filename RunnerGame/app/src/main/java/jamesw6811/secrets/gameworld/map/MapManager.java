@@ -7,8 +7,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.SphericalUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
 import jamesw6811.secrets.R;
 import jamesw6811.secrets.RunMapActivity;
@@ -16,14 +18,13 @@ import jamesw6811.secrets.controls.RunningMediaController;
 import jamesw6811.secrets.gameworld.chase.ChaseManager;
 import jamesw6811.secrets.gameworld.difficulty.DifficultySettings;
 import jamesw6811.secrets.gameworld.map.discovery.DiscoveryScheme;
-import jamesw6811.secrets.gameworld.map.site.Headquarters;
 import jamesw6811.secrets.gameworld.map.site.SiteFactory;
 import jamesw6811.secrets.gameworld.story.StoryManager;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
 
 public class MapManager {
-    private ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
-    private Headquarters headquarters = null;
+    private ArrayList<GameObject> gameObjects = new ArrayList<>();
+    private Map<String, GameObject> gameObjectRegistry = new HashMap<>();
     private double metersSinceRunningResource = 0;
     private float metersRunningTotal = 0;
     private Player player;
@@ -53,13 +54,6 @@ public class MapManager {
         newsights.removeAll(oldsights);
         newsights.remove(player);
 
-        // Handle approach activities
-        for (GameObject tryApproach : newsights) {
-            if (tryApproach.hasApproachActivity()) {
-                tryApproach.approach();
-            }
-        }
-
         // Speak location names
         if (newsights.size() > 0) {
             Iterator<GameObject> nextSight = newsights.iterator();
@@ -76,6 +70,13 @@ public class MapManager {
             }
             story.addSpeechToQueue(ctx.getString(R.string.approachingAnnounce, sightsText));
         }
+
+        // Handle approach activities
+        for (GameObject tryApproach : newsights) {
+            if (tryApproach.hasApproachActivity()) {
+                tryApproach.approach();
+            }
+        }
     }
 
     // Handle interaction with nearby sites based on user input
@@ -83,7 +84,7 @@ public class MapManager {
         // Don't allow interaction if injured
         if (player.isInjured()) {
             if (clickState.playClicked)
-                story.addSpeechToQueue(ctx.getString(R.string.interaction_injured));
+                story.addSpeechToQueue("You are too injured to do that. Get to a Dead Drop to patch yourself up.");
             return;
         }
 
@@ -125,7 +126,6 @@ public class MapManager {
                 runningResource += 2*player.getUpgradeLevelDiscoverySupporter();
             }
             player.giveRunningResource(runningResource);
-            story.addSpeechToQueue(TextToSpeechRunner.CRED_EARCON);
         }
 
         // Site discovery
@@ -197,8 +197,16 @@ public class MapManager {
             updateMarker();
         }
 
-        public MapManager getMap() {
+        public final MapManager getMap() {
             return mm;
+        }
+
+        protected final GameObject getRegisteredObject(String id){
+            return mm.gameObjectRegistry.get(id);
+        }
+
+        protected final void registerThis(String id){
+            mm.gameObjectRegistry.put(id, this);
         }
 
         public void destroy() {

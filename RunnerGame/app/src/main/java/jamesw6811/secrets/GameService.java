@@ -256,11 +256,18 @@ public class GameService extends Service implements GameUIUpdateProcessor {
         intent.putExtra(RunStatsActivity.EXTRA_DISTANCE, gr.distance);
         intent.putExtra(DebriefingActivity.EXTRA_SUCCESS, gr.success);
         startActivity(intent);
+
+        finishServiceAndActivity();
+    }
+
+    private void finishServiceAndActivity(){
+        mActivity.finish();
         finish();
     }
 
     public void abortClicked() {
-        gw.abort();
+        if (gw != null) gw.abort();
+        else finishAndDebrief(new GameResult(0,0,false));
     }
 
     /**

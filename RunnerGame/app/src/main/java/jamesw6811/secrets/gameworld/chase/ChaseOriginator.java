@@ -5,5 +5,9 @@ public interface ChaseOriginator {
 
     void chaseFailed();
 
+    void chaserTrapped();
+
     CharSequence getChaseMessage();
+
+    CharSequence getChaserName();
 }
