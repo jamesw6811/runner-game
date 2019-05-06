@@ -85,7 +85,7 @@ public class Player extends MapManager.GameObject {
         return lastHeadingTravelled;
     }
 
-    public void giveRunningResource(int i) {
+    public void giveRunningResource(int i, boolean discovery) {
         if (runningResource != runningResourceMax){
             int oldRunningResource = runningResource;
             runningResource += i;
@@ -98,7 +98,7 @@ public class Player extends MapManager.GameObject {
         if (runningResource == runningResourceMax){
             story.addSpeechToQueue("You have " + runningResource + " Vine Cred, which is the most you can hold right now.");
         }
-        positionsGivenRunningResources.add(getPosition()); // Add position last, so that we have not "visited" the position we are currently on.
+        if (discovery) positionsGivenRunningResources.add(getPosition());
     }
 
     public int getRunningResource() {
@@ -174,7 +174,7 @@ public class Player extends MapManager.GameObject {
         this.positionsGivenRunningResources = positionsGivenRunningResources;
     }
 
-    public double getDistanceFromCollectedRunningResources(){
+    public double getDistanceFromCollectedDiscoveryRunningResources(){
         return MapUtilities.distanceToClosestLatLng(getPosition(), positionsGivenRunningResources);
     }
 

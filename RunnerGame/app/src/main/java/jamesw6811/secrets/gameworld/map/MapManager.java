@@ -17,10 +17,8 @@ import jamesw6811.secrets.RunMapActivity;
 import jamesw6811.secrets.controls.RunningMediaController;
 import jamesw6811.secrets.gameworld.chase.ChaseManager;
 import jamesw6811.secrets.gameworld.difficulty.DifficultySettings;
-import jamesw6811.secrets.gameworld.map.discovery.DiscoveryScheme;
 import jamesw6811.secrets.gameworld.map.site.SiteFactory;
 import jamesw6811.secrets.gameworld.story.StoryManager;
-import jamesw6811.secrets.sound.TextToSpeechRunner;
 
 public class MapManager {
     private ArrayList<GameObject> gameObjects = new ArrayList<>();
@@ -120,12 +118,15 @@ public class MapManager {
         if (metersSinceRunningResource > difficultySettings.getMetersPerRunningResource()) {
             metersSinceRunningResource -= difficultySettings.getMetersPerRunningResource();
             int runningResource = 1;
-            if (player.getDistanceFromCollectedRunningResources() <= difficultySettings.getMetersPerRunningResource()){
+            boolean discovery = false;
+            if (player.getDistanceFromCollectedDiscoveryRunningResources() <= difficultySettings.getMetersPerRunningResource()*0.75){
                 runningResource += 2*player.getUpgradeLevelLapSupporter();
+                discovery = false;
             } else {
                 runningResource += 2*player.getUpgradeLevelDiscoverySupporter();
+                discovery = true;
             }
-            player.giveRunningResource(runningResource);
+            player.giveRunningResource(runningResource, discovery);
         }
 
         // Site discovery
