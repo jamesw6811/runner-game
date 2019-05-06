@@ -87,6 +87,7 @@ public class GameWorld implements TimeTicked {
 
         // Handle time
         mapManager.tickAll(timeDelta);
+        storyManager.tick(timeDelta);
 
         // Handle map movement
         mapManager.discoverResourcesAndSites();
@@ -150,7 +151,7 @@ public class GameWorld implements TimeTicked {
     public void abort() {
         timeTickerThread.stopRunning();
         GameResult gameResult = new GameResult(timeTickerThread.getDuration(), mapManager.getMetersRunningTotal(), false);
-        storyManager.interruptQueueWithSpeech("StoryMission Aborted");
+        storyManager.interruptQueueWithSpeech("Mission Aborted");
         storyManager.setOnDoneSpeaking(() -> ui.finishAndDebrief(gameResult));
     }
 }

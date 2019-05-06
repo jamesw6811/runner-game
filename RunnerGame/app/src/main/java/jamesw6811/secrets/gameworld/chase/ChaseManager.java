@@ -40,6 +40,7 @@ public class ChaseManager {
         chaseDistanceWin = difficulty.getChaseDefaultDistanceMeters();
         chaseDistanceLose = -difficulty.getChaseDefaultDistanceFailMeters();
         chaseHappening = true;
+        story.resetChaseAnnouncement();
         return true;
     }
 
@@ -55,10 +56,10 @@ public class ChaseManager {
 
         chaseDistance += lastDistanceTravelled - timeDelta * chaseSpeed;
         if (chaseDistance > chaseDistanceWin) {
-            chaseHappening = false;
+            endChase();
             chaseSite.chaseSuccessful();
         } else if (chaseDistance < chaseDistanceLose) {
-            chaseHappening = false;
+            endChase();
             chaseSite.chaseFailed();
         }
 
@@ -66,10 +67,12 @@ public class ChaseManager {
             double navDistance = getNavigationDistance();
             toner.playTone(navTonePeriodForDistance(navDistance));
             story.doChaseAnnouncements(getChaseMessage());
-        } else {
-            story.resetChaseAnnouncement();
-            toner.stopTone();
         }
+    }
+
+    private void endChase(){
+        chaseHappening = false;
+        toner.stopTone();
     }
 
     private int navTonePeriodForDistance(double distance) {
@@ -81,7 +84,7 @@ public class ChaseManager {
     }
 
     public void endChaseTrap() {
-        chaseHappening = false;
+        endChase();
         chaseSite.chaserTrapped();
     }
 
