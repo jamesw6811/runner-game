@@ -95,8 +95,8 @@ public abstract class CaptureSite extends MapManager.GameObject {
                 story.interruptQueueWithSpeech(getCaptureSiteDependencyNotMetSpeech());
             } else if (player.getRunningResource() >= getCaptureSiteCaptureCost()) {
                 player.takeRunningResource(getCaptureSiteCaptureCost());
-                setCaptured(true);
                 story.interruptQueueWithSpeech(getCaptureSiteCaptureSpeech());
+                setCaptured(true); // Do last for any resulting speech events.
             } else {
                 story.interruptQueueWithSpeech(getCaptureSiteNotEnoughResourcesSpeech());
             }

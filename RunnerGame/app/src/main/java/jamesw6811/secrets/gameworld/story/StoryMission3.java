@@ -244,6 +244,9 @@ public class StoryMission3 extends StoryMission {
             switch (event) {
                 case CaptureSite.EVENT_CAPTURE_SITE_CAPTURED:
                     numberCaptures++;
+                    if (numberCaptures == 3) {
+                        addSpeechToQueue("All Anti-Air Aspens have been chopped down. Get to the Dogwood Dead Drop for immediate tree-vac.");
+                    }
                     break;
                 case DropSite.EVENT_DROP_SITE_ACTIVATED:
                     if (numberCaptures == NUMBER_OF_CAPTURES_WIN){
