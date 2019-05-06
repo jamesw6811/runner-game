@@ -26,7 +26,7 @@ import jamesw6811.secrets.location.ManualGameLocationPoller;
 public class RunMapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     public static final String EXTRA_PACE = "jamesw6811.secrets.RunMapActivity.EXTRA_PACE";
-    public static final boolean MANUAL_MODE_ENABLED = BuildConfig.DEBUG;
+    public static final boolean MANUAL_MODE_ENABLED = false;
     private static final String LOGTAG = RunMapActivity.class.getName();
     SupportMapFragment mapFragment;
     private GoogleMap mMap;
