@@ -26,47 +26,31 @@ public class RunningMediaController {
     private void initialize() {
         mediaSession = new MediaSessionCompat(ctx, LOGTAG);
         mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-        mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
-                .setState(PlaybackStateCompat.STATE_PLAYING, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 1)
-                .setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_SKIP_TO_NEXT)
-                .build());
+        mediaSession.setPlaybackState(buildFocusPlaybackState());
         PendingIntent servicePendingIntent = PendingIntent.getService(ctx, 0, new Intent(ctx, GameService.class), 0);
         mediaSession.setMediaButtonReceiver(servicePendingIntent);
         mediaSession.setCallback(new MediaSessionCompat.Callback() {
             @Override
             public boolean onMediaButtonEvent(Intent mediaButtonIntent) {
-                return super.onMediaButtonEvent(mediaButtonIntent);
-            }
-
-            @Override
-            public void onPause() {
                 onSingleClick();
-            }
-
-            @Override
-            public void onPlay() {
-                onSingleClick();
-            }
-
-            @Override
-            public void onStop() {
-                onSingleClick();
-            }
-
-            @Override
-            public void onSkipToNext() {
-                onDoubleClick();
+                return true;
             }
         });
         mediaSession.setActive(true);
         mSilencePlayer = MediaPlayer.create(ctx, R.raw.silent);
-        mSilencePlayer.setLooping(true);
-        mSilencePlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-            }
+        mSilencePlayer.setOnCompletionListener(mediaPlayer -> {
+            mediaSession.setActive(true);
+            mediaSession.setPlaybackState(buildFocusPlaybackState());
+            mSilencePlayer.start();
         });
         mSilencePlayer.start();
+    }
+
+    private PlaybackStateCompat buildFocusPlaybackState(){
+        return new PlaybackStateCompat.Builder()
+                .setState(PlaybackStateCompat.STATE_PLAYING, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 1)
+                .setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_SKIP_TO_NEXT)
+                .build();
     }
 
     public void release() {
