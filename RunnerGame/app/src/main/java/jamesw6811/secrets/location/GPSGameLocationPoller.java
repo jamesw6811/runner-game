@@ -12,7 +12,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
 public class GPSGameLocationPoller extends GameLocationPoller{
-    public static final float MINIMUM_ACCURACY_REQUIRED = 25f;
+    public static final float MINIMUM_ACCURACY_REQUIRED = 10f;
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 3*1000;
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = 2*1000;
     public static final float SMALLEST_DISPLACEMENT = 10f;
@@ -22,6 +22,7 @@ public class GPSGameLocationPoller extends GameLocationPoller{
     private LocationCallback mLocationCallback;
     private LocationRequest mLocationRequest;
     private NewLocationListener newLocationListener;
+    private Location lastLocation;
 
 
     public GPSGameLocationPoller(Context ctx, NewLocationListener newLocationListener) {
@@ -81,7 +82,10 @@ public class GPSGameLocationPoller extends GameLocationPoller{
 
     private void onNewLocation(Location location) {
         if (location.getAccuracy() < MINIMUM_ACCURACY_REQUIRED) {
-            newLocationListener.onNewLocation(location);
+            if (lastLocation == null || (lastLocation.distanceTo(location) >= SMALLEST_DISPLACEMENT)) {
+                lastLocation = location;
+                newLocationListener.onNewLocation(location);
+            }
         }
     }
 
@@ -90,7 +94,6 @@ public class GPSGameLocationPoller extends GameLocationPoller{
         mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setSmallestDisplacement(SMALLEST_DISPLACEMENT);
     }
 
 }
