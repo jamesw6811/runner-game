@@ -15,6 +15,8 @@ import org.junit.Test;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.rule.ServiceTestRule;
 
+import jamesw6811.secrets.gameworld.story.StoryMission;
+
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static org.junit.Assert.*;
 
@@ -47,6 +49,7 @@ public class GameServiceTest {
         Looper.prepare();
         Context appContext = getApplicationContext();
         Intent serviceIntent = new Intent(appContext, GameService.class);
+        serviceIntent.putExtra(StoryMission.EXTRA_MISSION, 1);
         IBinder binder = mServiceRule.bindService(serviceIntent, mServiceConnection,
                 Context.BIND_AUTO_CREATE);
         assertNotNull(gameService);
