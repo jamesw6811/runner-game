@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -22,6 +24,7 @@ import com.google.android.gms.maps.model.Marker;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import jamesw6811.secrets.location.ManualGameLocationPoller;
+import jamesw6811.secrets.location.MapUtilities;
 
 public class RunMapActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -130,8 +133,19 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.clear();
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.getUiSettings().setAllGesturesEnabled(false);
+        mMap.getUiSettings().setCompassEnabled(true);
+        mMap.getUiSettings().setRotateGesturesEnabled(true);
+        mMap.getUiSettings().setZoomGesturesEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.setOnCameraIdleListener(() -> {
+            Location last = gameService.getLastLocation();
+            if (last != null){
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(MapUtilities.locationToLatLng(last)));
+            }
+        });
         disableMarkerScrolling();
         mMapReady = true;
         // Check permissions

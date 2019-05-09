@@ -134,7 +134,8 @@ public class GameWorld implements TimeTicked {
     private void updatePlayerState() {
         lastClickState = controller.getClickState(true);
         player.updatePosition(lastGPS);
-        focusCameraOnPlayer();
+        if (player.getLastPosition() != player.getPosition())
+            moveCameraToPosition(player.getPosition());
         if (lastClickState.playClicked) {
             analytics.logAnalyticsEvent("game_click", Float.toString(mapManager.getMetersRunningTotal()));
         }
@@ -146,6 +147,16 @@ public class GameWorld implements TimeTicked {
             public void updateMap(GoogleMap map) {
                 map.moveCamera(CameraUpdateFactory.newLatLng(ll));
                 map.moveCamera(CameraUpdateFactory.zoomTo(zoom));
+            }
+        });
+    }
+
+
+    private void moveCameraToPosition(final LatLng ll) {
+        ui.processMapUpdate(new RunMapActivity.MapUpdate() {
+            @Override
+            public void updateMap(GoogleMap map) {
+                map.moveCamera(CameraUpdateFactory.newLatLng(ll));
             }
         });
     }

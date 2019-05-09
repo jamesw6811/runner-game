@@ -46,6 +46,9 @@ public class GameService extends Service implements GameUIUpdateProcessor, Conte
     private TextToSpeechRunner ttser;
     private ToneRunner toner;
     private RunningMediaController controller;
+
+
+    private Location lastLocation;
     private boolean servicesSet = false;
     public boolean started = false;
     private GameWorld gw;
@@ -225,6 +228,7 @@ public class GameService extends Service implements GameUIUpdateProcessor, Conte
     }
 
     public void startGameOrUpdateLocation(Location location) {
+        lastLocation = location;
         if (ttser.isInitialized()) {
             if (gw == null && uiBound) {
                 gw = new GameWorld(location, pace, missionNumber, this, this, this, ttser, toner, controller);
@@ -292,6 +296,10 @@ public class GameService extends Service implements GameUIUpdateProcessor, Conte
         GameService getService() {
             return GameService.this;
         }
+    }
+
+    public Location getLastLocation() {
+        return lastLocation;
     }
 
 }

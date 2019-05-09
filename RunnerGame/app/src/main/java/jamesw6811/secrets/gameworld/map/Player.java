@@ -43,23 +43,15 @@ public class Player extends MapManager.GameObject {
 
     @Override
     protected void drawMarker(GoogleMap gm) {
-        if (circle == null) {
-            circle = gm.addCircle(new CircleOptions().center(getPosition())
-                    .radius(10f)
-                    .strokeColor(Color.GREEN));
-        } else {
-            circle.setCenter(getPosition());
-        }
     }
 
     @Override
     protected void clearMarkerState() {
-        circle = null;
+
     }
 
     @Override
     protected void removeMarker() {
-        if (circle != null) circle.remove();
     }
 
     public void updatePosition(LatLng lastGPS) {
