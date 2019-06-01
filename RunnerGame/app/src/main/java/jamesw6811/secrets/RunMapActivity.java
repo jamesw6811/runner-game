@@ -81,6 +81,16 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
     @Override
     protected void onStart() {
         super.onStart();
+        // Check permissions
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            String[] perms = {android.Manifest.permission.ACCESS_FINE_LOCATION};
+            ActivityCompat.requestPermissions(this, perms, 0);
+        } else {
+            permissionsReady();
+        }
+    }
+
+    protected void permissionsReady(){
         // Once map is ready to be used
         mapFragment.getMapAsync(this);
     }
@@ -115,7 +125,7 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        bindGameService();
+        permissionsReady();
     }
 
     private void bindGameService() {
@@ -148,12 +158,6 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         });
         disableMarkerScrolling();
         mMapReady = true;
-        // Check permissions
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            String[] perms = {android.Manifest.permission.ACCESS_FINE_LOCATION};
-            ActivityCompat.requestPermissions(this, perms, 0);
-            return;
-        }
         bindGameService();
     }
 
