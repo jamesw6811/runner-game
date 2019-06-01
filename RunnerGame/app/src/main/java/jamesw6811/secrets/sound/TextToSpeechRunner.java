@@ -20,6 +20,8 @@ public class TextToSpeechRunner {
     private AudioManager mAudioManager;
     private TTSRunnerListener listener;
     private Runnable onDoneSpeaking;
+    private String lastutteranceid;
+    private long nextUtterance = 0;
 
     public TextToSpeechRunner(Context ctx) {
         // initialization of the audio attributes and focus request
@@ -30,7 +32,12 @@ public class TextToSpeechRunner {
     }
 
     public void addSpeech(CharSequence toSay) {
-        tts.speak(toSay, TextToSpeech.QUEUE_ADD, null, LOGTAG);
+        lastutteranceid = LOGTAG + getNextUtterance();
+        tts.speak(toSay, TextToSpeech.QUEUE_ADD, null, lastutteranceid);
+    }
+
+    private long getNextUtterance(){
+        return nextUtterance++;
     }
 
     /*
@@ -92,7 +99,9 @@ public class TextToSpeechRunner {
         @Override
         public void onDone(String utteranceId) {
             mAudioManager.abandonAudioFocus(this);
-            if (!isStillSpeaking()) {
+            Log.d(LOGTAG, "Done Utterance");
+            if (utteranceId.equals(lastutteranceid)) {
+                Log.d(LOGTAG, "Done Last Utterance.");
                 if (onDoneSpeaking != null) onDoneSpeaking.run();
                 onDoneSpeaking = null;
             }
