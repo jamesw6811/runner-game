@@ -1,7 +1,9 @@
 package jamesw6811.secrets;
 
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
@@ -36,6 +38,7 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
     private Marker lastOpened;
     // A reference to the service used to get location updates.
     private GameService gameService = null;
+    private Button button_quit;
 
 
     // Tracks the bound state of the service.
@@ -69,13 +72,26 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         // Obtain the SupportMapFragment
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        Button button_quit = findViewById(R.id.button_quit);
+        button_quit = findViewById(R.id.button_quit);
         button_quit.setOnClickListener(v -> {
             if (gameService != null) {
-                gameService.abortClicked();
-                button_quit.setEnabled(false);
+                createConfirmAbortDialog();
             }
         });
+    }
+
+    private void createConfirmAbortDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Aborting Mission...")
+                .setMessage("Do you really want to abort?")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> confirmAbort())
+                .setNegativeButton(android.R.string.no, null).show();
+    }
+
+    private void confirmAbort() {
+        gameService.abortClicked();
+        button_quit.setEnabled(false);
     }
 
     @Override
