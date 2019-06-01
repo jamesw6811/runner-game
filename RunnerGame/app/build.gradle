@@ -15,8 +15,8 @@ android {
         applicationId "jamesw6811.secrets"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 8
-        versionName "0.7.1"
+        versionCode 9
+        versionName "0.7.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
