@@ -35,7 +35,6 @@ public class BriefingActivity extends Activity {
             @Override
             protected void onSingleClick() {
                 super.onSingleClick();
-                this.release();
                 BriefingActivity.this.startGameActivity(mission);
             }
 
@@ -44,6 +43,12 @@ public class BriefingActivity extends Activity {
                 super.onDoubleClick();
             }
         };
+    }
+
+    @Override
+    protected void onDestroy() {
+        runningMediaController.release();
+        super.onDestroy();
     }
 
     private void startGameActivity(int mission) {

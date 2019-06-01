@@ -56,7 +56,7 @@ public class RunningMediaController {
     public void release() {
         if (mediaSession != null) mediaSession.release();
         if (mSilencePlayer != null) {
-            mSilencePlayer.stop();
+            if (mSilencePlayer.isPlaying())mSilencePlayer.stop();
             mSilencePlayer.release();
         }
     }
