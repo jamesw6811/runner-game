@@ -43,7 +43,7 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
 
         Button startButton = findViewById(R.id.start_game_button);
         int latest_mission_unlocked = sharedPref.getInt(getString(R.string.latest_mission_unlock_key), 1);
-        startButton.setText(String.format("Start Mission: %s", StoryMission.getMission(latest_mission_unlocked).getName()));
+        startButton.setText(String.format(getString(R.string.start_button_text), StoryMission.getMission(latest_mission_unlocked).getName()));
         startButton.setOnClickListener(v -> startBriefingScreen(latest_mission_unlocked));
 
         int defaultValue = getResources().getInteger(R.integer.default_pace_key);

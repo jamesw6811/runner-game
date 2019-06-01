@@ -39,6 +39,7 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
     // A reference to the service used to get location updates.
     private GameService gameService = null;
     private Button button_quit;
+    AlertDialog GPSDialog;
 
 
     // Tracks the bound state of the service.
@@ -174,7 +175,21 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         });
         disableMarkerScrolling();
         mMapReady = true;
+        showLookingforGPSDialog();
         bindGameService();
+    }
+
+    private void showLookingforGPSDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setIcon(android.R.drawable.ic_dialog_map);
+        alertDialogBuilder.setTitle("GPS Signal");
+        alertDialogBuilder.setMessage("Searching for your location...\nGo outside under a clear sky.").setCancelable(false);
+        GPSDialog = alertDialogBuilder.create();
+        GPSDialog.show();
+    }
+
+    private void dismissLookingforGPSDialog() {
+        if (GPSDialog.isShowing()) GPSDialog.dismiss();
     }
 
     private void initializeManualMode() {
@@ -236,6 +251,7 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
     public void gameStarted() {
         runOnUiThread(() -> {
             if (MANUAL_MODE_ENABLED) initializeManualMode();
+            dismissLookingforGPSDialog();
         });
     }
 
