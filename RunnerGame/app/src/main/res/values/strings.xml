@@ -2,8 +2,8 @@
     <string name="app_name">Sappy Secrets</string>
 
     <string name="title_activity_run_map">Sappy Mappy</string>
-    <string name="start_button_text">Launch First Mission</string>
-    <string name="settings_header">Settings</string>
+    <string name="start_button_text">Confirm Pace &amp; Launch</string>
+    <string name="settings_header">Set Pace</string>
     <string name="pace_setting_text">Average Pace: %d minute mile</string>
     <string name="foreground_service_notification_title">Sappy Secrets GPS Tracker</string>
     <string name="foreground_service_notification_description">Tracking location for Sappy Secrets…</string>
