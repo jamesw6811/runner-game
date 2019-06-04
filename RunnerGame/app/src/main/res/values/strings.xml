@@ -168,5 +168,5 @@ THIS NOTICE DOES NOT APPLY IF: (1) IF YOU ARE A RESIDENT OF ANY JURISDICTION WHI
     <string name="dropsite_spokenName">a Dogwood Dead Drop</string>
     <string name="dropsite_mapName">DDD</string>
     <string name="dropsite_fixInjuries">You fixed up your injuries at the Dogwood Dead Drop. You are spry as a sapling now!</string>
-    <string name="gps_dialog_message">Getting an accurate lock on your location…\nGo outside under a clear sky.\nAccuracy:%3.2f</string>
+    <string name="gps_dialog_message">Getting an accurate lock on your location…\nGo outside under a clear sky.\nAccuracy: %3.2f meters</string>
 </resources>
