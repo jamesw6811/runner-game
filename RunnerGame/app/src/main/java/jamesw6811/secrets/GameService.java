@@ -30,10 +30,11 @@ import jamesw6811.secrets.gameworld.story.GameResult;
 import jamesw6811.secrets.gameworld.story.StoryMission;
 import jamesw6811.secrets.location.GPSGameLocationPoller;
 import jamesw6811.secrets.location.GameLocationPoller;
+import jamesw6811.secrets.location.NewLocationListener;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
 import jamesw6811.secrets.sound.ToneRunner;
 
-public class GameService extends Service implements GameUIUpdateProcessor, ContentAnalyticsLogger {
+public class GameService extends Service implements GameUIUpdateProcessor, ContentAnalyticsLogger, NewLocationListener {
     private static final String LOGTAG = GameService.class.getName();
     private static final String CHANNEL_ID = "gameservice_notifications";
     private static final int NOTIFICATION_ID = 1;
@@ -92,7 +93,7 @@ public class GameService extends Service implements GameUIUpdateProcessor, Conte
         ttser = new TextToSpeechRunner(this);
         toner = new ToneRunner();
         controller = new RunningMediaController(this);
-        GPSGameLocationPoller = new GPSGameLocationPoller(this, GameService.this::startGameOrUpdateLocation);
+        GPSGameLocationPoller = new GPSGameLocationPoller(this, this);
         servicesSet = true;
     }
 
@@ -288,6 +289,17 @@ public class GameService extends Service implements GameUIUpdateProcessor, Conte
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, id);
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, type);
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+    }
+
+    @Override
+    public void onNewLocation(Location location) {
+        startGameOrUpdateLocation(location);
+        mActivity.hideGPSWarning();
+    }
+
+    @Override
+    public void onLocationExpired(long timeSinceLocation, float accuracy) {
+        mActivity.showGPSWarning(accuracy);
     }
 
     /**

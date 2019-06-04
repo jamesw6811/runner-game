@@ -181,6 +181,7 @@ public class MapManager {
         protected ChaseManager chase;
         protected Player player;
         protected Context ctx;
+        protected DifficultySettings settings;
         private MapManager mm;
         private String spokenName;
         private LatLng position;
@@ -194,6 +195,7 @@ public class MapManager {
             this.ctx = mm.ctx;
             this.spokenName = spokenName;
             this.position = latLng;
+            this.settings = mm.difficultySettings;
             mm.gameObjects.add(this);
             updateMarker();
         }

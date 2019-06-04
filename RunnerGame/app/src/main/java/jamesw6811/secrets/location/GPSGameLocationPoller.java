@@ -12,10 +12,11 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
 public class GPSGameLocationPoller extends GameLocationPoller{
-    public static final float MINIMUM_ACCURACY_REQUIRED = 10f;
-    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 3*1000;
-    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = 2*1000;
+    public static final float MINIMUM_ACCURACY_REQUIRED = 20f;
+    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 2*1000;
+    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = 1*1000;
     public static final float SMALLEST_DISPLACEMENT = 10f;
+    public static final float LOCATION_RECEIVE_TIMEOUT = 5*1000; // milliseconds until location should be considered expired
     private static final String LOGTAG = GPSGameLocationPoller.class.getName();
 
     private FusedLocationProviderClient mFusedLocationClient;
@@ -23,6 +24,7 @@ public class GPSGameLocationPoller extends GameLocationPoller{
     private LocationRequest mLocationRequest;
     private NewLocationListener newLocationListener;
     private Location lastLocation;
+    private long timeLastAccurateLocation = 0;
 
 
     public GPSGameLocationPoller(Context ctx, NewLocationListener newLocationListener) {
@@ -40,6 +42,7 @@ public class GPSGameLocationPoller extends GameLocationPoller{
     }
 
     public void startPolling() {
+        timeLastAccurateLocation = System.currentTimeMillis();
         getLastLocation();
         requestLocationUpdates();
     }
@@ -82,10 +85,15 @@ public class GPSGameLocationPoller extends GameLocationPoller{
 
     private void onNewLocation(Location location) {
         if (location.getAccuracy() < MINIMUM_ACCURACY_REQUIRED) {
-            if (lastLocation == null || (lastLocation.distanceTo(location) >= SMALLEST_DISPLACEMENT)) {
+            timeLastAccurateLocation = System.currentTimeMillis();
+            if (lastLocation == null || (lastLocation.distanceTo(location) >= Math.max(SMALLEST_DISPLACEMENT, location.getAccuracy()))) {
                 lastLocation = location;
                 newLocationListener.onNewLocation(location);
+                return;
             }
+        }
+        if (System.currentTimeMillis() - timeLastAccurateLocation > LOCATION_RECEIVE_TIMEOUT){
+            newLocationListener.onLocationExpired(System.currentTimeMillis() - timeLastAccurateLocation, location.getAccuracy());
         }
     }
 

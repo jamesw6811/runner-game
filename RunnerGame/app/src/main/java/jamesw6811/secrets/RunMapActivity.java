@@ -51,7 +51,6 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
             gameService = binder.getService();
             gameService.bindUI(RunMapActivity.this);
             mBound = true;
-            if(!gameService.gameStarted)showLookingforGPSDialog();
         }
 
         @Override
@@ -166,9 +165,11 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         mMap.getUiSettings().setZoomGesturesEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setOnCameraIdleListener(() -> {
-            Location last = gameService.getLastLocation();
-            if (last != null){
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(MapUtilities.locationToLatLng(last)));
+            if (gameService != null) {
+                Location last = gameService.getLastLocation();
+                if (last != null) {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(MapUtilities.locationToLatLng(last)));
+                }
             }
         });
         disableMarkerScrolling();
@@ -176,25 +177,27 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         bindGameService();
     }
 
-    private void showLookingforGPSDialog() {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setIcon(android.R.drawable.ic_dialog_map);
-        alertDialogBuilder.setTitle("GPS Signal");
-        alertDialogBuilder.setMessage("Searching for your location...\nGo outside under a clear sky.").setCancelable(false);
-        GPSDialog = alertDialogBuilder.create();
-        GPSDialog.show();
+    private void showLookingforGPSDialog(float accuracy) {
+        if (GPSDialog == null) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setIcon(android.R.drawable.ic_dialog_map);
+            alertDialogBuilder.setTitle("GPS Signal");
+            alertDialogBuilder.setMessage(String.format(getString(R.string.gps_dialog_message), accuracy)).setCancelable(false);
+            GPSDialog = alertDialogBuilder.create();
+        } else {
+            GPSDialog.setMessage(String.format(getString(R.string.gps_dialog_message), accuracy));
+        }
+        if (!GPSDialog.isShowing()) GPSDialog.show();
     }
 
     private void dismissLookingforGPSDialog() {
-        if (GPSDialog.isShowing()) GPSDialog.dismiss();
+        if (GPSDialog != null && GPSDialog.isShowing()) GPSDialog.dismiss();
     }
 
     private void initializeManualMode() {
-        ManualGameLocationPoller gameLocationPoller = new ManualGameLocationPoller(this, gameService::startGameOrUpdateLocation);
+        ManualGameLocationPoller gameLocationPoller = new ManualGameLocationPoller(this, gameService);
         gameService.setGameLocationPoller(gameLocationPoller);
-        mMap.setOnMapClickListener(latLng -> {
-            gameLocationPoller.manualSetLocation(latLng);
-        });
+        mMap.setOnMapClickListener(gameLocationPoller::manualSetLocation);
         mMap.setOnMarkerClickListener(marker -> {
             gameLocationPoller.manualSetLocation(marker.getPosition());
             return true;
@@ -252,16 +255,21 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         });
     }
 
+    public void showGPSWarning(float accuracy) {
+        runOnUiThread(() -> showLookingforGPSDialog(accuracy));
+    }
+
+    public void hideGPSWarning() {
+        runOnUiThread(this::dismissLookingforGPSDialog);
+    }
+
     public abstract static class MapUpdate {
-        public Runnable getRunnable(final GoogleMap gm) {
-            return new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        updateMap(gm);
-                    } catch (IllegalArgumentException unmanaged) {
-                        Log.w(LOGTAG, "Updating unmanaged descriptor");
-                    }
+        Runnable getRunnable(final GoogleMap gm) {
+            return () -> {
+                try {
+                    updateMap(gm);
+                } catch (IllegalArgumentException unmanaged) {
+                    Log.w(LOGTAG, "Updating unmanaged descriptor");
                 }
             };
         }

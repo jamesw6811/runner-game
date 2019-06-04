@@ -5,6 +5,7 @@ import android.util.Log;
 public class DifficultySettings {
     private static final String LOGTAG = DifficultySettings.class.getName();
     private static final double PACE_BASELINE = 9; //minutes per mile baseline for setting speeds based on pace, all settings scale off of this number.
+    private static final double PACE_MAXIMUM = 30;
     private static final double PACE_MINIMUM = 1;
     private double metersPerRunningResource = 130;
     private double metersInSight = 50;
@@ -20,7 +21,8 @@ public class DifficultySettings {
 
     // Alter defaults based on pace settings
     public void setPaceSettings(double pace) {
-        if (pace < PACE_MINIMUM) throw new RuntimeException("Pace too low");
+        if (pace > PACE_MAXIMUM) throw new RuntimeException("Pace too slow");
+        if (pace < PACE_MINIMUM) throw new RuntimeException("Pace too fast");
         double paceModifier = pace / PACE_BASELINE; // unitless pace ratio, higher = slower than baseline; lower = faster than baseline
         Log.d(LOGTAG, "Pace modifier:" + paceModifier);
         metersPerRunningResource = metersPerRunningResource / paceModifier;

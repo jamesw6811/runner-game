@@ -59,10 +59,14 @@ public class Player extends MapManager.GameObject {
         if (lastGPS.equals(getPosition())) {
             lastDistanceTravelled = 0;
         } else {
-            lastDistanceTravelled = SphericalUtil.computeDistanceBetween(getPosition(), lastGPS);
+            lastDistanceTravelled = travelDistanceCap(SphericalUtil.computeDistanceBetween(getPosition(), lastGPS));
             lastHeadingTravelled = SphericalUtil.computeHeading(getPosition(), lastGPS);
             setPosition(lastGPS);
         }
+    }
+
+    private double travelDistanceCap(double distance){
+        return Math.min(distance, settings.getMetersPerRunningResource());
     }
 
     public LatLng getLastPosition() {

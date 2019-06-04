@@ -4,4 +4,5 @@ import android.location.Location;
 
 public interface NewLocationListener {
     void onNewLocation(Location location);
+    void onLocationExpired(long timeSinceLocation, float accuracy);
 }
