@@ -1,7 +1,5 @@
 package jamesw6811.secrets;
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +10,6 @@ import android.os.Looper;
 import org.junit.Rule;
 import org.junit.Test;
 
-import androidx.test.InstrumentationRegistry;
 import androidx.test.rule.ServiceTestRule;
 
 import jamesw6811.secrets.gameworld.story.StoryMission;
@@ -54,6 +51,6 @@ public class GameServiceTest {
                 Context.BIND_AUTO_CREATE);
         assertNotNull(gameService);
         assertTrue(mBound);
-        assertTrue(gameService.started);
+        assertTrue(gameService.serviceStarted);
     }
 }

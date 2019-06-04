@@ -3,7 +3,6 @@ package jamesw6811.secrets;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
@@ -11,7 +10,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
@@ -20,7 +18,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 import androidx.core.app.ActivityCompat;
@@ -54,6 +51,7 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
             gameService = binder.getService();
             gameService.bindUI(RunMapActivity.this);
             mBound = true;
+            if(!gameService.gameStarted)showLookingforGPSDialog();
         }
 
         @Override
@@ -175,7 +173,6 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
         });
         disableMarkerScrolling();
         mMapReady = true;
-        showLookingforGPSDialog();
         bindGameService();
     }
 

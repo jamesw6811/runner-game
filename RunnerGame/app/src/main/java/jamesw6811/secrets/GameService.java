@@ -50,7 +50,8 @@ public class GameService extends Service implements GameUIUpdateProcessor, Conte
 
     private Location lastLocation;
     private boolean servicesSet = false;
-    public boolean started = false;
+    public boolean serviceStarted = false;
+    public boolean gameStarted = false;
     private GameWorld gw;
     private boolean uiBound;
     private double pace = -1;
@@ -99,7 +100,7 @@ public class GameService extends Service implements GameUIUpdateProcessor, Conte
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (controller != null) MediaButtonReceiver.handleIntent(controller.getMediaSession(), intent);
         startForeground(NOTIFICATION_ID, getNotification());
-        started = true;
+        serviceStarted = true;
         return START_NOT_STICKY;
     }
 
@@ -233,6 +234,7 @@ public class GameService extends Service implements GameUIUpdateProcessor, Conte
             if (gw == null && uiBound) {
                 gw = new GameWorld(location, pace, missionNumber, this, this, this, ttser, toner, controller);
                 gw.initializeAndStartRunning();
+                gameStarted = true;
                 mActivity.gameStarted();
             } else if (gw != null) {
                 gw.updateGPS(location);
