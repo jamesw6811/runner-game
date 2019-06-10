@@ -107,7 +107,7 @@ public class StoryMission1 extends StoryMission {
 
         @Override
         protected void doAlarmAnnouncement(int minutesRemaining) {
-            story.addSpeechToQueue("You have " + minutesRemaining + " minutes until the Oaken agents catch you up! Get to the drop site.");
+            story.addSpeechToQueue("You have " + minutesRemaining + " minutes until the Oaken agents catch you up! Get to the Dead Drop.");
         }
 
         @Override
@@ -162,7 +162,7 @@ public class StoryMission1 extends StoryMission {
         }
 
         public void gameStarted() {
-            addSpeechToQueue("Hello Agent Almond. I'm an artificially intelligent holographic life-form. But you can call me Holly for short. I'll provide you support on your missions. Your objective is to find the Oaken agent and and collect the files. You'll need to completely fill your Vine Cred to pay the source. That's 10 Vine Cred. One way to get Vine Cred is by exploring. When you get a Vine Cred, you will hear the following sound.");
+            addSpeechToQueue("Hello Agent Almond. I'm an artificially intelligent holographic life-form. But you can call me Holly for short. I'll provide you support on your missions. Your objective is to find the Oaken agent and and collect the files. You'll need to completely fill your Vine Cred to pay off the agent. That's 10 Vine Cred. One way to get Vine Cred is by exploring. When you get a Vine Cred, you will hear the following sound.");
             addSpeechToQueue(TextToSpeechRunner.EARCON_CRED);
             addSpeechToQueue("Good luck, Agent Almond.");
         }
