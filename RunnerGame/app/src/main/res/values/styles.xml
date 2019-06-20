@@ -24,7 +24,7 @@
         <item name="android:textColor">@color/primary_dark</item>
         <item name="android:fontFamily">@font/georgia</item>
         <item name="android:textSize">23sp</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textStyle">italic</item>
     </style>
 
     <style name="SappyTitleViewStyle" parent="android:Widget.TextView">
