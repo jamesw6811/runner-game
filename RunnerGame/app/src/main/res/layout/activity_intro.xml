@@ -20,9 +20,8 @@
             android:layout_marginRight="8sp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Sappy Secrets is experienced through your earphones while walking or running"
-            android:textAlignment="center"
-            android:textSize="24sp" />
+            android:text="Sappy Secrets is experienced through your earphones while walking or running."
+            android:textAlignment="center"/>
 
         <TextView
             android:id="@+id/textView2"
@@ -33,8 +32,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Your location and earphone play/pause button is used to control the game."
-            android:textAlignment="center"
-            android:textSize="24sp" />
+            android:textAlignment="center" />
 
         <TextView
             android:id="@+id/textView3"
@@ -45,8 +43,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Play your own music from any app, just make sure to relaunch Sappy Secrets to re-enable controls."
-            android:textAlignment="center"
-            android:textSize="24sp" />
+            android:textAlignment="center" />
 
         <TextView
             android:id="@+id/textView4"
@@ -57,14 +54,16 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Play safe. Don't run across streets or other hazardous areas. Your life is not worth a game."
-            android:textAlignment="center"
-            android:textSize="24sp" />
+            android:textAlignment="center" />
 
         <Button
             android:id="@+id/button_safe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="I'll play safe."
-            android:textSize="24sp" />
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="I'll play safe."/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

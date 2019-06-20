@@ -1,4 +1,57 @@
 <resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- your app branding color for the app bar -->
+        <item name="colorPrimary">@color/primary</item>
+        <!-- darker variant for the status bar and contextual app bars -->
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <!-- theme UI controls like checkboxes and text fields -->
+        <item name="colorAccent">@color/primary_light</item>
 
+        <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@color/background_light</item>
+        <item name="android:textViewStyle">@style/SappyTextViewStyle</item>
+        <item name="android:buttonStyle">@style/SappyButtonStyle</item>
+        <item name="android:seekBarStyle">@style/SappySeekBar</item>
+    </style>
 
+    <style name="SappyTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="android:fontFamily">@font/georgia</item>
+        <item name="android:textSize">23sp</item>
+    </style>
+
+    <style name="SappyTextViewStyleAlt" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/primary_dark</item>
+        <item name="android:fontFamily">@font/georgia</item>
+        <item name="android:textSize">23sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SappyTitleViewStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/secondary_dark</item>
+        <item name="android:fontFamily">@font/pinewood</item>
+        <item name="android:textSize">60sp</item>
+    </style>
+
+    <style name="SappyButtonStyle" parent="android:Widget.Button">
+        <item name="android:background">@color/secondary</item>
+        <item name="android:textColor">@color/secondaryTextColor</item>
+        <item name="android:fontFamily">@font/georgia</item>
+        <item name="android:textSize">36sp</item>
+    </style>
+
+    <style name="SappySeekBar" parent="android:Widget.SeekBar">
+        <item name="android:progressTint">@color/secondary_dark</item>
+        <item name="android:progressBackgroundTint">@color/secondary_light</item>
+        <item name="android:thumbTint">@color/secondary</item>
+    </style>
+
+    <style name="SappyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <!-- Used for the buttons -->
+        <item name="colorAccent">@color/primary_dark</item>
+        <!-- Used for the title and text -->
+        <item name="android:textColorPrimary">@color/primaryTextColor</item>
+        <!-- Used for the background -->
+        <item name="android:background">@color/secondary_light</item>
+    </style>
 </resources>

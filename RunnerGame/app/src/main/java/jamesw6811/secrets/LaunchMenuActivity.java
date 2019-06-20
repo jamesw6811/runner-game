@@ -16,7 +16,7 @@ import jamesw6811.secrets.gameworld.story.StoryMission;
 public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarChangeListener {
     public static final String EXTRA_SEEN_INTRO_ALREADY = "LaunchMenuActivity.EXTRA_SEEN_INTRO_ALREADY";
     private static final int SPEED_OFFSET = 4; // minutes per mile
-    private TextView speedSettingText;
+    private Button startButton;
     private SeekBar speedSettingBar;
 
     @Override
@@ -38,12 +38,10 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
         // Set up the settings/start screen
         setContentView(R.layout.activity_launch_menu);
         speedSettingBar = findViewById(R.id.running_speed_seek_bar);
-        speedSettingText = findViewById(R.id.running_speed_text);
         speedSettingBar.setOnSeekBarChangeListener(this);
 
-        Button startButton = findViewById(R.id.start_game_button);
+        startButton = findViewById(R.id.start_game_button);
         int latest_mission_unlocked = sharedPref.getInt(getString(R.string.latest_mission_unlock_key), 1);
-        startButton.setText(String.format(getString(R.string.start_button_text), StoryMission.getMission(latest_mission_unlocked).getName()));
         startButton.setOnClickListener(v -> startBriefingScreen(latest_mission_unlocked));
 
         int defaultValue = getResources().getInteger(R.integer.default_pace_key);
@@ -92,7 +90,7 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
 
     private void updateSpeedFromBar() {
         int speedSettingPace = speedSettingBar.getProgress() + SPEED_OFFSET;
-        speedSettingText.setText(this.getResources().getString(R.string.pace_setting_text, speedSettingPace));
+        startButton.setText(this.getResources().getString(R.string.pace_set_button_text, speedSettingPace));
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt(getString(R.string.saved_pace_key), speedSettingPace);

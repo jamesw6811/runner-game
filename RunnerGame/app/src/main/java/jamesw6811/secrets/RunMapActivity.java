@@ -79,7 +79,7 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
     }
 
     private void createConfirmAbortDialog() {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this, R.style.SappyAlertDialogStyle)
                 .setTitle("Aborting Mission...")
                 .setMessage("Do you really want to abort?")
                 .setIcon(android.R.drawable.ic_dialog_alert)
@@ -179,7 +179,7 @@ public class RunMapActivity extends FragmentActivity implements OnMapReadyCallba
 
     private void showLookingforGPSDialog(float accuracy) {
         if (GPSDialog == null) {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this, R.style.SappyAlertDialogStyle);
             alertDialogBuilder.setIcon(android.R.drawable.ic_dialog_map);
             alertDialogBuilder.setTitle("GPS Signal");
             alertDialogBuilder.setMessage(String.format(getString(R.string.gps_dialog_message), accuracy)).setCancelable(false);
