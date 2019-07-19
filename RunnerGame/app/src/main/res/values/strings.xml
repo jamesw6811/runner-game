@@ -167,6 +167,12 @@ THIS NOTICE DOES NOT APPLY IF: (1) IF YOU ARE A RESIDENT OF ANY JURISDICTION WHI
     <string name="latest_mission_unlock_key">latest_mission_unlock</string>
     <string name="dropsite_spokenName">a Dogwood Dead Drop</string>
     <string name="dropsite_mapName">DDD</string>
-    <string name="dropsite_fixInjuries">You fixed up your injuries at the Dogwood Dead Drop. You are spry as a sapling now!</string>
+    <string name="dropsite_fixInjuries">You cured your poison at the Dogwood Dead Drop. You are spry as a sapling now!</string>
     <string name="gps_dialog_message">Getting an accurate lock on your location…\nGo outside under a clear sky.\nAccuracy: %3.2f meters</string>
+    <string name="hazardsite_spokenName">a Hemlock Hazard</string>
+    <string name="hazardsite_mapName">Hazard</string>
+    <string name="hazardsite_injured">You were hurt by a Hemlock Hazard. It is now harmless, but you are poisoned. Find a Dead Drop Date!</string>
+    <string name="hazardsite_alreadyinjured">You are already poisoned, so the Hemlock Hazard didn\'t hurt you.</string>
+    <string name="hazardsite_primed">This Hemlock Hazard is dangerous! If we return to this area, we will be poisoned by the Hemlock!</string>
+    <string name="hazardsite_spokenName_triggered">a harmless Hemlock Haven</string>
 </resources>

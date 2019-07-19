@@ -34,6 +34,12 @@ public class SiteFactory {
         } else if (cls == RunningDiscoveryUpgradeSite.class){
             return new RunningDiscoveryUpgradeSite(mapManager, position);
 
+        } else if (cls == WalletUpgradeSite.class){
+            return new WalletUpgradeSite(mapManager, position);
+
+        } else if (cls == HazardSite.class){
+            return new HazardSite(mapManager, position);
+
         // Mission-specific sites:
         } else if (cls == StoryMission1.Mission1AlarmCaptureSite.class){
             return new StoryMission1.Mission1AlarmCaptureSite(mapManager, position);
