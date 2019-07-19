@@ -1,10 +1,7 @@
 package jamesw6811.secrets.gameworld.map;
 
-import android.graphics.Color;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.SphericalUtil;
 
@@ -24,20 +21,20 @@ public class Player extends MapManager.GameObject {
     private LatLng lastPosition;
     private double lastDistanceTravelled;
     private double lastHeadingTravelled;
-    private int runningResourceMax;
+    private static final int RUNNING_RESOURCE_MAX_START = 10;
     private int runningResource;
     private int buildingResource;
     private int buildingSubResource;
     private int upgradeLevelLapSupporter;
     private int upgradeLevelDiscoverySupporter;
     private int upgradeLevelTrapSupporter;
+    private int upgradeLevelCapacitySupporter;
     private boolean injured = false;
     private List<LatLng> positionsGivenRunningResources;
 
     Player(MapManager mm, LatLng gp) {
         super(mm, mm.getContext().getString(R.string.player_spokenName), gp);
         runningResource = 0;
-        runningResourceMax = 10;
         positionsGivenRunningResources = new LinkedList<>();
     }
 
@@ -82,16 +79,16 @@ public class Player extends MapManager.GameObject {
     }
 
     public void giveRunningResource(int i, boolean discovery) {
-        if (runningResource != runningResourceMax){
+        if (runningResource != getResourceCapacity()){
             int oldRunningResource = runningResource;
             runningResource += i;
-            runningResource = Math.min(runningResource, runningResourceMax);
+            runningResource = Math.min(runningResource, getResourceCapacity());
             for (int x = 0; x < runningResource - oldRunningResource - 1; x++) {
                 story.addSpeechToQueue(TextToSpeechRunner.EARCON_CRED_SHORT);
             }
             story.addSpeechToQueue(TextToSpeechRunner.EARCON_CRED);
         }
-        if (runningResource == runningResourceMax){
+        if (runningResource == getResourceCapacity()){
             story.addSpeechToQueue("You have " + runningResource + " Vine Cred, which is the most you can hold right now.");
         }
         if (discovery) positionsGivenRunningResources.add(getPosition());
@@ -180,5 +177,17 @@ public class Player extends MapManager.GameObject {
 
     public void setUpgradeLevelTrapSupporter(int upgradeLevelTrapSupporter) {
         this.upgradeLevelTrapSupporter = upgradeLevelTrapSupporter;
+    }
+
+    public int getUpgradeLevelCapacitySupporter() {
+        return upgradeLevelCapacitySupporter;
+    }
+
+    public void setUpgradeLevelCapacitySupporter(int upgradeLevelCapacitySupporter) {
+        this.upgradeLevelCapacitySupporter = upgradeLevelCapacitySupporter;
+    }
+
+    public int getResourceCapacity() {
+        return RUNNING_RESOURCE_MAX_START*(1+upgradeLevelCapacitySupporter);
     }
 }
