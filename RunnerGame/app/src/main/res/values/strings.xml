@@ -173,6 +173,6 @@ THIS NOTICE DOES NOT APPLY IF: (1) IF YOU ARE A RESIDENT OF ANY JURISDICTION WHI
     <string name="hazardsite_mapName">Hazard</string>
     <string name="hazardsite_injured">You were hurt by a Hemlock Hazard. It is now harmless, but you are poisoned. Find a Dead Drop Date!</string>
     <string name="hazardsite_alreadyinjured">You are already poisoned, so the Hemlock Hazard didn\'t hurt you.</string>
-    <string name="hazardsite_primed">This Hemlock Hazard is dangerous! If we return to this area, we will be poisoned by the Hemlock!</string>
+    <string name="hazardsite_primed">This Hemlock Hazard is dangerous!</string>
     <string name="hazardsite_spokenName_triggered">a harmless Hemlock Haven</string>
 </resources>

@@ -15,20 +15,20 @@ import jamesw6811.secrets.gameworld.map.MapManager;
 import jamesw6811.secrets.gameworld.map.Player;
 import jamesw6811.secrets.gameworld.map.discovery.DiscoveryScheme;
 import jamesw6811.secrets.gameworld.map.discovery.MultiStageCardsBasedDiscoveryScheme;
-import jamesw6811.secrets.gameworld.map.site.AlarmCaptureSite;
 import jamesw6811.secrets.gameworld.map.site.CaptureSite;
 import jamesw6811.secrets.gameworld.map.site.ChaseSite;
-import jamesw6811.secrets.gameworld.map.site.ChaserCaptureSite;
 import jamesw6811.secrets.gameworld.map.site.DropSite;
 import jamesw6811.secrets.gameworld.map.site.EmptySite;
+import jamesw6811.secrets.gameworld.map.site.HazardSite;
 import jamesw6811.secrets.gameworld.map.site.RunningDiscoveryUpgradeSite;
 import jamesw6811.secrets.gameworld.map.site.RunningLapUpgradeSite;
 import jamesw6811.secrets.gameworld.map.site.TrapSite;
 import jamesw6811.secrets.gameworld.map.site.TrapUpgradeSite;
+import jamesw6811.secrets.gameworld.map.site.WalletUpgradeSite;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
 
-public class StoryMission3 extends StoryMission {
-    public static final int NEXT_MISSION_NUMBER = 4; // Setting to 2 before having a mission 2 will crash
+public class StoryMission4 extends StoryMission {
+    public static final int NEXT_MISSION_NUMBER = 1; // Setting to 2 before having a mission 2 will crash
     public static final int NUMBER_OF_CAPTURES_WIN = 3;
 
     @Override
@@ -38,32 +38,34 @@ public class StoryMission3 extends StoryMission {
 
     @Override
     public String getName() {
-        return "Make Like a Tree";
+        return "Stabbed in the Bark";
     }
 
     @Override
     public String getBriefing() {
-        return "URGENT: Agent Almond,\n" +
+        return "Agent Almond,\n" +
                 "\n" +
-                "I don’t know how, but the Nightshade Organization tracked the database hack back to you. They know your location and the Ginkgo Guard, a city reserve force, is coming for you. You only have 25 minutes to make it back into Redwood Republic territory. \n" +
+                "This is Secretary Root, the head of the spy service. I’ve heard of your exemplary service getting us valuable information. The only problem is that our Republic’s government has not been receiving this information. It has been intercepted\n" +
                 "\n" +
-                "We can evacuate you, but there are three Anti-Air Aspens that will make splinters out of our HollyCopters. Take them out, evade or sabotage the Ginkgo Guards, and then get to a Dead Drop Date.\n" +
+                "We believe that Director Stem is a double-agent working for the Oaken Empire. We also believe that he was the one who told the Nightshade Organization you were behind the hack and where to find you. We have to find out why he’s doing this. \n" +
                 "\n" +
-                "S\n";
+                "Stem has hidden several stashes of crucial info around an old Nightshade chemical waste disposal plant. Find those stashes, but be careful Agent. You can expect resistance; Stem is a master spy, and he has eyes on every branch. In 25 minutes we’ll abort the mission - with or without you.\n" +
+                "\n" +
+                "-R\n";
     }
 
     @Override
     public String getSuccessDebriefing() {
-        return "I’m so glad you made it out OK. Take a rest, and we’ll talk soon.\n" +
+        return "Good work Agent. We will analyze this information and confirm if Director Stem is a double-agent.\n" +
                 "\n" +
-                "S\n";
+                "- R";
     }
 
     @Override
     public String getFailureDebriefing() {
-        return "We had to abort. Go underground for a while until we have another window to attempt an escape.\n" +
+        return "We have to abort. Stem cannot know we are tracking him. Go about your business as normal and we’ll try again later. \n" +
                 "\n" +
-                "S\n";
+                "- R\n";
     }
 
     @Override
@@ -82,44 +84,42 @@ public class StoryMission3 extends StoryMission {
             List<Class> stage0 = new LinkedList<>();
             List<Class> stage1 = new LinkedList<>();
             List<Class> stage2 = new LinkedList<>();
-            List<Class> stage3 = new LinkedList<>();
-            List<Class> stage4 = new LinkedList<>();
-            List<Class> stage5 = new LinkedList<>();
             List<List<Class>> decks = new LinkedList<>();
 
-            stage0.add(Mission3GuardSite.class);
+            stage0.add(DropSite.class);
+            stage0.add(RunningDiscoveryUpgradeSite.class);
+            stage0.add(RunningDiscoveryUpgradeSite.class);
+            stage0.add(RunningLapUpgradeSite.class);
+            stage0.add(RunningLapUpgradeSite.class);
+            stage0.add(TrapUpgradeSite.class);
+            stage0.add(WalletUpgradeSite.class);
+            stage0.add(WalletUpgradeSite.class);
+            stage0.add(HazardSite.class);
 
             stage1.add(TrapSite.class);
+            stage1.add(TrapSite.class);
+            stage1.add(DropSite.class);
+            stage1.add(HazardSite.class);
+            stage1.add(Mission4GuardSite.class);
+            stage1.add(Mission4GuardSite.class);
+            stage1.add(Mission4CaptureSite.class);
+            stage1.add(Mission4CaptureSite.class);
+            stage1.add(Mission4CaptureSite.class);
 
-            stage2.add(DropSite.class);
-            stage2.add(Mission3CaptureSite.class);
-            stage2.add(TrapUpgradeSite.class);
-
-            stage3.add(Mission3CaptureSite.class);
-            stage3.add(Mission3GuardSite.class);
-
-            stage4.add(Mission3CaptureSite.class);
-            stage4.add(Mission3GuardSite.class);
-            stage4.add(TrapSite.class);
-            stage4.add(DropSite.class);
-
-            stage5.add(EmptySite.class);
-            stage5.add(Mission3GuardSite.class);
+            stage2.add(HazardSite.class);
+            stage2.add(EmptySite.class);
 
             decks.add(stage0);
             decks.add(stage1);
             decks.add(stage2);
-            decks.add(stage3);
-            decks.add(stage4);
-            decks.add(stage5);
             setDecksAndShuffle(decks);
         }
     }
 
-    public static class Mission3GuardSite extends ChaseSite {
+    public static class Mission4GuardSite extends ChaseSite {
 
-        public Mission3GuardSite(MapManager mm, LatLng position) {
-            super(mm, "a Ginkgo Guard Tower", position);
+        public Mission4GuardSite(MapManager mm, LatLng position) {
+            super(mm, "a Nightshade Guard Tower", position);
         }
 
         @Override
@@ -129,67 +129,67 @@ public class StoryMission3 extends StoryMission {
 
         @Override
         protected double getChaseDifficulty() {
-            return 0.75;
+            return 0.8;
         }
 
         @Override
         protected String getChaseStartMessage() {
-            return "A Ginkgo Guard begins chasing you! Run!";
+            return "A Nightshade Guard begins chasing you! Run!";
         }
 
         @Override
         public void chaseSuccessful() {
-            story.addSpeechToQueue("You lost the Ginkgo guard. Nice work.");
+            story.addSpeechToQueue("You lost the Nightshade guard. Nice work.");
         }
 
         @Override
         public void chaseFailed() {
-            story.addSpeechToQueue("The Ginkgo guard caught you. You got away but you were injured. Get to a Dead Drop to patch yourself up.");
+            story.addSpeechToQueue("The Nightshade guard caught you. You got away but you were injured. Get to a Dead Drop to patch yourself up.");
             player.injure();
         }
 
         @Override
         public CharSequence getChaseMessage() {
-            return "You are being chased by a Ginkgo guard. Run away!";
+            return "You are being chased by a Nightshade guard. Run away!";
         }
 
         @Override
         public CharSequence getChaserName() {
-            return "a Ginkgo guard";
+            return "a Nightshade guard";
         }
     }
 
-    public static class Mission3CaptureSite extends CaptureSite {
+    public static class Mission4CaptureSite extends CaptureSite {
 
-        private static final int CAPTURE_CRED = 10;
+        private static final int CAPTURE_CRED = 20;
 
-        public Mission3CaptureSite(MapManager mm, LatLng latLng) {
-            super(mm, "an Anti-Air Aspen", latLng);
+        public Mission4CaptureSite(MapManager mm, LatLng latLng) {
+            super(mm, "one of Stem's stashes", latLng);
         }
 
         @Override
         protected CharSequence getCaptureSiteMapName() {
-            return "Aspen";
+            return "Stash";
         }
 
         @Override
         protected CharSequence getCaptureSiteSpokenNameBeforeCapture() {
-            return "an Anti-Air Aspen";
+            return "one of Stem's stashes";
         }
 
         @Override
         protected CharSequence getCaptureSiteSpokenNameAfterCapture() {
-            return "the remains of a sabotaged Anti-Air Aspen";
+            return "a stash you already hacked";
         }
 
         @Override
         protected CharSequence getCaptureSiteCaptureSpeech() {
-            return "Calculating Sabotage Results. Anti-Air Aspen 100% sawdust.";
+            return "You hacked open one of Stem's stashes. He is keeping lots of secrets.";
         }
 
         @Override
         protected CharSequence getCaptureSiteNotEnoughResourcesSpeech() {
-            return "You need " + getCaptureSiteCaptureCost() + " Vine Cred to sabotage this Anti-Air Aspen.";
+            return "You need " + getCaptureSiteCaptureCost() + " Vine Cred to gain access to this stash.";
         }
 
         @Override
@@ -203,7 +203,7 @@ public class StoryMission3 extends StoryMission {
         private boolean winConditionMet = false;
         private boolean loseConditionMet = false;
         private float timeAlarmOut = 60.0f*25.0f - 1;
-        private boolean firstChaseDone = false;
+        private boolean firstHazardApproached = false;
         private DiscoveryScheme discoveryScheme;
 
         MissionStoryManager(Context c, TextToSpeechRunner tts, Random random) {
@@ -235,7 +235,7 @@ public class StoryMission3 extends StoryMission {
                 if (timeAlarmOut <= 0) {
                     loseConditionMet = true;
                 } else if (minutesAfter != minutesBefore){
-                    addSpeechToQueue("It's heating up out there. " + (int)(minutesBefore*timeAnnounceResolution/60.0f) + " minutes until mission abort.");
+                    addSpeechToQueue("Nightshade reinforcements inbound. " + (int)(minutesBefore*timeAnnounceResolution/60.0f) + " minutes until mission abort.");
                 }
             }
         }
@@ -246,7 +246,7 @@ public class StoryMission3 extends StoryMission {
                 case CaptureSite.EVENT_CAPTURE_SITE_CAPTURED:
                     numberCaptures++;
                     if (numberCaptures == 3) {
-                        addSpeechToQueue("All Anti-Air Aspens have been chopped down. Get to the Dogwood Dead Drop for immediate tree-vac.");
+                        addSpeechToQueue("We have enough information on Director Stem's crimes. Get to the Dogwood Dead Drop for immediate tree-vac.");
                     }
                     break;
                 case DropSite.EVENT_DROP_SITE_ACTIVATED:
@@ -254,12 +254,12 @@ public class StoryMission3 extends StoryMission {
                         winConditionMet = true;
                         interruptQueueWithSpeech("Nice work Agent Almond. Holly Copter inbound for tree-vac. I'm sending the debriefing to your mobile device.");
                     }
-                    else interruptQueueWithSpeech("We can't evacuate you yet, Almond. The Anti-Air Aspens will shoot us down!");
+                    else interruptQueueWithSpeech("We can't evacuate you yet, Almond. We must find out the truth about Director Stem.");
                     break;
-                case ChaseSite.EVENT_CHASE_SITE_CHASE_STARTED:
-                    if (!firstChaseDone){
-                        firstChaseDone = true;
-                        addSpeechToQueue("Hollie calculating escape plan. First step: run away. Second step: sabotage anti-air aspens. Third step: get to Dogwood Dead Drop.");
+                case HazardSite.EVENT_HAZARD_SITE_APPROACHED:
+                    if (!firstHazardApproached){
+                        firstHazardApproached = true;
+                        addSpeechToQueue("It looks like there is hazardous waste around the Nightshade chemical plant. Analyzing waste composition. Waste analyzed. 100% toxic to tree spies. I recommend you avoid it.");
                     }
                     break;
             }

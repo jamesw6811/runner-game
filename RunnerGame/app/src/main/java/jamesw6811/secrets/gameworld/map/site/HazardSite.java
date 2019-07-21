@@ -23,6 +23,7 @@ public class HazardSite extends MapManager.GameObject {
     private Marker marker;
     private boolean primed = false;
     private boolean triggered = false;
+    public static final String EVENT_HAZARD_SITE_APPROACHED = "EVENT_HAZARD_SITE_APPROACHED";
 
     public HazardSite(MapManager mm, LatLng pos) {
         super(mm, mm.getContext().getString(R.string.hazardsite_spokenName), pos);
@@ -86,6 +87,7 @@ public class HazardSite extends MapManager.GameObject {
             primed = true;
             story.addSpeechToQueue(ctx.getString(R.string.hazardsite_primed));
         }
+        story.processEvent(EVENT_HAZARD_SITE_APPROACHED);
     }
 
 }
