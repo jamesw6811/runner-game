@@ -28,7 +28,7 @@ import jamesw6811.secrets.gameworld.map.site.WalletUpgradeSite;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
 
 public class StoryMission4 extends StoryMission {
-    public static final int NEXT_MISSION_NUMBER = 1; // Setting to 2 before having a mission 2 will crash
+    public static final int NEXT_MISSION_NUMBER = 5; // Setting to 2 before having a mission 2 will crash
     public static final int NUMBER_OF_CAPTURES_WIN = 3;
 
     @Override
@@ -245,7 +245,7 @@ public class StoryMission4 extends StoryMission {
             switch (event) {
                 case CaptureSite.EVENT_CAPTURE_SITE_CAPTURED:
                     numberCaptures++;
-                    if (numberCaptures == 3) {
+                    if (numberCaptures == NUMBER_OF_CAPTURES_WIN) {
                         addSpeechToQueue("We have enough information on Director Stem's crimes. Get to the Dogwood Dead Drop for immediate tree-vac.");
                     }
                     break;

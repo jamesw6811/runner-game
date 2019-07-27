@@ -25,6 +25,8 @@ public abstract class StoryMission {
                 return new StoryMission3();
             case 4:
                 return new StoryMission4();
+            case 5:
+                return new StoryMission5();
         }
         throw new InvalidParameterException("No such mission:" + x);
     }

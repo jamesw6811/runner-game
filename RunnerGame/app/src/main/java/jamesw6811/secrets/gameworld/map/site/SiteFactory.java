@@ -6,6 +6,8 @@ import jamesw6811.secrets.gameworld.map.MapManager;
 import jamesw6811.secrets.gameworld.story.StoryMission1;
 import jamesw6811.secrets.gameworld.story.StoryMission2;
 import jamesw6811.secrets.gameworld.story.StoryMission3;
+import jamesw6811.secrets.gameworld.story.StoryMission4;
+import jamesw6811.secrets.gameworld.story.StoryMission5;
 
 public class SiteFactory {
     // TODO: Consider instead using self-registering Supplier subclasses in each Site.
@@ -56,8 +58,23 @@ public class SiteFactory {
         } else if (cls == StoryMission3.Mission3CaptureSite.class){
             return new StoryMission3.Mission3CaptureSite(mapManager, position);
 
-        } else if (cls == StoryMission3.Mission3GuardSite.class){
-            return new StoryMission3.Mission3GuardSite(mapManager, position);
+        } else if (cls == StoryMission4.Mission4GuardSite.class){
+            return new StoryMission4.Mission4GuardSite(mapManager, position);
+
+        } else if (cls == StoryMission4.Mission4CaptureSite.class){
+            return new StoryMission4.Mission4CaptureSite(mapManager, position);
+
+        } else if (cls == StoryMission5.Mission5CaptureSite.class){
+            return new StoryMission5.Mission5CaptureSite(mapManager, position);
+
+        } else if (cls == StoryMission5.Mission5CaptureSiteAlternate.class){
+            return new StoryMission5.Mission5CaptureSiteAlternate(mapManager, position);
+
+        } else if (cls == StoryMission5.Mission5GuardSite.class){
+            return new StoryMission5.Mission5GuardSite(mapManager, position);
+
+        } else if (cls == StoryMission5.Mission5AlarmSite.class){
+            return new StoryMission5.Mission5AlarmSite(mapManager, position);
 
         } else throw new UnsupportedOperationException("That site is not registered with SiteFactory. Class:" + cls.getName());
     }
