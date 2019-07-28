@@ -23,7 +23,7 @@ public class WalletUpgradeSite extends UpgradeSite {
 
     @Override
     protected CharSequence getUpgradeSiteSpokenNameAfterUpgrade() {
-        return "used Vine Vault";
+        return "a used Vine Vault";
     }
 
     @Override

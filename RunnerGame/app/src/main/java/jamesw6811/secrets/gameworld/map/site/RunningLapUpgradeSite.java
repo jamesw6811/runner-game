@@ -23,7 +23,7 @@ public class RunningLapUpgradeSite extends UpgradeSite {
 
     @Override
     protected CharSequence getUpgradeSiteSpokenNameAfterUpgrade() {
-        return "used Sappy Shoes";
+        return "a pair of used Sappy Shoes";
     }
 
     @Override

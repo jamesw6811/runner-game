@@ -45,7 +45,7 @@ public class StoryMission4 extends StoryMission {
     public String getBriefing() {
         return "Agent Almond,\n" +
                 "\n" +
-                "This is Secretary Root, the head of the spy service. I’ve heard of your exemplary service getting us valuable information. The only problem is that our Republic’s government has not been receiving this information. It has been intercepted\n" +
+                "This is Secretary Root, the head of the spy service. I’ve heard of your exemplary service getting us valuable information. The only problem is that our Republic’s government has not been receiving this information. It has been intercepted. \n" +
                 "\n" +
                 "We believe that Director Stem is a double-agent working for the Oaken Empire. We also believe that he was the one who told the Nightshade Organization you were behind the hack and where to find you. We have to find out why he’s doing this. \n" +
                 "\n" +

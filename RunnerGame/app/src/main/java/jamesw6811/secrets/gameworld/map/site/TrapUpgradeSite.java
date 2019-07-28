@@ -23,7 +23,7 @@ public class TrapUpgradeSite extends UpgradeSite {
 
     @Override
     protected CharSequence getUpgradeSiteSpokenNameAfterUpgrade() {
-        return "used Venus booster";
+        return "a used Venus booster";
     }
 
     @Override
