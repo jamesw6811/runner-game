@@ -58,8 +58,8 @@ public class StoryMission5 extends StoryMission {
                 "\n" +
                 "- R\n" +
                 "\n" +
-                "\n" +
-                "<incoming 2nd transmission, includes “plant_program.app”>\n" +
+                "<><><><>\n" +
+                "<incoming 2nd transmission, includes “plant_program.app” attachment>\n" +
                 "\n" +
                 "URGENT: Agent Almond, this is Stem. The Oaken Empire will never stop hunting Redwoods. The only way to keep our Republic safe is to end this, once and for all, by ending the Oaken Empire. I’m sure Root is sending you to the Viral Plant. \n" +
                 "\n" +
