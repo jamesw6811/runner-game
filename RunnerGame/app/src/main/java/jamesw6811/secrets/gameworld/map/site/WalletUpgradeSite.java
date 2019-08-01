@@ -28,7 +28,7 @@ public class WalletUpgradeSite extends UpgradeSite {
 
     @Override
     protected CharSequence getUpgradeSiteUpgradeSpeech() {
-        return "You upgraded a Vine Vault, now you can hold up to " + player.getResourceCapacity() + " Vine Cred.";
+        return "You upgraded a Vine Vault. Now you can hold up to " + player.getResourceCapacity() + " Vine Cred.";
     }
 
     @Override

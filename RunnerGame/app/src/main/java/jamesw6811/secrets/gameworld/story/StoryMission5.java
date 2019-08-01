@@ -70,7 +70,14 @@ public class StoryMission5 extends StoryMission {
 
     @Override
     public String getSuccessDebriefing() {
-        if (released_virus){
+        if (released_virus && disabled_regulator) {
+            return "Almond, this is President Trunk. I am contacting you directly because you have accomplished the impossible. Despite conflicting orders from your superiors, you managed to both strike an offense blow at the Oaken Empire and disable the Viral Plant once and for all. \n" +
+                    "\n" +
+                    "You deserve a medal, but the game developers were too busy to put one in the game for this secret bonus ending. So all you get is this message: \n" +
+                    "\n" +
+                    "From the Office of President Trunk and the Developers of Sappy Secrets,\n" +
+                    "Great work and thanks for playing.\n";
+        } else if (released_virus){
             return "Almond, this is Stem. I’ve been released from my arrest after word reached the HQ that you flawlessly executed my plan. As I write this, the Oaken Empire is dying the death they deserve. It’s a new era of peace for the Redwood Republic and for you. There is no cost too high for that.\n" +
                     "\n" +
                     "- S\n";
@@ -78,13 +85,6 @@ public class StoryMission5 extends StoryMission {
             return "Almond, this is Root. I’ve confirmed that the Viral Plant is destroyed. The Nightshade Organization has lost years of research and all of the virus they planned to use on the Redwood Republic. We are safe for now, thanks to you. You deserve a long vacation. \n" +
                     "\n" +
                     "- R\n";
-        } else if (released_virus && disabled_regulator) {
-            return "Almond, this is President Trunk. I am contacting you directly because you have accomplished the impossible. Despite conflicting orders from your superiors, you managed to both strike an offense blow at the Oaken Empire and disable the Viral Plant once and for all. \n" +
-                    "\n" +
-                    "You deserve a medal, but the game developers were too busy to put one in the game for this secret bonus ending. So all you get is this message: \n" +
-                    "\n" +
-                    "From the Office of President Trunk and the Developers of Sappy Secrets,\n" +
-                    "Great work and thanks for playing.\n";
         } else {
             throw new RuntimeException("Success Debriefing requested without any success conditions met.");
         }
@@ -426,7 +426,7 @@ public class StoryMission5 extends StoryMission {
                 case DropSite.EVENT_DROP_SITE_ACTIVATED:
                     if (numberCaptures >= NUMBER_OF_CAPTURES_WIN){
                         winConditionMet = true;
-                        interruptQueueWithSpeech("Holly Copter inbound for tree-vac. I'm sending the debriefing to your mobile device.");
+                        interruptQueueWithSpeech(getEndSpeech() + " Holly Copter inbound for tree-vac. I'm sending the debriefing to your mobile device.");
                     }
                     else interruptQueueWithSpeech("We can't evacuate you yet, Almond. The viral plant must be disabled.");
                     break;
@@ -443,6 +443,18 @@ public class StoryMission5 extends StoryMission {
         @Override
         public boolean checkLoseConditions() {
             return loseConditionMet;
+        }
+    }
+
+    private String getEndSpeech() {
+        if (released_virus && disabled_regulator) {
+            return "Viral plant load detected outbound to Oaken Empire. Alert. Viral plant temperatures reaching critical. Unexpected mission result. Analyzing outcome.";
+        } else if (released_virus){
+            return "Viral plant load detected outbound to Oaken Empire. Estimated casualties. One hundred thousand per day. Oaken Empire estimated total collapse. Two weeks.";
+        } else if (disabled_regulator){
+            return "Alert. Viral Plant temperatures reaching critical. Prediction. Complete destruction of viral plant and viral load under intense heat.";
+        } else {
+            throw new RuntimeException("Success Debriefing requested without any success conditions met.");
         }
     }
 }
