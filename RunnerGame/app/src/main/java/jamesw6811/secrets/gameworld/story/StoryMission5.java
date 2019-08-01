@@ -198,7 +198,7 @@ public class StoryMission5 extends StoryMission {
 
         @Override
         protected double getChaseDifficulty() {
-            return 0.9;
+            return 0.95;
         }
 
         @Override
@@ -279,7 +279,7 @@ public class StoryMission5 extends StoryMission {
 
     public static class Mission5CaptureSite extends CaptureSite {
 
-        private static final int CAPTURE_CRED = 100;
+        private static final int CAPTURE_CRED = 80;
 
         public Mission5CaptureSite(MapManager mm, LatLng latLng) {
             super(mm, "the Viral Plant temperature regulator", latLng);
@@ -327,7 +327,7 @@ public class StoryMission5 extends StoryMission {
 
     public static class Mission5CaptureSiteAlternate extends CaptureSite {
 
-        private static final int CAPTURE_CRED = 100;
+        private static final int CAPTURE_CRED = 80;
 
         public Mission5CaptureSiteAlternate(MapManager mm, LatLng latLng) {
             super(mm, "the Viral Plant mainframe", latLng);
@@ -432,7 +432,7 @@ public class StoryMission5 extends StoryMission {
                     break;
                 case Mission5AlarmSite.MISSION5_ALARM_TRIGGERED_EVENT:
                     addSpeechToQueue("I detect multiple alarms triggered in the plant as you enter. Guards are on alert and military forces are inbound.");
-                    timeAlarmOut = 25.0f*60.0f;
+                    timeAlarmOut = 30.0f*60.0f;
             }
         }
 
