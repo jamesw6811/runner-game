@@ -26,7 +26,7 @@ public class IntroActivity extends Activity {
         boolean eulaAgreed = sharedPref.getBoolean(getString(R.string.eula_agreed_key), false);
         if(!eulaAgreed)
         {
-            new AlertDialog.Builder(this)
+            new AlertDialog.Builder(this, R.style.SappyAlertDialogStyle)
                     .setIcon(R.drawable.amu_bubble_mask)
                     .setTitle(R.string.eula_title)
                     .setMessage(getText(R.string.eula_content))

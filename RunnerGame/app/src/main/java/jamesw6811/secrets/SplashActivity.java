@@ -32,8 +32,7 @@ public class SplashActivity extends Activity {
         private void scheduleSplashScreen() {
             long splashScreenDuration = getSplashScreenDuration();
             new Handler().postDelayed(() -> {
-                Intent intent = new Intent(SplashActivity.this, LaunchMenuActivity.class);
-                intent.putExtra(LaunchMenuActivity.EXTRA_SEEN_INTRO_ALREADY, true);
+                Intent intent = new Intent(SplashActivity.this, IntroActivity.class);
                 startActivity(intent);
                 finish();
             }, splashScreenDuration);
