@@ -35,7 +35,7 @@ import jamesw6811.secrets.gameworld.map.site.WalletUpgradeSite;
 import jamesw6811.secrets.sound.TextToSpeechRunner;
 
 public class StoryMission5 extends StoryMission {
-    public static final int NEXT_MISSION_NUMBER = 1; // Setting to 2 before having a mission 2 will crash
+    public static final int NEXT_MISSION_NUMBER = 5; // Setting to 2 before having a mission 2 will crash
     public static final int NUMBER_OF_CAPTURES_WIN = 1;
     private static boolean released_virus = false;
     private static boolean disabled_regulator = false;

@@ -18,6 +18,11 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
     private static final int SPEED_OFFSET = 4; // minutes per mile
     private Button startButton;
     private SeekBar speedSettingBar;
+    private int latest_mission_unlocked;
+    private int selected_mission;
+    private TextView missionText;
+    private Button prevMissionButton;
+    private Button nextMissionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +45,17 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
         speedSettingBar = findViewById(R.id.running_speed_seek_bar);
         speedSettingBar.setOnSeekBarChangeListener(this);
 
+        // Set up mission selection
         startButton = findViewById(R.id.start_game_button);
-        int latest_mission_unlocked = sharedPref.getInt(getString(R.string.latest_mission_unlock_key), 1);
-        startButton.setOnClickListener(v -> startBriefingScreen(latest_mission_unlocked));
+        missionText = findViewById(R.id.mission_number);
+        latest_mission_unlocked = sharedPref.getInt(getString(R.string.latest_mission_unlock_key), 1);
+        selected_mission = latest_mission_unlocked;
+        startButton.setOnClickListener(v -> startBriefingScreen(selected_mission));
+        prevMissionButton = findViewById(R.id.prev_mission_button);
+        nextMissionButton = findViewById(R.id.next_mission_button);
+        prevMissionButton.setOnClickListener(v -> incrementMission(-1));
+        nextMissionButton.setOnClickListener(v -> incrementMission(1));
+        updateMissionUI();
 
         int defaultValue = getResources().getInteger(R.integer.default_pace_key);
         int pacePref = sharedPref.getInt(getString(R.string.saved_pace_key), defaultValue);
@@ -53,6 +66,19 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
             TextView medalsText = findViewById(R.id.contents_medals);
             medalsText.setText(String.format(getString(R.string.text_medals), num_medals));
         }
+    }
+
+    private void incrementMission(int i) {
+        selected_mission = Math.min(latest_mission_unlocked, Math.max(1, selected_mission + i));
+        updateMissionUI();
+    }
+
+    private void updateMissionUI(){
+        if (selected_mission == 1) prevMissionButton.setVisibility(View.INVISIBLE);
+        else prevMissionButton.setVisibility(View.VISIBLE);
+        if (selected_mission == latest_mission_unlocked) nextMissionButton.setVisibility(View.INVISIBLE);
+        else nextMissionButton.setVisibility(View.VISIBLE);
+        missionText.setText(new StringBuilder().append(this.getString(R.string.mission_number)).append(selected_mission).toString());
     }
 
     @Override
@@ -80,7 +106,6 @@ public class LaunchMenuActivity extends Activity implements SeekBar.OnSeekBarCha
         Intent intent = new Intent(this, BriefingActivity.class);
         intent.putExtra(StoryMission.EXTRA_MISSION, missionNumber);
         startActivity(intent);
-        finish();
     }
 
     @Override

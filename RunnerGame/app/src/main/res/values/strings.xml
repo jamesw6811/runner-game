@@ -175,4 +175,5 @@ THIS NOTICE DOES NOT APPLY IF: (1) IF YOU ARE A RESIDENT OF ANY JURISDICTION WHI
     <string name="hazardsite_alreadyinjured">You are already poisoned, so the Hemlock Hazard didn\'t hurt you.</string>
     <string name="hazardsite_primed">This Hemlock Hazard is dangerous!</string>
     <string name="hazardsite_spokenName_triggered">a harmless Hemlock Haven</string>
+    <string name="mission_number">Mission #</string>
 </resources>

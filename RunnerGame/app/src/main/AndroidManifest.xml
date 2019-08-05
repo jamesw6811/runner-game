@@ -40,7 +40,7 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".IntroActivity" />
-        <activity android:name=".BriefingActivity" />
+        <activity android:name=".BriefingActivity" android:parentActivityName=".LaunchMenuActivity"/>
         <activity android:name=".DebriefingActivity" />
         <activity android:name=".LaunchMenuActivity" />
         <activity
