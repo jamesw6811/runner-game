@@ -58,6 +58,9 @@ public class SiteFactory {
         } else if (cls == StoryMission3.Mission3CaptureSite.class){
             return new StoryMission3.Mission3CaptureSite(mapManager, position);
 
+        } else if (cls == StoryMission3.Mission3GuardSite.class){
+            return new StoryMission3.Mission3GuardSite(mapManager, position);
+
         } else if (cls == StoryMission4.Mission4GuardSite.class){
             return new StoryMission4.Mission4GuardSite(mapManager, position);
 
